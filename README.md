@@ -1,0 +1,1 @@
+# Azure-Custom-Translator-CLI
