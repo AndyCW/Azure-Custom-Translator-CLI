@@ -2,7 +2,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Rest.Serialization;
-using Swagger;
+using CustomTranslator;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +19,10 @@ namespace CustomTranslatorCLI
 
             var hc = new HttpClient();
             hc.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", config.TranslatorKey);
+            if (config.TranslatorRegion.ToLower() != "global")
+            {
+                hc.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Region", config.TranslatorRegion);
+            }
 
             var sdk = new MicrosoftCustomTranslatorAPIPreview10(hc, true);
             sdk.BaseUri = new Uri($"https://api/texttranslator/v1.0");
@@ -44,14 +48,14 @@ namespace CustomTranslatorCLI
         {
             if (!File.Exists(Config.CONFIG_FILENAME))
             {
-                Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".speech"));
+                Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".translator"));
                 File.WriteAllText(Config.CONFIG_FILENAME, "[]");
             }
 
             var config = SafeJsonConvert.DeserializeObject<List<Config>>(File.ReadAllText(Config.CONFIG_FILENAME)).FirstOrDefault(c => c.Selected == true);
             if (config == null)
             {
-                config = new Config("Anonymous", "", "northeurope");
+                config = new Config("Anonymous", "", "global");
             }
 
             return config;

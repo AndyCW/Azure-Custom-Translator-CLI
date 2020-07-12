@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Swagger
+namespace CustomTranslator
 {
     using Microsoft.Rest;
     using Microsoft.Rest.Serialization;

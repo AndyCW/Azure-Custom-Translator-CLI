@@ -5,7 +5,7 @@ namespace CustomTranslatorCLI
 {
     [Command(Name = "translator", Description = "Command-line interface for Azure Custom Translator service.")]
     [Subcommand(typeof(ConfigCommand))]
-    //[Subcommand("dataset", typeof(DatasetCommand))]
+    [Subcommand(typeof(WorkspaceCommand))]
     //[Subcommand("model", typeof(ModelCommand))]
     //[Subcommand("test", typeof(TestCommand))]
     //[Subcommand("endpoint", typeof(EndpointCommand))]

@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Swagger
+namespace CustomTranslator
 {
     using Microsoft.Rest;
     using Models;
@@ -1151,6 +1151,38 @@ namespace Swagger
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<MicrosoftAspNetCoreMvcVirtualFileResult>> ApiTexttranslatorV10WorkspacesByIdExportByMigrationIdPostWithHttpMessagesAsync(string id, string migrationId, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Gets the authorization token.
+        /// </summary>
+        /// <param name='apikey'>
+        /// Account key
+        /// </param>
+        /// <param name='region'>
+        /// Region for the key
+        /// </param>
+        /// <param name='customHeaders'>
+        /// Headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        /// <exception cref="HttpOperationException">
+        /// Thrown when the operation returned an invalid status code
+        /// </exception>
+        /// <exception cref="SerializationException">
+        /// Thrown when unable to deserialize the response
+        /// </exception>
+        /// <exception cref="ValidationException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when a required parameter is null
+        /// </exception>
+        /// <return>
+        /// A response object containing the response body and response headers.
+        /// </return>
+        Task<HttpOperationResponse<string>> AuthTokenGetWithHttpMessagesAsync(string apikey, string region, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Swagger
+namespace CustomTranslator
 {
     using Models;
     using System.Collections;

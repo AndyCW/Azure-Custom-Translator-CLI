@@ -8,7 +8,7 @@ namespace CustomTranslatorCLI.Interfaces
     {
         string Name { get; set; }
         string TranslatorKey { get; set; }
-        //string TranslatorRegion { get; set; }
+        string TranslatorRegion { get; set; }
         bool Selected { get; set; }
     }
 }

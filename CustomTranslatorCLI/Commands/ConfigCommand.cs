@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -21,7 +20,7 @@ namespace CustomTranslatorCLI.Commands
             app.ShowHelp();
         }
 
-        [Command(Description = "Sets speech API key.")]
+        [Command("set", Description = "Sets speech API key.")]
         class Set : ParamActionCommandBase
         {
             [Option(Description = "Name of the config set. If  Creates new one if not found, otherwise updates existing one.")]
@@ -31,8 +30,8 @@ namespace CustomTranslatorCLI.Commands
             [Option(CommandOptionType.SingleValue, Description = "Translator API subscription key.")]
             string Key { get; set; }
 
-            //[Option(CommandOptionType.SingleValue, Description = "Translator API region. Default: westus")]
-            //string Region { get; set; }
+            [Option(CommandOptionType.SingleValue, Description = "Translator API region. Default: global")]
+            string Region { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Make this subscription active after storing settings.")]
             bool? Select { get; set; }
@@ -48,13 +47,12 @@ namespace CustomTranslatorCLI.Commands
                 var config = configs.FirstOrDefault(c => c.Name == Name);
                 if (config == null)
                 {
-                    //config = new Config(Name, defaultRegion: "westus");
-                    config = new Config(Name);
+                    config = new Config(Name, defaultRegion: "global");
                     configs.Add(config);
                 }
 
                 config.TranslatorKey = Key ?? config.TranslatorKey;
-                //config.TranslatorRegion = Region ?? config.TranslatorRegion;
+                config.TranslatorRegion = Region ?? config.TranslatorRegion;
                 if (Select == true) ConfigCommand.Select.ChangeSelection(Name, configs);
 
                 if (string.IsNullOrWhiteSpace(config.TranslatorKey))
@@ -63,15 +61,14 @@ namespace CustomTranslatorCLI.Commands
                     return -1;
                 }
 
-                //console.WriteLine($"Setting {Name}: Key = {Key ?? "(no change)"}, Region = {Region ?? "(no change)"}");
-                console.WriteLine($"Setting {Name}: Key = {Key ?? "(no change)"}");
+                console.WriteLine($"Setting {Name}: Key = {Key ?? "(no change)"}, Region = {Region ?? "(no change)"}");
                 File.WriteAllText(Config.CONFIG_FILENAME, SafeJsonConvert.SerializeObject(configs, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
                 return 0;
             }
         }
 
-        [Command(Description = "Shows current settings.")]
+        [Command("list", Description = "Shows current settings.")]
         class List
         {
             int OnExecute(IConsole console, CommandLineApplication app)
@@ -85,7 +82,7 @@ namespace CustomTranslatorCLI.Commands
                         console.WriteLine("Configuration set:");
                         console.WriteLine($"- Name: {config.Name}");
                         console.WriteLine($"- Key: {config.TranslatorKey}");
-                        //console.WriteLine($"- Region: {config.TranslatorRegion}");
+                        console.WriteLine($"- Region: {config.TranslatorRegion}");
                         console.WriteLine($"- Selected: {config.Selected}");
                         console.WriteLine();
                     }
@@ -99,7 +96,7 @@ namespace CustomTranslatorCLI.Commands
             }
         }
 
-        [Command(Description = "Selects which config set is currently active. Use this command to switch between subscriptions.")]
+        [Command("select", Description = "Selects which config set is currently active. Use this command to switch between subscriptions.")]
         class Select : ParamActionCommandBase
         {
             [Argument(0, Description = "Configuration set name. This will be selected for all API operations. Case sensitive.")]
@@ -148,7 +145,7 @@ namespace CustomTranslatorCLI.Commands
             }
         }
 
-        [Command(Description = "Removes selected configuration set.")]
+        [Command("delete", Description = "Removes selected configuration set.")]
         class Delete : ParamActionCommandBase
         {
             [Argument(0, Description = "Configuration set name.")]

@@ -4,7 +4,7 @@
 // regenerated.
 // </auto-generated>
 
-namespace Swagger.Models
+namespace CustomTranslator.Models
 {
     using Microsoft.Rest;
     using Newtonsoft.Json;

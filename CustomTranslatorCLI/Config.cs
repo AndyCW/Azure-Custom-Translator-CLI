@@ -12,17 +12,16 @@ namespace CustomTranslatorCLI
 
         public string Name { get; set; }
         public string TranslatorKey { get; set; }
-        //public string TranslatorRegion { get; set; }
+        public string TranslatorRegion { get; set; }
         public bool Selected { get; set; }
 
         public Config() { }
 
-        //public Config(string defaultName = "", string defaultKey = "", string defaultRegion = "", bool defaultSelected = false)
-        public Config(string defaultName = "", string defaultKey = "", bool defaultSelected = false)
+        public Config(string defaultName = "", string defaultKey = "", string defaultRegion = "", bool defaultSelected = false)
         {
             Name = defaultName;
             TranslatorKey = defaultKey;
-            //TranslatorRegion = defaultRegion;
+            TranslatorRegion = defaultRegion;
         }
     }
 }
