@@ -33,22 +33,20 @@ namespace CustomTranslatorCLI.Commands
 
         protected static string mBearerToken;
 
-        protected static string BearerToken
+        protected static string GetBearerToken(IMicrosoftCustomTranslatorAPIPreview10 customTranslatorAPI, IConfig config)
         {
-            get
+            if (!string.IsNullOrEmpty(mBearerToken))
             {
-                if (!string.IsNullOrEmpty(mBearerToken))
-                {
-                    return mBearerToken;
-                }
-                else
-                {
-                    var res = _customTranslatorAPI.GetAuthToken(_config.TranslatorKey, _config.TranslatorRegion);
-                    if (res == null)
-                        throw new AuthenticationException("Failed to get auth token");
-                    mBearerToken = "Bearer " + res;
-                    return mBearerToken;
-                }
+                return mBearerToken;
+            }
+            else
+            {
+                var res = CallApi<string>(() => customTranslatorAPI.GetAuthToken(config.TranslatorKey, config.TranslatorRegion));
+                if (res == null)
+                    return string.Empty;
+
+                mBearerToken = "Bearer " + res;
+                return mBearerToken;
             }
         }
 

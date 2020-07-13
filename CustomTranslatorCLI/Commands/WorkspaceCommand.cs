@@ -58,13 +58,11 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Lists workspaces in your subscription.")]
         class List
         {
-            async Task<int> OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Getting workspaces...");
 
-                var res1 = await sdk.AuthTokenGetWithHttpMessagesAsync(config.TranslatorKey, config.TranslatorRegion);
-
-                var res = CallApi<List<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>>(() => _customTranslatorAPI.ApiTexttranslatorV10WorkspacesGet(BearerToken));
+                var res = CallApi<List<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>>(() => sdk.ApiTexttranslatorV10WorkspacesGet(GetBearerToken(sdk, config)));
                 if (res == null)
                     return -1;
 
@@ -92,11 +90,11 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
-            int OnExecute(IConsole console)
+            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Getting workspace...");
 
-                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => _customTranslatorAPI.ApiTexttranslatorV10WorkspacesByIdGet(Id, BearerToken));
+                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => sdk.ApiTexttranslatorV10WorkspacesByIdGet(Id, GetBearerToken(sdk, config)));
                 if (res == null)
                     return -1;
 
@@ -114,9 +112,9 @@ namespace CustomTranslatorCLI.Commands
             [Guid]
             string Id { get; set; }
 
-            int OnExecute(IConsole console)
+            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
-                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => _customTranslatorAPI.ApiTexttranslatorV10WorkspacesByIdGet(Id, BearerToken));
+                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => sdk.ApiTexttranslatorV10WorkspacesByIdGet(Id, GetBearerToken(sdk, config)));
                 if (res == null)
                     return -1;
 
@@ -134,10 +132,10 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
-            int OnExecute(IConsole console)
+            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Deleting workspace...");
-                CallApi<ErrorContent>(() => _customTranslatorAPI.ApiTexttranslatorV10WorkspacesByIdDelete(Id, BearerToken));
+                CallApi<ErrorContent>(() => sdk.ApiTexttranslatorV10WorkspacesByIdDelete(Id, GetBearerToken(sdk, config)));
                 console.WriteLine("Done.");
 
                 return 0;

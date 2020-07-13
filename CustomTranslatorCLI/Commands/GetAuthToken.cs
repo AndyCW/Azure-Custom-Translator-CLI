@@ -11,49 +11,6 @@ using System.Threading.Tasks;
 
 namespace CustomTranslator
 {
-    /// <summary>
-    /// Extension methods for MicrosoftCustomTranslatorAPIPreview10.
-    /// </summary>
-    public static partial class MicrosoftCustomTranslatorAPIPreview10Extensions
-    {
-        /// <summary>
-        /// Gets the authentication token.
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='apikey'>
-        /// Account key
-        /// </param>
-        /// <param name='region'>
-        /// Region for the key
-        /// </param>
-        public static string GetAuthToken(this IMicrosoftCustomTranslatorAPIPreview10 operations, string apikey, string region)
-        {
-            return operations.GetAuthTokenAsync(apikey, region).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Gets the authentication token.
-        /// </summary>
-        /// <param name='operations'>
-        /// The operations group for this extension method.
-        /// </param>
-        /// <param name='apikey'>
-        /// Account key
-        /// </param>
-        /// <param name='region'>
-        /// Region for the key
-        /// </param>
-        public static async Task<string> GetAuthTokenAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string apikey, string region, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            using (var _result = await operations.AuthTokenGetWithHttpMessagesAsync(apikey, region, null, cancellationToken).ConfigureAwait(false))
-            {
-                return _result.Body;
-            }
-        }
-    }
-
     public partial class MicrosoftCustomTranslatorAPIPreview10 : ServiceClient<MicrosoftCustomTranslatorAPIPreview10>, IMicrosoftCustomTranslatorAPIPreview10
     {
         /// <summary>

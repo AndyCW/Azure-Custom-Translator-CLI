@@ -2427,5 +2427,41 @@ namespace CustomTranslator
                 }
             }
 
+        /// <summary>
+        /// Gets the authentication token.
+        /// </summary>
+        /// <param name='operations'>
+        /// The operations group for this extension method.
+        /// </param>
+        /// <param name='apikey'>
+        /// Account key
+        /// </param>
+        /// <param name='region'>
+        /// Region for the key
+        /// </param>
+        public static string GetAuthToken(this IMicrosoftCustomTranslatorAPIPreview10 operations, string apikey, string region)
+        {
+            return operations.GetAuthTokenAsync(apikey, region).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets the authentication token.
+        /// </summary>
+        /// <param name='operations'>
+        /// The operations group for this extension method.
+        /// </param>
+        /// <param name='apikey'>
+        /// Account key
+        /// </param>
+        /// <param name='region'>
+        /// Region for the key
+        /// </param>
+        public static async Task<string> GetAuthTokenAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string apikey, string region, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var _result = await operations.AuthTokenGetWithHttpMessagesAsync(apikey, region, null, cancellationToken).ConfigureAwait(false))
+            {
+                return _result.Body;
+            }
+        }
     }
 }
