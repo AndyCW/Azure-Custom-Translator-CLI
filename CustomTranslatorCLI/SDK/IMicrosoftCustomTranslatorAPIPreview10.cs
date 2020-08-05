@@ -48,7 +48,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<TextTranslatorModelsTextTranslatorCategory>>> ApiTexttranslatorV10CategoriesGetWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<TranslatorCategory>>> ApiTexttranslatorV10CategoriesGetWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the documents.
@@ -399,7 +399,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<TextTranslatorModelsLanguagePair>>> ApiTexttranslatorV10LanguagesSupportedlanguagepairsGetWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<LanguagePair>>> GetSupportedLanguagePairsWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get the model details.
@@ -660,7 +660,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorProjectsResponse>> ApiTexttranslatorV10ProjectsGetWithHttpMessagesAsync(string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ProjectsResponse>> GetProjectsWithHttpMessagesAsync(string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Create a project.
@@ -680,7 +680,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ProjectsPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> CreateProjectWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the project specified by Id.
@@ -697,7 +697,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsTextTranslatorProjectInfo>> ApiTexttranslatorV10ProjectsByIdGetWithHttpMessagesAsync(System.Guid id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ProjectInfo>> GetProjectByIdWithHttpMessagesAsync(System.Guid id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates the project.
@@ -717,7 +717,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsTextTranslatorProjectInfo>> ApiTexttranslatorV10ProjectsByIdPutWithHttpMessagesAsync(System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ProjectInfo>> ApiTexttranslatorV10ProjectsByIdPutWithHttpMessagesAsync(System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Delete the current project
@@ -734,7 +734,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ProjectsByIdDeleteWithHttpMessagesAsync(System.Guid id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> DeleteProjectWithHttpMessagesAsync(System.Guid id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets all the Models for the given project.
