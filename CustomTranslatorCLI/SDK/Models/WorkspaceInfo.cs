@@ -7,20 +7,19 @@
 namespace CustomTranslator.Models
 {
     using Newtonsoft.Json;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Metadata about an individual workspace
     /// </summary>
-    public partial class TextTranslatorApiModelsTextTranslatorWorkspaceInfo
+    //[JsonArray(true)]
+    public partial class WorkspaceInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorApiModelsTextTranslatorWorkspaceInfo class.
         /// </summary>
-        public TextTranslatorApiModelsTextTranslatorWorkspaceInfo()
+        public WorkspaceInfo()
         {
             CustomInit();
         }
@@ -45,7 +44,7 @@ namespace CustomTranslator.Models
         /// workspace is shared with.</param>
         /// <param name="hasMigrations">Gets or sets if the current workspace
         /// has any migrations.</param>
-        public TextTranslatorApiModelsTextTranslatorWorkspaceInfo(string id = default(string), TextTranslatorModelsRoleInfo role = default(TextTranslatorModelsRoleInfo), string name = default(string), bool? isCreator = default(bool?), bool? isDefaultWorkspace = default(bool?), TextTranslatorModelsResponseUserInfo createdBy = default(TextTranslatorModelsResponseUserInfo), System.DateTime? createdDate = default(System.DateTime?), IList<TextTranslatorModelsSharingInfo> sharing = default(IList<TextTranslatorModelsSharingInfo>), bool? hasMigrations = default(bool?))
+        public WorkspaceInfo(string id = default(string), RoleInfo role = default(RoleInfo), string name = default(string), bool? isCreator = default(bool?), bool? isDefaultWorkspace = default(bool?), UserInfo createdBy = default(UserInfo), System.DateTime? createdDate = default(System.DateTime?), IList<SharingInfo> sharing = default(IList<SharingInfo>), bool? hasMigrations = default(bool?))
         {
             Id = id;
             Role = role;
@@ -74,7 +73,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the role this user has in the workspace.
         /// </summary>
         [JsonProperty(PropertyName = "role")]
-        public TextTranslatorModelsRoleInfo Role { get; set; }
+        public RoleInfo Role { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the workspace.
@@ -99,7 +98,7 @@ namespace CustomTranslator.Models
         /// Gets or sets who created the workspace.
         /// </summary>
         [JsonProperty(PropertyName = "createdBy")]
-        public TextTranslatorModelsResponseUserInfo CreatedBy { get; set; }
+        public UserInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets or sets when the workspace was created.
@@ -112,7 +111,7 @@ namespace CustomTranslator.Models
         /// with.
         /// </summary>
         [JsonProperty(PropertyName = "sharing")]
-        public IList<TextTranslatorModelsSharingInfo> Sharing { get; set; }
+        public IList<SharingInfo> Sharing { get; set; }
 
         /// <summary>
         /// Gets or sets if the current workspace has any migrations.

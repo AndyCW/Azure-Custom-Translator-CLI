@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using CustomTranslatorCLI.SDK.Models;
 using System.Security.Authentication;
+using CustomTranslatorCLI.Helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -33,7 +35,7 @@ namespace CustomTranslatorCLI.Commands
 
         protected static string mBearerToken;
 
-        protected static string GetBearerToken(IMicrosoftCustomTranslatorAPIPreview10 customTranslatorAPI, IConfig config)
+        protected static string GetBearerToken(IConfiguration appconfig)
         {
             if (!string.IsNullOrEmpty(mBearerToken))
             {
@@ -41,9 +43,11 @@ namespace CustomTranslatorCLI.Commands
             }
             else
             {
-                var res = CallApi<string>(() => customTranslatorAPI.GetAuthToken(config.TranslatorKey, config.TranslatorRegion));
-                if (res == null)
-                    return string.Empty;
+                //var res = CallApi<string>(() => customTranslatorAPI.GetAuthToken(config.TranslatorKey, config.TranslatorRegion));
+                //if (res == null)
+                //    return string.Empty;
+
+                var res = new AccessTokenClient(appconfig).GetToken();
 
                 mBearerToken = "Bearer " + res;
                 return mBearerToken;
@@ -62,7 +66,7 @@ namespace CustomTranslatorCLI.Commands
             {
                 if ((res as ErrorContent).Code == "Unauthorized")
                 {
-                    _console.Error.WriteLine("Run 'config set' and add your Speech key or select proper configuration set by calling 'config select <name>'.");
+                    _console.Error.WriteLine("Run 'config set' and add your Translator key or select proper configuration set by calling 'config select <name>'.");
                 }
                 throw new Exception($"API call ended with error: {(res as ErrorContent).Message}");
             }

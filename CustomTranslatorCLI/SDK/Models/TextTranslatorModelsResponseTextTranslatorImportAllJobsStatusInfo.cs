@@ -59,7 +59,7 @@ namespace CustomTranslator.Models
         /// (id, display name).</param>
         /// <param name="languages">The file languages associated with this
         /// document.</param>
-        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), TextTranslatorModelsTextTranslatorImportJobStatus status = default(TextTranslatorModelsTextTranslatorImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), TextTranslatorModelsResponseUserInfo createdBy = default(TextTranslatorModelsResponseUserInfo), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>))
+        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), TextTranslatorModelsTextTranslatorImportJobStatus status = default(TextTranslatorModelsTextTranslatorImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), UserInfo createdBy = default(UserInfo), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>))
         {
             JobId = jobId;
             NumberFiles = numberFiles;
@@ -142,7 +142,7 @@ namespace CustomTranslator.Models
         /// display name).
         /// </summary>
         [JsonProperty(PropertyName = "createdBy")]
-        public TextTranslatorModelsResponseUserInfo CreatedBy { get; set; }
+        public UserInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets the file languages associated with this document.

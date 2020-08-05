@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Information about a user that has permissions to a workspace.
     /// </summary>
-    public partial class TextTranslatorModelsSharingInfo
+    public partial class SharingInfo
     {
         /// <summary>
         /// Initializes a new instance of the TextTranslatorModelsSharingInfo
         /// class.
         /// </summary>
-        public TextTranslatorModelsSharingInfo()
+        public SharingInfo()
         {
             CustomInit();
         }
@@ -36,7 +36,7 @@ namespace CustomTranslator.Models
         /// shared with.</param>
         /// <param name="role">Gets or sets the role this user has in the
         /// workspace.</param>
-        public TextTranslatorModelsSharingInfo(long id, string emailAddress, TextTranslatorModelsRoleInfo role)
+        public SharingInfo(long id, string emailAddress, RoleInfo role)
         {
             Id = id;
             EmailAddress = emailAddress;
@@ -67,7 +67,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the role this user has in the workspace.
         /// </summary>
         [JsonProperty(PropertyName = "role")]
-        public TextTranslatorModelsRoleInfo Role { get; set; }
+        public RoleInfo Role { get; set; }
 
         /// <summary>
         /// Validate the object.

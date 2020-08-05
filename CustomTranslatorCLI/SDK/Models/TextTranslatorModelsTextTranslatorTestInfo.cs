@@ -55,7 +55,7 @@ namespace CustomTranslator.Models
         /// <param name="bleuScoreCIUnpunctuated">Gets or sets BleuScore
         /// (case-insensitive, Unpunctuated).</param>
         /// <param name="sentenceCount">The SentenceCount of the test</param>
-        public TextTranslatorModelsTextTranslatorTestInfo(long id, string name, long modelId, string status, TextTranslatorModelsResponseUserInfo createdBy, TextTranslatorModelsResponseUserInfo modifiedBy, double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), int? sentenceCount = default(int?))
+        public TextTranslatorModelsTextTranslatorTestInfo(long id, string name, long modelId, string status, UserInfo createdBy, UserInfo modifiedBy, double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), int? sentenceCount = default(int?))
         {
             Id = id;
             Name = name;
@@ -163,13 +163,13 @@ namespace CustomTranslator.Models
         /// Gets the Name of the creator of this test.
         /// </summary>
         [JsonProperty(PropertyName = "createdBy")]
-        public TextTranslatorModelsResponseUserInfo CreatedBy { get; set; }
+        public UserInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets the Name of who last modified this model.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedBy")]
-        public TextTranslatorModelsResponseUserInfo ModifiedBy { get; set; }
+        public UserInfo ModifiedBy { get; set; }
 
         /// <summary>
         /// Validate the object.

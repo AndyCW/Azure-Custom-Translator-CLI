@@ -10,59 +10,79 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomTranslatorCLI.Commands
 {
     [Command(Description = "Commands related to workspace management.")]
-//    [Subcommand(typeof(Create))]
+    [Subcommand(typeof(Create))]
     [Subcommand(typeof(List))]
     [Subcommand(typeof(Show))]
-    [Subcommand(typeof(Status))]
     [Subcommand(typeof(Delete))]
     class WorkspaceCommand : TranslatorCommandBase
     {
-        public WorkspaceCommand(IMicrosoftCustomTranslatorAPIPreview10 customTranslatorAPI, IConsole console, IConfig config) : base(customTranslatorAPI, console, config) { }
+        public WorkspaceCommand(IMicrosoftCustomTranslatorAPIPreview10 customTranslatorAPI, IConsole console, IConfig config, IConfiguration appConfiguration) : base(customTranslatorAPI, console, config) { }
 
-        //[Command(Description = "Creates new workspace.")]
-        //class Create : ParamActionCommandBase
-        //{
-        //    [Option(Description = "(Required) workspace name.")]
-        //    [Required]
-        //    string Name { get; set; }
+        [Command(Description = "Creates new workspace.")]
+        class Create : ParamActionCommandBase
+        {
+           [Option(Description = "(Required) workspace name.")]
+           [Required]
+           string Name { get; set; }
 
-        //    [Option(Description = "workspace description.")]
-        //    string Description { get; set; }
+           [Option(Description = "workspace description.")]
+           string Description { get; set; }
 
-        //    int OnExecute()
-        //    {
-        //        var workspaceDefinition = new TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest()
-        //        {
-        //            Name = Name,
-        //            Subscription = new TextTranslatorModelsRequestTextTranslatorSubscriptionRequest()
-        //            {
-        //                SubscriptionKey = _config.TranslatorKey,
-        //                BillingRegionCode = _config.TranslatorRegion
-        //            }
-        //        };
+           int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+           {
+               var workspaceDefinition = new CreateWorkspaceData()
+               {
+                   Name = Name,
+                   Subscription = new Subscription()
+                   {
+                       SubscriptionKey = config.TranslatorKey,
+                       BillingRegionCode = config.TranslatorRegion
+                   }
+               };
 
-        //        _console.WriteLine("Creating workspace...");
-        //        var res = CreateAndWait(
-        //            () => _customTranslatorAPI.ApiTexttranslatorV10WorkspacesPost(workspaceDefinition, BearerToken),
-        //            true,
-        //            _customTranslatorAPI.ApiTexttranslatorV10WorkspacesGet(BearerToken));
+               console.WriteLine("Creating workspace...");
+               var res = CallApi<ErrorContent>(() => sdk.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)));
+            //    var res = CreateAndWait(
+            //        () => _customTranslatorAPI.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)),
+            //        true,
+            //        _customTranslatorAPI.GetWorkspaces(GetBearerToken(appConfiguration)));
 
-        //        return res;
-        //    }
-        //}
+                var res1 = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(GetBearerToken(appConfiguration)));
+                if (res1 == null)
+                    return -1;
+
+                if (res1.Count == 0)
+                {
+                    console.WriteLine("No workspaces found.");
+                }
+                else
+                {
+                    foreach (var workspace in res1)
+                    {
+                        if (workspace.Name == Name)
+                        {
+                            console.WriteLine($"{workspace.Id, 30} {workspace.Name, -25}");
+                        }
+                    }
+                }
+
+                return 0;
+           }
+        }
 
         [Command(Description = "Lists workspaces in your subscription.")]
         class List
         {
-            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Getting workspaces...");
 
-                var res = CallApi<List<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>>(() => sdk.ApiTexttranslatorV10WorkspacesGet(GetBearerToken(sdk, config)));
+                var res = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(GetBearerToken(appConfiguration)));
                 if (res == null)
                     return -1;
 
@@ -90,35 +110,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Getting workspace...");
 
-                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => sdk.ApiTexttranslatorV10WorkspacesByIdGet(Id, GetBearerToken(sdk, config)));
+                var res = CallApi<WorkspaceInfo>(() => sdk.GetWorkspaceById(Id, GetBearerToken(appConfiguration)));
                 if (res == null)
                     return -1;
 
                 console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-
-                return 0;
-            }
-        }
-
-        [Command(Description = "Shows status of specific workspace.")]
-        class Status
-        {
-            [Argument(0, Name = "GUID", Description = "(Required) workspace ID.")]
-            [Required]
-            [Guid]
-            string Id { get; set; }
-
-            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
-            {
-                var res = CallApi<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(() => sdk.ApiTexttranslatorV10WorkspacesByIdGet(Id, GetBearerToken(sdk, config)));
-                if (res == null)
-                    return -1;
-
-                console.WriteLine($"{res.Id,30} {res.Name,-25}");
 
                 return 0;
             }
@@ -132,10 +132,10 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
             {
                 console.WriteLine("Deleting workspace...");
-                CallApi<ErrorContent>(() => sdk.ApiTexttranslatorV10WorkspacesByIdDelete(Id, GetBearerToken(sdk, config)));
+                CallApi<ErrorContent>(() => sdk.DeleteWorkspace(Id, GetBearerToken(appConfiguration)));
                 console.WriteLine("Done.");
 
                 return 0;

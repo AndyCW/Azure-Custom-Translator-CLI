@@ -4825,7 +4825,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPutWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPutWithHttpMessagesAsync(Subscription subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (subscription == null)
             {
@@ -4981,7 +4981,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPostWithHttpMessagesAsync(Subscription subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (subscription == null)
             {
@@ -6095,7 +6095,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorWorkspacesReponse>> ApiTexttranslatorV10WorkspacesGetWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<List<WorkspaceInfo>>> GetWorkspacesWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -6182,7 +6182,7 @@ namespace CustomTranslator
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorWorkspacesReponse>();
+            var _result = new HttpOperationResponse<List<WorkspaceInfo>>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -6191,7 +6191,7 @@ namespace CustomTranslator
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<TextTranslatorModelsResponseTextTranslatorWorkspacesReponse>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<List<WorkspaceInfo>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -6237,7 +6237,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10WorkspacesPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest newWorkspace, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> CreateWorkspaceWithHttpMessagesAsync(CreateWorkspaceData newWorkspace, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (newWorkspace == null)
             {
@@ -6379,7 +6379,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>> ApiTexttranslatorV10WorkspacesByIdGetWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<WorkspaceInfo>> GetWorkspaceByIdWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == null)
             {
@@ -6472,7 +6472,7 @@ namespace CustomTranslator
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>();
+            var _result = new HttpOperationResponse<WorkspaceInfo>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -6481,7 +6481,7 @@ namespace CustomTranslator
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<WorkspaceInfo>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -6530,7 +6530,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>> ApiTexttranslatorV10WorkspacesByIdDeleteWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<WorkspaceInfo>> DeleteWorkspaceWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == null)
             {
@@ -6623,7 +6623,7 @@ namespace CustomTranslator
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>();
+            var _result = new HttpOperationResponse<WorkspaceInfo>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -6632,7 +6632,7 @@ namespace CustomTranslator
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<WorkspaceInfo>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

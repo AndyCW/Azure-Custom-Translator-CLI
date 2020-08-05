@@ -57,7 +57,7 @@ namespace CustomTranslator.Models
         /// 3. Has a language pair that is not supported</param>
         /// <param name="usedByPrioritizedModel">Gets or sets if this model is
         /// used by the specified prioritized model</param>
-        public TextTranslatorModelsTextTranslatorDocumentInfo(string name, bool isParallel, TextTranslatorModelsResponseUserInfo createdBy, TextTranslatorModelsResponseUserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TextTranslatorModelsTextTranslatorFileInfo> files = default(IList<TextTranslatorModelsTextTranslatorFileInfo>), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
+        public TextTranslatorModelsTextTranslatorDocumentInfo(string name, bool isParallel, UserInfo createdBy, UserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TextTranslatorModelsTextTranslatorFileInfo> files = default(IList<TextTranslatorModelsTextTranslatorFileInfo>), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
         {
             Name = name;
             IsParallel = isParallel;
@@ -96,13 +96,13 @@ namespace CustomTranslator.Models
         /// Gets the user who created this document.
         /// </summary>
         [JsonProperty(PropertyName = "createdBy")]
-        public TextTranslatorModelsResponseUserInfo CreatedBy { get; set; }
+        public UserInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets the user who last modified this document.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedBy")]
-        public TextTranslatorModelsResponseUserInfo ModifiedBy { get; set; }
+        public UserInfo ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the files associated with the document. Each document

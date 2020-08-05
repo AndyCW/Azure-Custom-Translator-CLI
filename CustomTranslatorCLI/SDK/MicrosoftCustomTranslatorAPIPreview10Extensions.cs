@@ -1702,7 +1702,7 @@ namespace CustomTranslator
             /// <param name='workspaceId'>
             /// Workspace to add the subscription to
             /// </param>
-            public static void ApiTexttranslatorV10SubscriptionsPut(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId)
+            public static void ApiTexttranslatorV10SubscriptionsPut(this IMicrosoftCustomTranslatorAPIPreview10 operations, Subscription subscription, string authorization, string workspaceId)
             {
                 operations.ApiTexttranslatorV10SubscriptionsPutAsync(subscription, authorization, workspaceId).GetAwaiter().GetResult();
             }
@@ -1725,7 +1725,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10SubscriptionsPutAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task ApiTexttranslatorV10SubscriptionsPutAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, Subscription subscription, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.ApiTexttranslatorV10SubscriptionsPutWithHttpMessagesAsync(subscription, authorization, workspaceId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -1745,7 +1745,7 @@ namespace CustomTranslator
             /// <param name='workspaceId'>
             /// Workspace to add the subscription to
             /// </param>
-            public static void ApiTexttranslatorV10SubscriptionsPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId)
+            public static void ApiTexttranslatorV10SubscriptionsPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, Subscription subscription, string authorization, string workspaceId)
             {
                 operations.ApiTexttranslatorV10SubscriptionsPostAsync(subscription, authorization, workspaceId).GetAwaiter().GetResult();
             }
@@ -1768,7 +1768,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10SubscriptionsPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task ApiTexttranslatorV10SubscriptionsPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, Subscription subscription, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.ApiTexttranslatorV10SubscriptionsPostWithHttpMessagesAsync(subscription, authorization, workspaceId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
@@ -2031,9 +2031,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorModelsResponseTextTranslatorWorkspacesReponse ApiTexttranslatorV10WorkspacesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static List<WorkspaceInfo> GetWorkspaces(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
-                return operations.ApiTexttranslatorV10WorkspacesGetAsync(authorization).GetAwaiter().GetResult();
+                return operations.GetWorkspacesAsync(authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2048,9 +2048,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsResponseTextTranslatorWorkspacesReponse> ApiTexttranslatorV10WorkspacesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<List<WorkspaceInfo>> GetWorkspacesAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10WorkspacesGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetWorkspacesWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -2068,9 +2068,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static void ApiTexttranslatorV10WorkspacesPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest newWorkspace, string authorization)
+            public static object CreateWorkspace(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateWorkspaceData newWorkspace, string authorization)
             {
-                operations.ApiTexttranslatorV10WorkspacesPostAsync(newWorkspace, authorization).GetAwaiter().GetResult();
+                return operations.CreateWorkspaceAsync(newWorkspace, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2088,9 +2088,12 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10WorkspacesPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest newWorkspace, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CreateWorkspaceAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateWorkspaceData newWorkspace, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10WorkspacesPostWithHttpMessagesAsync(newWorkspace, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                using (var _result = await operations.CreateWorkspaceWithHttpMessagesAsync(newWorkspace, authorization, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result;
+                }
             }
 
             /// <summary>
@@ -2105,9 +2108,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorApiModelsTextTranslatorWorkspaceInfo ApiTexttranslatorV10WorkspacesByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization)
+            public static WorkspaceInfo GetWorkspaceById(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization)
             {
-                return operations.ApiTexttranslatorV10WorkspacesByIdGetAsync(id, authorization).GetAwaiter().GetResult();
+                return operations.GetWorkspaceByIdAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2125,9 +2128,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorApiModelsTextTranslatorWorkspaceInfo> ApiTexttranslatorV10WorkspacesByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<WorkspaceInfo> GetWorkspaceByIdAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10WorkspacesByIdGetWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetWorkspaceByIdWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -2145,9 +2148,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorApiModelsTextTranslatorWorkspaceInfo ApiTexttranslatorV10WorkspacesByIdDelete(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization)
+            public static WorkspaceInfo DeleteWorkspace(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization)
             {
-                return operations.ApiTexttranslatorV10WorkspacesByIdDeleteAsync(id, authorization).GetAwaiter().GetResult();
+                return operations.DeleteWorkspaceAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -2165,9 +2168,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorApiModelsTextTranslatorWorkspaceInfo> ApiTexttranslatorV10WorkspacesByIdDeleteAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<WorkspaceInfo> DeleteWorkspaceAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10WorkspacesByIdDeleteWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.DeleteWorkspaceWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Information about a users role in a workspace.
     /// </summary>
-    public partial class TextTranslatorModelsRoleInfo
+    public partial class RoleInfo
     {
         /// <summary>
         /// Initializes a new instance of the TextTranslatorModelsRoleInfo
         /// class.
         /// </summary>
-        public TextTranslatorModelsRoleInfo()
+        public RoleInfo()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="id">Gets or sets the id for this role.</param>
         /// <param name="roleName">Gets or sets the name of this role.</param>
-        public TextTranslatorModelsRoleInfo(int id, string roleName)
+        public RoleInfo(int id, string roleName)
         {
             Id = id;
             RoleName = roleName;

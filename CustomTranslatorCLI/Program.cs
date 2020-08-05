@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomTranslatorCLI
 {
@@ -25,14 +26,18 @@ namespace CustomTranslatorCLI
             }
 
             var sdk = new MicrosoftCustomTranslatorAPIPreview10(hc, true);
-            sdk.BaseUri = new Uri($"https://api/texttranslator/v1.0");
+            sdk.BaseUri = new Uri($"https://custom-api.cognitive.microsofttranslator.com");
+
+            IConfiguration appConfiguration = new ConfigurationBuilder()
+              .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+              .Build();
 
             CommandLineApplication<MainApp> app = new CommandLineApplication<MainApp>();
             app.HelpOption();
             app.VersionOptionFromAssemblyAttributes(typeof(Program).Assembly);
             app.Conventions
                 .UseDefaultConventions()
-                .UseConstructorInjection(GetServices(config, sdk));
+                .UseConstructorInjection(GetServices(config, appConfiguration, sdk));
 
             try
             {
@@ -61,10 +66,11 @@ namespace CustomTranslatorCLI
             return config;
         }
 
-        static ServiceProvider GetServices(IConfig config, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+        static ServiceProvider GetServices(IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
         {
             var services = new ServiceCollection()
                 .AddSingleton<IConfig>(config)
+                .AddSingleton<IConfiguration>(appConfiguration)
                 .AddSingleton<IMicrosoftCustomTranslatorAPIPreview10>(sdk)
                 .BuildServiceProvider();
 

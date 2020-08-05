@@ -72,18 +72,19 @@ namespace CustomTranslator
             _httpRequest.Method = new HttpMethod("POST");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            _httpRequest.Headers.Add("Ocp-Apim-Subscription-Key", apikey);
 
-            //if (customHeaders != null)
-            //{
-            //    foreach (var _header in customHeaders)
-            //    {
-            //        if (_httpRequest.Headers.Contains(_header.Key))
-            //        {
-            //            _httpRequest.Headers.Remove(_header.Key);
-            //        }
-            //        _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
-            //    }
-            //}
+            if (customHeaders != null)
+            {
+               foreach (var _header in customHeaders)
+               {
+                   if (_httpRequest.Headers.Contains(_header.Key))
+                   {
+                       _httpRequest.Headers.Remove(_header.Key);
+                   }
+                   _httpRequest.Headers.TryAddWithoutValidation(_header.Key, _header.Value);
+               }
+            }
 
             // Serialize Request
             string _requestContent = null;

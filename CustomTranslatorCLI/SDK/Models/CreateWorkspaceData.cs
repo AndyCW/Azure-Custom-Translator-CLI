@@ -13,14 +13,14 @@ namespace CustomTranslator.Models
     /// <summary>
     /// The input class for creating a new workspace.
     /// </summary>
-    public partial class TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest
+    public partial class CreateWorkspaceData
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest
         /// class.
         /// </summary>
-        public TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest()
+        public CreateWorkspaceData()
         {
             CustomInit();
         }
@@ -33,7 +33,7 @@ namespace CustomTranslator.Models
         /// <param name="name">Gets or sets the name of the workspace</param>
         /// <param name="subscription">Gets or sets the subscription
         /// information</param>
-        public TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest(string name, TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription)
+        public CreateWorkspaceData(string name, Subscription subscription)
         {
             Name = name;
             Subscription = subscription;
@@ -55,7 +55,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the subscription information
         /// </summary>
         [JsonProperty(PropertyName = "subscription")]
-        public TextTranslatorModelsRequestTextTranslatorSubscriptionRequest Subscription { get; set; }
+        public Subscription Subscription { get; set; }
 
         /// <summary>
         /// Validate the object.

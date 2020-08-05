@@ -32,7 +32,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="workspaces">Gets or sets information for
         /// workspaces.</param>
-        public TextTranslatorModelsResponseTextTranslatorWorkspacesReponse(IList<TextTranslatorApiModelsTextTranslatorWorkspaceInfo> workspaces)
+        public TextTranslatorModelsResponseTextTranslatorWorkspacesReponse(IList<WorkspaceInfo> workspaces)
         {
             Workspaces = workspaces;
             CustomInit();
@@ -47,7 +47,7 @@ namespace CustomTranslator.Models
         /// Gets or sets information for workspaces.
         /// </summary>
         [JsonProperty(PropertyName = "workspaces")]
-        public IList<TextTranslatorApiModelsTextTranslatorWorkspaceInfo> Workspaces { get; set; }
+        public IList<WorkspaceInfo> Workspaces { get; set; }
 
         /// <summary>
         /// Validate the object.

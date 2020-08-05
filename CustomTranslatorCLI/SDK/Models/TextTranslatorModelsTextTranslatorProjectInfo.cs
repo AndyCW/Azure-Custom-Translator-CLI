@@ -65,7 +65,7 @@ namespace CustomTranslator.Models
         /// (case-insensitive, Unpunctuated).</param>
         /// <param name="hubCategory">Gets the Category of this Model in
         /// Hub</param>
-        public TextTranslatorModelsTextTranslatorProjectInfo(System.Guid id, string name, TextTranslatorModelsLanguagePair languagePair, TextTranslatorModelsTextTranslatorCategory category, string status, System.DateTime modifiedDate, System.DateTime createdDate, TextTranslatorModelsResponseUserInfo createdBy, TextTranslatorModelsResponseUserInfo modifiedBy, string apiDomain, bool isAvailable, string label = default(string), string description = default(string), string categoryDescriptor = default(string), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), string hubCategory = default(string))
+        public TextTranslatorModelsTextTranslatorProjectInfo(System.Guid id, string name, TextTranslatorModelsLanguagePair languagePair, TextTranslatorModelsTextTranslatorCategory category, string status, System.DateTime modifiedDate, System.DateTime createdDate, UserInfo createdBy, UserInfo modifiedBy, string apiDomain, bool isAvailable, string label = default(string), string description = default(string), string categoryDescriptor = default(string), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), string hubCategory = default(string))
         {
             Id = id;
             Name = name;
@@ -215,13 +215,13 @@ namespace CustomTranslator.Models
         /// Gets the creator of this project.
         /// </summary>
         [JsonProperty(PropertyName = "createdBy")]
-        public TextTranslatorModelsResponseUserInfo CreatedBy { get; set; }
+        public UserInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets the user who last modified this project.
         /// </summary>
         [JsonProperty(PropertyName = "modifiedBy")]
-        public TextTranslatorModelsResponseUserInfo ModifiedBy { get; set; }
+        public UserInfo ModifiedBy { get; set; }
 
         /// <summary>
         /// Gets the Api Domain

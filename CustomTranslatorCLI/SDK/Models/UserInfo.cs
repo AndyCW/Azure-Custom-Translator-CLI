@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// User Information supplied for Tracking
     /// </summary>
-    public partial class TextTranslatorModelsResponseUserInfo
+    public partial class UserInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseUserInfo class.
         /// </summary>
-        public TextTranslatorModelsResponseUserInfo()
+        public UserInfo()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="id">Gets or Sets the User Id</param>
         /// <param name="userName">Gets or Sets the User Name</param>
-        public TextTranslatorModelsResponseUserInfo(System.Guid id, string userName)
+        public UserInfo(System.Guid id, string userName)
         {
             Id = id;
             UserName = userName;

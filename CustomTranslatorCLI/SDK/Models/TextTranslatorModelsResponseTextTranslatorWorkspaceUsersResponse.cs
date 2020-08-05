@@ -34,7 +34,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="users">Gets or sets information for users with access
         /// to this workspace.</param>
-        public TextTranslatorModelsResponseTextTranslatorWorkspaceUsersResponse(IList<TextTranslatorModelsSharingInfo> users)
+        public TextTranslatorModelsResponseTextTranslatorWorkspaceUsersResponse(IList<SharingInfo> users)
         {
             Users = users;
             CustomInit();
@@ -49,7 +49,7 @@ namespace CustomTranslator.Models
         /// Gets or sets information for users with access to this workspace.
         /// </summary>
         [JsonProperty(PropertyName = "users")]
-        public IList<TextTranslatorModelsSharingInfo> Users { get; set; }
+        public IList<SharingInfo> Users { get; set; }
 
         /// <summary>
         /// Validate the object.

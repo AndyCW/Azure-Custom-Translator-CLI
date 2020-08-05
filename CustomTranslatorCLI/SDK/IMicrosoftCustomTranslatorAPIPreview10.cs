@@ -839,7 +839,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPutWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPutWithHttpMessagesAsync(Subscription subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Add a subscription key.
@@ -859,7 +859,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorSubscriptionRequest subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> ApiTexttranslatorV10SubscriptionsPostWithHttpMessagesAsync(Subscription subscription, string authorization, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Deletes a subscription key.
@@ -981,7 +981,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorWorkspacesReponse>> ApiTexttranslatorV10WorkspacesGetWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<List<WorkspaceInfo>>> GetWorkspacesWithHttpMessagesAsync(string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Creates a new workspace
@@ -998,7 +998,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10WorkspacesPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorCreateWorkspaceRequest newWorkspace, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> CreateWorkspaceWithHttpMessagesAsync(CreateWorkspaceData newWorkspace, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the information for a specific workspace.
@@ -1015,7 +1015,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>> ApiTexttranslatorV10WorkspacesByIdGetWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<WorkspaceInfo>> GetWorkspaceByIdWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Deletes a workspace
@@ -1032,7 +1032,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorApiModelsTextTranslatorWorkspaceInfo>> ApiTexttranslatorV10WorkspacesByIdDeleteWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<WorkspaceInfo>> DeleteWorkspaceWithHttpMessagesAsync(string id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Changes the name of a workspace

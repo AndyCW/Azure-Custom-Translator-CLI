@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// The input class for subscription requests.
     /// </summary>
-    public partial class TextTranslatorModelsRequestTextTranslatorSubscriptionRequest
+    public partial class Subscription
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsRequestTextTranslatorSubscriptionRequest class.
         /// </summary>
-        public TextTranslatorModelsRequestTextTranslatorSubscriptionRequest()
+        public Subscription()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="subscriptionKey">Gets or sets Name</param>
         /// <param name="billingRegionCode">Gets or sets the region</param>
-        public TextTranslatorModelsRequestTextTranslatorSubscriptionRequest(string subscriptionKey, string billingRegionCode)
+        public Subscription(string subscriptionKey, string billingRegionCode)
         {
             SubscriptionKey = subscriptionKey;
             BillingRegionCode = billingRegionCode;
