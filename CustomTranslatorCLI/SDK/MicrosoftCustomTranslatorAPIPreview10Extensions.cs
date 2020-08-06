@@ -6,6 +6,7 @@
 
 namespace CustomTranslator
 {
+    using Microsoft.Rest;
     using Models;
     using System.Collections;
     using System.Collections.Generic;
@@ -25,9 +26,9 @@ namespace CustomTranslator
             /// </param>
             /// <param name='authorization'>
             /// </param>
-            public static IList<TextTranslatorModelsTextTranslatorCategory> ApiTexttranslatorV10CategoriesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static IList<TranslatorCategory> GetCategories(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
-                return operations.ApiTexttranslatorV10CategoriesGetAsync(authorization).GetAwaiter().GetResult();
+                return operations.GetCategoriesAsync(authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -41,9 +42,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TextTranslatorModelsTextTranslatorCategory>> ApiTexttranslatorV10CategoriesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<TranslatorCategory>> GetCategoriesAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10CategoriesGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetCategoriesWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -760,9 +761,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// The auth token for the system
             /// </param>
-            public static IList<TextTranslatorModelsLanguagePair> ApiTexttranslatorV10LanguagesSupportedlanguagepairsGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static IList<LanguagePair> GetSupportedLanguagePairs(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
-                return operations.ApiTexttranslatorV10LanguagesSupportedlanguagepairsGetAsync(authorization).GetAwaiter().GetResult();
+                return operations.GetSupportedLanguagePairsAsync(authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -778,9 +779,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TextTranslatorModelsLanguagePair>> ApiTexttranslatorV10LanguagesSupportedlanguagepairsGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<LanguagePair>> GetSupportedLanguagePairsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10LanguagesSupportedlanguagepairsGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSupportedLanguagePairsWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1274,9 +1275,9 @@ namespace CustomTranslator
             /// <param name='orderby'>
             /// The OData $orderby parameter.
             /// </param>
-            public static TextTranslatorModelsResponseTextTranslatorProjectsResponse ApiTexttranslatorV10ProjectsGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string))
+            public static ProjectsResponse GetProjects(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string))
             {
-                return operations.ApiTexttranslatorV10ProjectsGetAsync(authorization, workspaceId, pageIndex, filter, orderby).GetAwaiter().GetResult();
+                return operations.GetProjectsAsync(authorization, workspaceId, pageIndex, filter, orderby).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1331,9 +1332,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsResponseTextTranslatorProjectsResponse> ApiTexttranslatorV10ProjectsGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ProjectsResponse> GetProjectsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string workspaceId, int pageIndex, string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10ProjectsGetWithHttpMessagesAsync(authorization, workspaceId, pageIndex, filter, orderby, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetProjectsWithHttpMessagesAsync(authorization, workspaceId, pageIndex, filter, orderby, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1354,9 +1355,9 @@ namespace CustomTranslator
             /// <param name='workspaceId'>
             /// Workspace id
             /// </param>
-            public static void ApiTexttranslatorV10ProjectsPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId)
+            public static void CreateProject(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateProjectData project, string authorization, string workspaceId)
             {
-                operations.ApiTexttranslatorV10ProjectsPostAsync(project, authorization, workspaceId).GetAwaiter().GetResult();
+                operations.CreateProjectAsync(project, authorization, workspaceId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1377,9 +1378,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ProjectsPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CreateProjectAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateProjectData project, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ProjectsPostWithHttpMessagesAsync(project, authorization, workspaceId, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.CreateProjectWithHttpMessagesAsync(project, authorization, workspaceId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1394,9 +1395,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorModelsTextTranslatorProjectInfo ApiTexttranslatorV10ProjectsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization)
+            public static ProjectInfo GetProjectById(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization)
             {
-                return operations.ApiTexttranslatorV10ProjectsByIdGetAsync(id, authorization).GetAwaiter().GetResult();
+                return operations.GetProjectByIdAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1414,9 +1415,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsTextTranslatorProjectInfo> ApiTexttranslatorV10ProjectsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ProjectInfo> GetProjectByIdAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10ProjectsByIdGetWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetProjectByIdWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1437,7 +1438,7 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorModelsTextTranslatorProjectInfo ApiTexttranslatorV10ProjectsByIdPut(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization)
+            public static ProjectInfo ApiTexttranslatorV10ProjectsByIdPut(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization)
             {
                 return operations.ApiTexttranslatorV10ProjectsByIdPutAsync(id, project, authorization).GetAwaiter().GetResult();
             }
@@ -1460,7 +1461,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsTextTranslatorProjectInfo> ApiTexttranslatorV10ProjectsByIdPutAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ProjectInfo> ApiTexttranslatorV10ProjectsByIdPutAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, TextTranslatorModelsRequestTextTranslatorProjectUpdateRequest project, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiTexttranslatorV10ProjectsByIdPutWithHttpMessagesAsync(id, project, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -1480,9 +1481,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// access token
             /// </param>
-            public static void ApiTexttranslatorV10ProjectsByIdDelete(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization)
+            public static void DeleteProject(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization)
             {
-                operations.ApiTexttranslatorV10ProjectsByIdDeleteAsync(id, authorization).GetAwaiter().GetResult();
+                operations.DeleteProjectAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1500,9 +1501,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ProjectsByIdDeleteAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteProjectAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ProjectsByIdDeleteWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                 (await operations.DeleteProjectWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>

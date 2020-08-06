@@ -8,20 +8,18 @@ namespace CustomTranslator.Models
 {
     using Microsoft.Rest;
     using Newtonsoft.Json;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// A container for project results.
     /// </summary>
-    public partial class TextTranslatorModelsResponseTextTranslatorProjectsResponse
+    public partial class ProjectsResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorProjectsResponse class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorProjectsResponse()
+        public ProjectsResponse()
         {
             CustomInit();
         }
@@ -34,7 +32,7 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public TextTranslatorModelsResponseTextTranslatorProjectsResponse(IList<TextTranslatorModelsTextTranslatorProjectInfo> projects, int pageIndex, int totalPageCount)
+        public ProjectsResponse(IList<ProjectInfo> projects, int pageIndex, int totalPageCount)
         {
             Projects = projects;
             PageIndex = pageIndex;
@@ -51,7 +49,7 @@ namespace CustomTranslator.Models
         /// Gets or sets projects
         /// </summary>
         [JsonProperty(PropertyName = "projects")]
-        public IList<TextTranslatorModelsTextTranslatorProjectInfo> Projects { get; set; }
+        public IList<ProjectInfo> Projects { get; set; }
 
         /// <summary>
         /// Gets or sets the page index.

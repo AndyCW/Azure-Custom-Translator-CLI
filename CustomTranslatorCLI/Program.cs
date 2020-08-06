@@ -30,6 +30,7 @@ namespace CustomTranslatorCLI
 
             IConfiguration appConfiguration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+              .AddEnvironmentVariables("Translator_")
               .Build();
 
             CommandLineApplication<MainApp> app = new CommandLineApplication<MainApp>();

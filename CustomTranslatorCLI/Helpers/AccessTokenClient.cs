@@ -78,23 +78,37 @@ namespace CustomTranslatorCLI.Helpers
         /// </summary>
         private void LoadCredentials()
         {
-            var x = appConfiguration.GetSection("AppRegistration");
-            var xx = x.GetChildren();
-            ClientId = appConfiguration.GetSection("AppRegistration")["clientId"];
-            ClientId = "bff24280-701a-40d8-82d2-87822f30828d";
+            ClientId = appConfiguration["clientId"];
+            TenantId = appConfiguration["tenantId"];
+
+            // Use environment variables if defined
+            var env_cId = (from var in appConfiguration.GetChildren()
+            where var.Key == "Translator_ClientID"
+            select var.Value).FirstOrDefault();
+            if (!string.IsNullOrEmpty(env_cId))
+            {
+                ClientId = env_cId;
+            }
+
+            var env_tId = (from var in appConfiguration.GetChildren()
+            where var.Key == "Translator_TenantID"
+            select var.Value).FirstOrDefault();
+            if (!string.IsNullOrEmpty(env_tId))
+            {
+                TenantId = env_tId;
+            }
+
             if (string.IsNullOrWhiteSpace(ClientId))
             {
                 Console.WriteLine("Please supply a clientId. See Readme.txt.");
                 return;
             }
-
-            TenantId = appConfiguration.GetSection("AppRegistration")["tenantId"];
-            TenantId = "72f988bf-86f1-41af-91ab-2d7cd011db47";
             if (string.IsNullOrWhiteSpace(TenantId))
             {
-                Console.WriteLine("Please supply a tenantId.");
+                Console.WriteLine("Please supply a tenantId. See Readme.txt.");
                 return;
             }
+
             EndPointOauthV2 = $"https://login.microsoftonline.com/{TenantId}/oauth2/v2.0";
         }
 

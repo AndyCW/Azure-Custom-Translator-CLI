@@ -37,20 +37,16 @@ namespace CustomTranslatorCLI.Commands
            {
                var workspaceDefinition = new CreateWorkspaceData()
                {
-                   Name = Name,
-                   Subscription = new Subscription()
-                   {
-                       SubscriptionKey = config.TranslatorKey,
-                       BillingRegionCode = config.TranslatorRegion
-                   }
-               };
+                    Name = Name,
+                    Subscription = new Subscription()
+                    {
+                        SubscriptionKey = config.TranslatorKey,
+                        BillingRegionCode = config.TranslatorRegion
+                    }
+                };
 
-               console.WriteLine("Creating workspace...");
-               var res = CallApi<ErrorContent>(() => sdk.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)));
-            //    var res = CreateAndWait(
-            //        () => _customTranslatorAPI.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)),
-            //        true,
-            //        _customTranslatorAPI.GetWorkspaces(GetBearerToken(appConfiguration)));
+                console.WriteLine("Creating workspace...");
+                sdk.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration));
 
                 var res1 = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(GetBearerToken(appConfiguration)));
                 if (res1 == null)

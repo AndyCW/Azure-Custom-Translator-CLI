@@ -14,13 +14,13 @@ namespace CustomTranslator.Models
     /// A language pair that is supported by the text translator for
     /// transalation.
     /// </summary>
-    public partial class TextTranslatorModelsLanguagePair
+    public partial class LanguagePair
     {
         /// <summary>
         /// Initializes a new instance of the TextTranslatorModelsLanguagePair
         /// class.
         /// </summary>
-        public TextTranslatorModelsLanguagePair()
+        public LanguagePair()
         {
             CustomInit();
         }
@@ -34,7 +34,7 @@ namespace CustomTranslator.Models
         /// <param name="targetLanguage">The Second Language, could be a source
         /// or target</param>
         /// <param name="id">The Id for the language pair.</param>
-        public TextTranslatorModelsLanguagePair(TextTranslatorModelsTextTranslatorLanguage sourceLanguage, TextTranslatorModelsTextTranslatorLanguage targetLanguage, long? id = default(long?))
+        public LanguagePair(TextTranslatorModelsTextTranslatorLanguage sourceLanguage, TextTranslatorModelsTextTranslatorLanguage targetLanguage, long? id = default(long?))
         {
             Id = id;
             SourceLanguage = sourceLanguage;

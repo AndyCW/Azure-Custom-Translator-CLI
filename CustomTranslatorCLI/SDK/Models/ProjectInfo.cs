@@ -10,13 +10,13 @@ namespace CustomTranslator.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class TextTranslatorModelsTextTranslatorProjectInfo
+    public partial class ProjectInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorProjectInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorProjectInfo()
+        public ProjectInfo()
         {
             CustomInit();
         }
@@ -65,7 +65,7 @@ namespace CustomTranslator.Models
         /// (case-insensitive, Unpunctuated).</param>
         /// <param name="hubCategory">Gets the Category of this Model in
         /// Hub</param>
-        public TextTranslatorModelsTextTranslatorProjectInfo(System.Guid id, string name, TextTranslatorModelsLanguagePair languagePair, TextTranslatorModelsTextTranslatorCategory category, string status, System.DateTime modifiedDate, System.DateTime createdDate, UserInfo createdBy, UserInfo modifiedBy, string apiDomain, bool isAvailable, string label = default(string), string description = default(string), string categoryDescriptor = default(string), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), string hubCategory = default(string))
+        public ProjectInfo(System.Guid id, string name, LanguagePair languagePair, TranslatorCategory category, string status, System.DateTime modifiedDate, System.DateTime createdDate, UserInfo createdBy, UserInfo modifiedBy, string apiDomain, bool isAvailable, string label = default(string), string description = default(string), string categoryDescriptor = default(string), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), string hubCategory = default(string))
         {
             Id = id;
             Name = name;
@@ -126,13 +126,13 @@ namespace CustomTranslator.Models
         /// Gets or sets the language pair
         /// </summary>
         [JsonProperty(PropertyName = "languagePair")]
-        public TextTranslatorModelsLanguagePair LanguagePair { get; set; }
+        public LanguagePair LanguagePair { get; set; }
 
         /// <summary>
         /// Gets or sets Category
         /// </summary>
         [JsonProperty(PropertyName = "category")]
-        public TextTranslatorModelsTextTranslatorCategory Category { get; set; }
+        public TranslatorCategory Category { get; set; }
 
         /// <summary>
         /// Gets or sets CategoryDescriptor

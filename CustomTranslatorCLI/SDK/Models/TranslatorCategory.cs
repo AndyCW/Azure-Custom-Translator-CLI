@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Defines a category of the project.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorCategory
+    public partial class TranslatorCategory
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorCategory class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorCategory()
+        public TranslatorCategory()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="id">Id of the Category</param>
         /// <param name="name">Name of the Category</param>
-        public TextTranslatorModelsTextTranslatorCategory(long id, string name)
+        public TranslatorCategory(long id, string name)
         {
             Id = id;
             Name = name;

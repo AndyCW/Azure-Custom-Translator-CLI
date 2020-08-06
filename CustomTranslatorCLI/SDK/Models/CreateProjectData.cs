@@ -12,13 +12,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// The input class for model requests.
     /// </summary>
-    public partial class TextTranslatorModelsRequestTextTranslatorProjectRequest
+    public partial class CreateProjectData
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsRequestTextTranslatorProjectRequest class.
         /// </summary>
-        public TextTranslatorModelsRequestTextTranslatorProjectRequest()
+        public CreateProjectData()
         {
             CustomInit();
         }
@@ -34,7 +34,7 @@ namespace CustomTranslator.Models
         /// CategoryDescriptor</param>
         /// <param name="description">Gets or sets Description</param>
         /// <param name="label">Gets or sets the project label.</param>
-        public TextTranslatorModelsRequestTextTranslatorProjectRequest(int languagePairId, int categoryId, string name = default(string), string categoryDescriptor = default(string), string description = default(string), string label = default(string))
+        public CreateProjectData(int languagePairId, int categoryId, string name = default(string), string categoryDescriptor = default(string), string description = default(string), string label = default(string))
         {
             LanguagePairId = languagePairId;
             CategoryId = categoryId;

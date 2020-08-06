@@ -43,10 +43,6 @@ namespace CustomTranslatorCLI.Commands
             }
             else
             {
-                //var res = CallApi<string>(() => customTranslatorAPI.GetAuthToken(config.TranslatorKey, config.TranslatorRegion));
-                //if (res == null)
-                //    return string.Empty;
-
                 var res = new AccessTokenClient(appconfig).GetToken();
 
                 mBearerToken = "Bearer " + res;
