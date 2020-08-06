@@ -3,11 +3,23 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>translator</ToolCommandName>
+    <PackageId>custom-translator-cli</PackageId>
+    <PackageVersion>1.0.0-alpha.1</PackageVersion>
+    <Description>A CLI to manage models for the Azure Custom Translator service</Description>
+    <Authors>Andy Wigley</Authors>
+    <PackageTags>translator custom-translator</PackageTags>
+    <PackageIconUrl>https://github.com/andycw/azure-custom-translator-cli/raw/master/logo.png</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appSettings.json" />
     <None Remove="appSettings.sample.json" />
+    <None Include="logo.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +38,7 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.17.1" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
     <PackageReference Include="RestSharp" Version="106.11.4" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/> 
   </ItemGroup>
 
 </Project>
