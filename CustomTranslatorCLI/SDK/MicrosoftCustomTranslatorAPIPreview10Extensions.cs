@@ -26,9 +26,9 @@ namespace CustomTranslator
             /// </param>
             /// <param name='authorization'>
             /// </param>
-            public static IList<TranslatorCategory> ApiTexttranslatorV10CategoriesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static IList<TranslatorCategory> GetCategories(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
-                return operations.ApiTexttranslatorV10CategoriesGetAsync(authorization).GetAwaiter().GetResult();
+                return operations.GetCategoriesAsync(authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -42,9 +42,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TranslatorCategory>> ApiTexttranslatorV10CategoriesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<TranslatorCategory>> GetCategoriesAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10CategoriesGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetCategoriesWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1355,7 +1355,7 @@ namespace CustomTranslator
             /// <param name='workspaceId'>
             /// Workspace id
             /// </param>
-            public static void CreateProject(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId)
+            public static void CreateProject(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateProjectData project, string authorization, string workspaceId)
             {
                 operations.CreateProjectAsync(project, authorization, workspaceId).GetAwaiter().GetResult();
             }
@@ -1378,7 +1378,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task CreateProjectAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorProjectRequest project, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CreateProjectAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateProjectData project, string authorization, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 (await operations.CreateProjectWithHttpMessagesAsync(project, authorization, workspaceId, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }

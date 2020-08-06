@@ -32,7 +32,7 @@
         "request": "launch",
         "preLaunchTask": "build",
         "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
-        "args": ["project","create","-w","cffbe659-5fb5-4913-b7de-6274a1540345","-n","andydebug","-lp","en:fr","-c","dummy"],
+        "args": ["project","create","-w","cffbe659-5fb5-4913-b7de-6274a1540345","-n","andydebug","-lp","en:fr","-c","General"],
         "cwd": "${workspaceFolder}",
         "stopAtEntry": false,
         "console": "internalConsole"

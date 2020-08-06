@@ -57,7 +57,7 @@ namespace CustomTranslatorCLI.Commands
             {
                 LanguagePair = LanguagePair.ToLower();
                 // Validate language pair param
-                var regex = @"^\W{2}:\W{2}$";
+                var regex = @"^\w{2}:\w{2}$";
                 var match = Regex.Match(LanguagePair, regex, RegexOptions.IgnoreCase);
                 if (!match.Success)
                 {
@@ -66,33 +66,49 @@ namespace CustomTranslatorCLI.Commands
                 }
 
                 // Get the supported language pairs
-                var res = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(GetBearerToken(appConfiguration)));
-                if (res == null)
+                var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(GetBearerToken(appConfiguration)));
+                if (languagePairs == null)
                     return -1;
 
-                //from 
+                var languagePairId = (from lp in languagePairs
+                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split(':')[0]
+                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split(':')[1])
+                    select lp.Id).FirstOrDefault();
 
-/*                 foreach (var project in res.Projects)
+                if (languagePairId == null)
                 {
-                    console.WriteLine($"{project.Id, 30} {project.Name, -25}");
+                    console.WriteLine("Invalid or unsupported LanguagePair.");
+                    return -1;
                 }
 
+                // Get the categories
+                var categories = CallApi<IList<TranslatorCategory>>(() => sdk.GetCategories(GetBearerToken(appConfiguration)));
+                if (categories == null)
+                    return -1;
+
+                var categoryId = (from c in categories
+                                  where c.Name.ToLower() == Category.ToLower()
+                                  select c.Id).FirstOrDefault();
+
+                if (categoryId == 0)
+                {
+                    console.WriteLine("Invalid or unsupported Category.");
+                    return -1;
+                }
+                
+                // Populate the new project data
                 var projectDefinition = new CreateProjectData()
                 {
+                    LanguagePairId = (int)languagePairId.Value,
+                    CategoryId = (int)categoryId,
                     Name = Name,
-                    Subscription = new Subscription()
-                    {
-                        SubscriptionKey = config.TranslatorKey,
-                        BillingRegionCode = config.TranslatorRegion
-                    }
+                    CategoryDescriptor = CategoryDescriptor,
+                    Description = Description,
+                    Label = Label
                 };
 
-               console.WriteLine("Creating project...");
-               var res = CallApi<ErrorContent>(() => sdk.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)));
-            //    var res = CreateAndWait(
-            //        () => _customTranslatorAPI.CreateWorkspace(workspaceDefinition, GetBearerToken(appConfiguration)),
-            //        true,
-            //        _customTranslatorAPI.GetWorkspaces(GetBearerToken(appConfiguration)));
+                console.WriteLine("Creating project...");
+                sdk.CreateProject(projectDefinition, GetBearerToken(appConfiguration), WorkspaceId);
 
                 var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(GetBearerToken(appConfiguration), WorkspaceId, 1));
                 if (res1 == null)
@@ -111,7 +127,7 @@ namespace CustomTranslatorCLI.Commands
                             console.WriteLine($"{project.Id, 30} {project.Name, -25}");
                         }
                     }
-                } */
+                }
 
                 return 0;
            }
