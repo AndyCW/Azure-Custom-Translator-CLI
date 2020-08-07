@@ -33,15 +33,14 @@ using RestSharp;
 using Microsoft.Identity.Client;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using CustomTranslatorCLI.Interfaces;
 
 #endregion
 
 namespace CustomTranslatorCLI.Helpers
 {
-    public class AccessTokenClient
+    public class AccessTokenClient : IAccessTokenClient
     {
-        private const int MillisecondsTimeout = 100;
-
         #region Static Fields
 
         private IPublicClientApplication app;
@@ -83,16 +82,16 @@ namespace CustomTranslatorCLI.Helpers
 
             // Use environment variables if defined
             var env_cId = (from var in appConfiguration.GetChildren()
-            where var.Key == "Translator_ClientID"
-            select var.Value).FirstOrDefault();
+                           where var.Key == "Translator_ClientID"
+                           select var.Value).FirstOrDefault();
             if (!string.IsNullOrEmpty(env_cId))
             {
                 ClientId = env_cId;
             }
 
             var env_tId = (from var in appConfiguration.GetChildren()
-            where var.Key == "Translator_TenantID"
-            select var.Value).FirstOrDefault();
+                           where var.Key == "Translator_TenantID"
+                           select var.Value).FirstOrDefault();
             if (!string.IsNullOrEmpty(env_tId))
             {
                 TenantId = env_tId;
@@ -135,7 +134,7 @@ namespace CustomTranslatorCLI.Helpers
             scopes = AccessTokenClient.Scopes;
 
             app = PublicClientApplicationBuilder.Create(ClientId)
-                    .WithRedirectUri("http://localhost")  
+                    .WithRedirectUri("http://localhost")
                     .Build();
             CachePersistence.EnableSerialization(app.UserTokenCache);
 
@@ -157,7 +156,7 @@ namespace CustomTranslatorCLI.Helpers
         /// The silent sign-in. Relies on token cache.
         /// </summary>
         /// <returns></returns>
-        public string AcquireTokenSilent()
+        private string AcquireTokenSilent()
         {
             var accounts = app.GetAccountsAsync().Result;
             var result = app.AcquireTokenSilent(scopes, accounts.FirstOrDefault()).ExecuteAsync().Result;
@@ -168,7 +167,7 @@ namespace CustomTranslatorCLI.Helpers
         /// The INTERACTIVE sign in action. It redirects to AAD to sign the user in and get back the token of the user. 
         /// </summary>
         /// <returns></returns>        
-        public string AcquireTokenWithSignIn()
+        private string AcquireTokenWithSignIn()
         {
             var result = app.AcquireTokenInteractive(scopes).ExecuteAsync().Result;
 

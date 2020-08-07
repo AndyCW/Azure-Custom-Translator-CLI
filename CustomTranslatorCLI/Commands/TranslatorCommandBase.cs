@@ -33,23 +33,6 @@ namespace CustomTranslatorCLI.Commands
             app.ShowHelp();
         }
 
-        protected static string mBearerToken;
-
-        protected static string GetBearerToken(IConfiguration appconfig)
-        {
-            if (!string.IsNullOrEmpty(mBearerToken))
-            {
-                return mBearerToken;
-            }
-            else
-            {
-                var res = new AccessTokenClient(appconfig).GetToken();
-
-                mBearerToken = "Bearer " + res;
-                return mBearerToken;
-            }
-        }
-
 
         /// <summary>
         /// Call API with method returning meaningful object for success and ErrorContent for failure.

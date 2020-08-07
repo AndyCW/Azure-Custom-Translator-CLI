@@ -53,7 +53,7 @@ namespace CustomTranslatorCLI.Commands
             [Option("-label|--Label", CommandOptionType.SingleValue, Description = "Label (max 30 chars).")]
             string Label { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 LanguagePair = LanguagePair.ToLower();
                 // Validate language pair param
@@ -66,7 +66,7 @@ namespace CustomTranslatorCLI.Commands
                 }
 
                 // Get the supported language pairs
-                var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(GetBearerToken(appConfiguration)));
+                var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(atc.GetToken()));
                 if (languagePairs == null)
                     return -1;
 
@@ -82,7 +82,7 @@ namespace CustomTranslatorCLI.Commands
                 }
 
                 // Get the categories
-                var categories = CallApi<IList<TranslatorCategory>>(() => sdk.GetCategories(GetBearerToken(appConfiguration)));
+                var categories = CallApi<IList<TranslatorCategory>>(() => sdk.GetCategories(atc.GetToken()));
                 if (categories == null)
                     return -1;
 
@@ -108,9 +108,9 @@ namespace CustomTranslatorCLI.Commands
                 };
 
                 console.WriteLine("Creating project...");
-                sdk.CreateProject(projectDefinition, GetBearerToken(appConfiguration), WorkspaceId);
+                sdk.CreateProject(projectDefinition, atc.GetToken(), WorkspaceId);
 
-                var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(GetBearerToken(appConfiguration), WorkspaceId, 1));
+                var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
                 if (res1 == null)
                     return -1;
 
@@ -141,11 +141,11 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string WorkspaceId { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 console.WriteLine("Getting projects...");
 
-                var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(GetBearerToken(appConfiguration), WorkspaceId, 1));
+                var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
                 if (res == null)
                     return -1;
 
@@ -173,11 +173,11 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ProjectId { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 console.WriteLine("Getting project...");
 
-                var res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), GetBearerToken(appConfiguration)));
+                var res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
                 if (res == null)
                     return -1;
 
@@ -195,10 +195,10 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ProjectId { get; set; }
 
-            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 console.WriteLine("Deleting project...");
-                sdk.DeleteProject(new Guid(ProjectId), GetBearerToken(appConfiguration));
+                sdk.DeleteProject(new Guid(ProjectId), atc.GetToken());
                 console.WriteLine("Done.");
 
                 return 0;
