@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30223.230
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTranslatorCLI", "CustomTranslatorCLI.csproj", "{57C15B05-15CE-4866-B79D-39334E5291A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomTranslatorCLI", "CustomTranslatorCLI.csproj", "{57C15B05-15CE-4866-B79D-39334E5291A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure-Custom-Translator-CLI.Tests", "..\Azure-Custom-Translator-CLI.Tests\Azure-Custom-Translator-CLI.Tests.csproj", "{A721B2DE-1051-4AF0-A5DC-10E3DFD8A795}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{57C15B05-15CE-4866-B79D-39334E5291A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C15B05-15CE-4866-B79D-39334E5291A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C15B05-15CE-4866-B79D-39334E5291A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A721B2DE-1051-4AF0-A5DC-10E3DFD8A795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A721B2DE-1051-4AF0-A5DC-10E3DFD8A795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A721B2DE-1051-4AF0-A5DC-10E3DFD8A795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A721B2DE-1051-4AF0-A5DC-10E3DFD8A795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

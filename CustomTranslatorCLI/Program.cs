@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
+using CustomTranslatorCLI.Helpers;
 
 namespace CustomTranslatorCLI
 {
@@ -38,7 +39,7 @@ namespace CustomTranslatorCLI
             app.VersionOptionFromAssemblyAttributes(typeof(Program).Assembly);
             app.Conventions
                 .UseDefaultConventions()
-                .UseConstructorInjection(GetServices(config, appConfiguration, sdk));
+                .UseConstructorInjection(GetServices(config, appConfiguration, sdk, new AccessTokenClient(appConfiguration)));
 
             try
             {
@@ -67,12 +68,13 @@ namespace CustomTranslatorCLI
             return config;
         }
 
-        static ServiceProvider GetServices(IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
+        static ServiceProvider GetServices(IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
         {
             var services = new ServiceCollection()
                 .AddSingleton<IConfig>(config)
                 .AddSingleton<IConfiguration>(appConfiguration)
                 .AddSingleton<IMicrosoftCustomTranslatorAPIPreview10>(sdk)
+                .AddSingleton<IAccessTokenClient>(atc)
                 .BuildServiceProvider();
 
             return services;
