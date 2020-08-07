@@ -44,12 +44,17 @@ namespace CustomTranslatorCLI.Helpers
             tokenCache.SetAfterAccess(AfterAccessNotification);
         }
 
-        public static string CacheFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location + "msalcache.txt";
+        public static string CacheFilePath = Path.Join(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "custom-translator-cli"), "msalcache.bin3");
 
         private static readonly object FileLock = new object();
 
         public static void BeforeAccessNotification(TokenCacheNotificationArgs args)
         {
+            var cacheFileDirectory = new FileInfo(CacheFilePath).Directory.FullName;
+            if (!Directory.Exists(cacheFileDirectory))
+            {
+                Directory.CreateDirectory(cacheFileDirectory);
+            }
             lock (FileLock)
             {
                 args.TokenCache.DeserializeMsalV3(File.Exists(CacheFilePath)
@@ -65,7 +70,7 @@ namespace CustomTranslatorCLI.Helpers
             {
                 lock (FileLock)
                 {
-                    // reflect changesgs in the persistent store
+                    // reflect changes in the persistent store
                     File.WriteAllBytes(CacheFilePath, args.TokenCache.SerializeMsalV3());
                 }
             }

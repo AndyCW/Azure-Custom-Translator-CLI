@@ -149,11 +149,6 @@ namespace CustomTranslatorCLI.Helpers
                 idToken = AcquireTokenWithSignIn();
             }
 
-            // Console.WriteLine("Id token Acquired Successfully. Use http://jwt.ms/ to inspect the token.");
-            // Console.WriteLine("Token:");
-            // Console.WriteLine(idToken);
-            // Console.WriteLine();
-
             return idToken;
         }
 
