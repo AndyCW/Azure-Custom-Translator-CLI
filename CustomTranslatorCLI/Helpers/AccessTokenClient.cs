@@ -66,7 +66,8 @@ namespace CustomTranslatorCLI.Helpers
         public static string EndPointAddressV1Prod { get; set; } = "https://custom-api.cognitive.microsofttranslator.com";
         public static string EndPointOauthV2 { get; set; }
 
-        public enum ContentType { plain, HTML };
+        protected static string mBearerToken;
+
         #endregion
 
         #region Private Methods and Operators
@@ -126,29 +127,38 @@ namespace CustomTranslatorCLI.Helpers
 
         public string GetToken()
         {
-            LoadCredentials();
-            clientId = AccessTokenClient.ClientId;
-            workspaceId = AccessTokenClient.WorkspaceId;
-            authorityUri = AccessTokenClient.EndPointOauthV2;
-            apiEndpoint = AccessTokenClient.EndPointAddressV1Prod;
-            scopes = AccessTokenClient.Scopes;
-
-            app = PublicClientApplicationBuilder.Create(ClientId)
-                    .WithRedirectUri("http://localhost")
-                    .Build();
-            CachePersistence.EnableSerialization(app.UserTokenCache);
-
-            string idToken = null;
-            try
+            if (!string.IsNullOrEmpty(mBearerToken))
             {
-                idToken = AcquireTokenSilent();
+                return mBearerToken;
             }
-            catch
+            else
             {
-                idToken = AcquireTokenWithSignIn();
-            }
 
-            return idToken;
+                LoadCredentials();
+                clientId = AccessTokenClient.ClientId;
+                workspaceId = AccessTokenClient.WorkspaceId;
+                authorityUri = AccessTokenClient.EndPointOauthV2;
+                apiEndpoint = AccessTokenClient.EndPointAddressV1Prod;
+                scopes = AccessTokenClient.Scopes;
+
+                app = PublicClientApplicationBuilder.Create(ClientId)
+                        .WithRedirectUri("http://localhost")
+                        .Build();
+                CachePersistence.EnableSerialization(app.UserTokenCache);
+
+                string idToken = null;
+                try
+                {
+                    idToken = AcquireTokenSilent();
+                }
+                catch
+                {
+                    idToken = AcquireTokenWithSignIn();
+                }
+                mBearerToken = "Bearer " + idToken;
+
+                return mBearerToken;
+            }
         }
 
 
