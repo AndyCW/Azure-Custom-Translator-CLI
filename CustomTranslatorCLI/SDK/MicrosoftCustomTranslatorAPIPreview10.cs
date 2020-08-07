@@ -1316,7 +1316,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse>> ApiTexttranslatorV10DocumentsImportPostWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ImportFilesResponse>> ImportDocumentsWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -1438,7 +1438,7 @@ namespace CustomTranslator
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse>();
+            var _result = new HttpOperationResponse<ImportFilesResponse>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1447,7 +1447,7 @@ namespace CustomTranslator
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ImportFilesResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

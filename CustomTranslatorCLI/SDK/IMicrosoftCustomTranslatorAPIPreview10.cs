@@ -254,7 +254,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse>> ApiTexttranslatorV10DocumentsImportPostWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ImportFilesResponse>> ImportDocumentsWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the status of the document import

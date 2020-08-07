@@ -15,14 +15,14 @@ namespace CustomTranslator.Models
     /// ImportFiles response.
     /// Return the job ids for imported files
     /// </summary>
-    public partial class TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse
+    public partial class ImportFilesResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse
         /// class.
         /// </summary>
-        public TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse()
+        public ImportFilesResponse()
         {
             CustomInit();
         }
@@ -35,7 +35,7 @@ namespace CustomTranslator.Models
         /// <param name="jobId">Gets or sets the job identifier.</param>
         /// <param name="filesAcceptedForProcessing">Gets or sets the files
         /// accepted for processing.</param>
-        public TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse(System.Guid? jobId = default(System.Guid?), IList<string> filesAcceptedForProcessing = default(IList<string>))
+        public ImportFilesResponse(System.Guid? jobId = default(System.Guid?), IList<string> filesAcceptedForProcessing = default(IList<string>))
         {
             JobId = jobId;
             FilesAcceptedForProcessing = filesAcceptedForProcessing;

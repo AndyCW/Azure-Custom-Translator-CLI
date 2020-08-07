@@ -8,9 +8,7 @@ using Microsoft.Rest.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace CustomTranslatorCLI.Commands
@@ -39,7 +37,7 @@ namespace CustomTranslatorCLI.Commands
             [Option(CommandOptionType.SingleValue, Description = "Project description.")]
             string Description { get; set; }
 
-            [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx:yy. eg. en:fr).")]
+            [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx->yy. eg. en->fr).")]
             [Required]
             string LanguagePair { get; set; }
 
@@ -57,7 +55,7 @@ namespace CustomTranslatorCLI.Commands
             {
                 LanguagePair = LanguagePair.ToLower();
                 // Validate language pair param
-                var regex = @"^\w{2}:\w{2}$";
+                var regex = @"^\w{2}->\w{2}$";
                 var match = Regex.Match(LanguagePair, regex, RegexOptions.IgnoreCase);
                 if (!match.Success)
                 {
@@ -71,8 +69,8 @@ namespace CustomTranslatorCLI.Commands
                     return -1;
 
                 var languagePairId = (from lp in languagePairs
-                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split(':')[0]
-                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split(':')[1])
+                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split("->")[0]
+                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split("->")[1])
                     select lp.Id).FirstOrDefault();
 
                 if (languagePairId == null)

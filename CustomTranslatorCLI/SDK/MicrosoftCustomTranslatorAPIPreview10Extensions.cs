@@ -444,9 +444,9 @@ namespace CustomTranslator
             /// <param name='workspaceId'>
             /// Workspace id
             /// </param>
-            public static TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse ApiTexttranslatorV10DocumentsImportPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string files, string documentDetails, string workspaceId)
+            public static ImportFilesResponse ImportDocuments(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string files, string documentDetails, string workspaceId)
             {
-                return operations.ApiTexttranslatorV10DocumentsImportPostAsync(authorization, files, documentDetails, workspaceId).GetAwaiter().GetResult();
+                return operations.ImportDocumentsAsync(authorization, files, documentDetails, workspaceId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -475,9 +475,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse> ApiTexttranslatorV10DocumentsImportPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string files, string documentDetails, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ImportFilesResponse> ImportDocumentsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, string files, string documentDetails, string workspaceId, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10DocumentsImportPostWithHttpMessagesAsync(authorization, files, documentDetails, workspaceId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.ImportDocumentsWithHttpMessagesAsync(authorization, files, documentDetails, workspaceId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
