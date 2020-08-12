@@ -34,7 +34,7 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public TextTranslatorModelsResponseTextTranslatorModelsResponse(IList<TextTranslatorModelsTextTranslatorModelInfo> modelsProperty, int pageIndex, int totalPageCount)
+        public TextTranslatorModelsResponseTextTranslatorModelsResponse(IList<ModelInfo> modelsProperty, int pageIndex, int totalPageCount)
         {
             ModelsProperty = modelsProperty;
             PageIndex = pageIndex;
@@ -51,7 +51,7 @@ namespace CustomTranslator.Models
         /// Gets or sets training models.
         /// </summary>
         [JsonProperty(PropertyName = "models")]
-        public IList<TextTranslatorModelsTextTranslatorModelInfo> ModelsProperty { get; set; }
+        public IList<ModelInfo> ModelsProperty { get; set; }
 
         /// <summary>
         /// Gets or sets the page index.

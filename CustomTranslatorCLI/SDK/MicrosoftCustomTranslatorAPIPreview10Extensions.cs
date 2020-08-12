@@ -123,9 +123,9 @@ namespace CustomTranslator
             /// <param name='orderby'>
             /// The OData $orderby parameter.
             /// </param>
-            public static TextTranslatorModelsResponseTextTranslatorDocumentsResponse ApiTexttranslatorV10DocumentsGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string))
+            public static DocumentsResponse GetDocuments(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string))
             {
-                return operations.ApiTexttranslatorV10DocumentsGetAsync(authorization, pageIndex, workspaceId, includeAllDocumentsFields, prioritizeModel, filter, orderby).GetAwaiter().GetResult();
+                return operations.GetDocumentsAsync(authorization, pageIndex, workspaceId, includeAllDocumentsFields, prioritizeModel, filter, orderby).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -204,9 +204,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsResponseTextTranslatorDocumentsResponse> ApiTexttranslatorV10DocumentsGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<DocumentsResponse> GetDocumentsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10DocumentsGetWithHttpMessagesAsync(authorization, pageIndex, workspaceId, includeAllDocumentsFields, prioritizeModel, filter, orderby, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetDocumentsWithHttpMessagesAsync(authorization, pageIndex, workspaceId, includeAllDocumentsFields, prioritizeModel, filter, orderby, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -224,7 +224,7 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static TextTranslatorModelsTextTranslatorDocumentInfo ApiTexttranslatorV10DocumentsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
+            public static DocumentInfo ApiTexttranslatorV10DocumentsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
             {
                 return operations.ApiTexttranslatorV10DocumentsByIdGetAsync(id, authorization).GetAwaiter().GetResult();
             }
@@ -244,7 +244,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsTextTranslatorDocumentInfo> ApiTexttranslatorV10DocumentsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<DocumentInfo> ApiTexttranslatorV10DocumentsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiTexttranslatorV10DocumentsByIdGetWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -522,9 +522,9 @@ namespace CustomTranslator
             /// <param name='filter'>
             /// The OData $filter parameter
             /// </param>
-            public static TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse ApiTexttranslatorV10DocumentsImportJobsByJobIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string))
+            public static ImportJobStatusResponse GetImportJobsByJobId(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string))
             {
-                return operations.ApiTexttranslatorV10DocumentsImportJobsByJobIdGetAsync(authorization, jobId, pageIndex, limit, filter).GetAwaiter().GetResult();
+                return operations.GetImportJobsByJobIdAsync(authorization, jobId, pageIndex, limit, filter).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -569,9 +569,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse> ApiTexttranslatorV10DocumentsImportJobsByJobIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ImportJobStatusResponse> GetImportJobsByJobIdAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10DocumentsImportJobsByJobIdGetWithHttpMessagesAsync(authorization, jobId, pageIndex, limit, filter, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetImportJobsByJobIdWithHttpMessagesAsync(authorization, jobId, pageIndex, limit, filter, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -828,7 +828,7 @@ namespace CustomTranslator
             /// <param name='orderby'>
             /// The OData $orderby parameter.
             /// </param>
-            public static TextTranslatorModelsTextTranslatorModelInfo ApiTexttranslatorV10ModelsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string))
+            public static ModelInfo ApiTexttranslatorV10ModelsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string))
             {
                 return operations.ApiTexttranslatorV10ModelsByIdGetAsync(id, authorization, orderby).GetAwaiter().GetResult();
             }
@@ -877,7 +877,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsTextTranslatorModelInfo> ApiTexttranslatorV10ModelsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ModelInfo> ApiTexttranslatorV10ModelsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(id, authorization, orderby, null, cancellationToken).ConfigureAwait(false))
                 {

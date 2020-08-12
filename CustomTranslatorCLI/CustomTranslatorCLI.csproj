@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>translator</ToolCommandName>
     <PackageId>custom-translator-cli</PackageId>
-    <PackageVersion>1.0.0-alpha.6</PackageVersion>
+    <PackageVersion>1.0.0-alpha.7</PackageVersion>
     <Description>A CLI to manage models for the Azure Custom Translator service</Description>
     <Authors>Andy Wigley</Authors>
     <PackageTags>translator custom-translator</PackageTags>

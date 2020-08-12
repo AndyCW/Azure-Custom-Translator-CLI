@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using CustomTranslatorCLI.Helpers;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -31,21 +34,21 @@ namespace CustomTranslatorCLI.Commands
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting projects...");
+                console.WriteLine("Getting documents...");
 
-                var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
+                var res = CallApi<DocumentsResponse>(() => sdk.GetDocuments(atc.GetToken(), 1, WorkspaceId));
                 if (res == null)
                     return -1;
 
-                if (res.Projects.Count == 0)
+                if (res.PaginatedDocuments.Documents?.Count == 0)
                 {
-                    console.WriteLine("No projects found.");
+                    console.WriteLine("No documents found.");
                 }
                 else
                 {
-                    foreach (var project in res.Projects)
+                    foreach (var document in res.PaginatedDocuments.Documents)
                     {
-                        console.WriteLine($"{project.Id, 30} {project.Name, -25}");
+                        console.WriteLine($"{document.Id} {document.Languages[0].LanguageCode} {document.Name}");
                     }
                 }
 
@@ -56,16 +59,16 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Shows status of document import.")]
         class Status
         {
-            [Option(CommandOptionType.SingleValue, Description = "(Required) ID of the project to show.")]
+            [Option(CommandOptionType.SingleValue, Description = "(Required) Job ID to show.")]
             [Guid]
             [Required]
-            public string ProjectId { get; set; }
+            public string JobId { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting project...");
+                console.WriteLine("Getting Import Status...");
 
-                var res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
+                var res = CallApi<ImportJobStatusResponse>(() => sdk.GetImportJobsByJobId(atc.GetToken(), new Guid(JobId), 1, 100));
                 if (res == null)
                     return -1;
 
@@ -75,7 +78,7 @@ namespace CustomTranslatorCLI.Commands
             }
         }
 
-        [Command(Description = "Uploads a combo document or a parallel document pair.")]
+        [Command(Description = "Uploads a combo document or a parallel document pair. Usage: translator document upload -w {workspaceId} -dt {documentType} -lp {languagePair} -c {comboFilePath} [-o] *OR* translator document upload -w {workspaceId} -dt {documentType} -lp {languagePair} -s {sourceFilePath} -t {targetFiePath} -pn {name} [-o]")]
         class Upload
         {
             [Option(CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
@@ -84,46 +87,43 @@ namespace CustomTranslatorCLI.Commands
             public string WorkspaceId { get; set; }
 
             [Option("-dt|--DocumentType", CommandOptionType.SingleValue, Description = "(Required) Document type (Training|Testing|Tuning|Phrase|Sentence).")]
+            [ListValidator("training|testing|tuning|phrase|sentence", ErrorMessage= "(Required) Document type: one of Training|Testing|Tuning|Phrase|Sentence")]
             [Required]
             public string DocumentType { get; set; }
 
-            [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx->yy. eg. en->fr).")]
+            [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx:yy. eg. en:fr).")]
+            [RegularExpression(@"^\w{2}:\w{2}$")]
             [Required]
             string LanguagePair { get; set; }
 
             [Option(CommandOptionType.SingleValue, Description = "Path of Combo file (.TMX|.XLF|.XLIFF|.LCL|.XLSX|.ZIP file required).")]
+            [FileExists]
             public string ComboFile { get; set; }
 
             [Option(CommandOptionType.SingleValue, Description = "Path of source file [Parallel] (.TXT|.HTML.|.HTM|.PDF|.DOCX|.ALIGN file required).")]
+            [FileExists]
             public string SourceFile { get; set; }
 
             [Option(CommandOptionType.SingleValue, Description = "Path of target file [Parallel] (.TXT|.HTML.|.HTM|.PDF|.DOCX|.ALIGN file required).")]
+            [FileExists]
             public string TargetFile { get; set; }
 
-            [Option(CommandOptionType.SingleValue, Description = "Document details of the files being uploaded.")]
-            [Required]
-            public string DocumentDetails { get; set; }
+            [Option("-pn|--ParallelName", CommandOptionType.SingleValue, Description = "Document name of parallel file set.")]
+            public string ParallelName { get; set; }
+
+            [Option(CommandOptionType.NoValue, Description = "Override document if it exists.")]
+            bool? Override { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                                LanguagePair = LanguagePair.ToLower();
-                // Validate language pair param
-                var regex = @"^\w{2}->\w{2}$";
-                var match = Regex.Match(LanguagePair, regex, RegexOptions.IgnoreCase);
-                if (!match.Success)
-                {
-                    console.WriteLine("Invalid LanguagePair, use format en:fr.");
-                    return -1;
-                }
-
                 // Get the supported language pairs
                 var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(atc.GetToken()));
                 if (languagePairs == null)
                     return -1;
 
                 var languagePairId = (from lp in languagePairs
-                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split("->")[0]
-                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split("->")[1])
+                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split(":")[0]
+                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split(":")[1])
                     select lp.Id).FirstOrDefault();
 
                 if (languagePairId == null)
@@ -132,8 +132,86 @@ namespace CustomTranslatorCLI.Commands
                     return -1;
                 }
 
+                // Validate arg combinations
+                if (!string.IsNullOrEmpty(ComboFile) && !string.IsNullOrEmpty(SourceFile))
+                {
+                    console.WriteLine("--ComboFile and --SourceFile cannot be specified together.");
+                    return -1;
+                }
+                if (!string.IsNullOrEmpty(ComboFile) && !string.IsNullOrEmpty(TargetFile))
+                {
+                    console.WriteLine("--ComboFile and --TargetFile cannot be specified together.");
+                    return -1;
+                }
+                if (!string.IsNullOrEmpty(SourceFile) && string.IsNullOrEmpty(TargetFile))
+                {
+                    console.WriteLine("--SourceFile and --TargetFile must be specified together.");
+                    return -1;
+                }
+                if (string.IsNullOrEmpty(SourceFile) && !string.IsNullOrEmpty(TargetFile))
+                {
+                    console.WriteLine("--SourceFile and --TargetFile must be specified together.");
+                    return -1;
+                }
+                if (!string.IsNullOrEmpty(SourceFile) && !string.IsNullOrEmpty(TargetFile) && string.IsNullOrEmpty(ParallelName))
+                {
+                    console.WriteLine("--ParallelName must be specified with --SourceFile and --TargetFile.");
+                    return -1;
+                }
+
+                // Build request data
                 console.WriteLine("Uploading documents...");
-                sdk.DeleteProject(new Guid(ProjectId), atc.GetToken());
+                var documentDetails = new DocumentDetailsForImportRequest()
+                {
+                    DocumentName = ParallelName,
+                    DocumentType = DocumentTypeLookup.Types[DocumentType.ToLowerInvariant()],
+                    FileDetails = new List<FileForImportRequest>()
+                };
+
+                if (!string.IsNullOrEmpty(ComboFile))
+                {
+                    documentDetails.FileDetails.Add(new FileForImportRequest()
+                    {
+                        Name = Path.GetFileName(ComboFile),
+                        LanguageCode = LanguagePair.Split(":")[1],
+                        OverwriteIfExists = Override.HasValue ? true : false
+                    });                    
+                    documentDetails.IsParallel = false;
+                }
+                else
+                {
+                    documentDetails.FileDetails.Add(new FileForImportRequest()
+                    {
+                        Name = Path.GetFileName(SourceFile),
+                        LanguageCode = LanguagePair.Split(":")[0],
+                        OverwriteIfExists = Override.HasValue ? true : false
+                    });
+                    documentDetails.FileDetails.Add(new FileForImportRequest()
+                    {
+                        Name = Path.GetFileName(TargetFile),
+                        LanguageCode = LanguagePair.Split(":")[1],
+                        OverwriteIfExists = Override.HasValue ? true : false
+                    });
+                    documentDetails.IsParallel = true;
+                }
+                var details = new List<DocumentDetailsForImportRequest>() { documentDetails };
+
+                var files = string.Empty;
+                if (!string.IsNullOrEmpty(ComboFile))
+                {
+                    files = ComboFile;
+                }
+                else
+                {
+                    files = SourceFile + "|" + TargetFile;
+                }
+
+                var res = CallApi<ImportFilesResponse>(() => sdk.ImportDocuments(atc.GetToken(), files , JsonConvert.SerializeObject(details, Formatting.Indented), WorkspaceId));
+                if (res == null)
+                    return -1;
+
+                console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+
                 console.WriteLine("Done.");
 
                 return 0;

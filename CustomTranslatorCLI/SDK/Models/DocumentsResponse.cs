@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// API results container for TextTranslatorDocuments.
     /// </summary>
-    public partial class TextTranslatorModelsResponseTextTranslatorDocumentsResponse
+    public partial class DocumentsResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorDocumentsResponse class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorDocumentsResponse()
+        public DocumentsResponse()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="paginatedDocuments">Gets or sets the document response
         /// (includes pagination).</param>
-        public TextTranslatorModelsResponseTextTranslatorDocumentsResponse(TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse paginatedDocuments, TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse allDocuments = default(TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse))
+        public DocumentsResponse(DocumentInfoResponse paginatedDocuments, BaseDocumentResponse allDocuments = default(BaseDocumentResponse))
         {
             PaginatedDocuments = paginatedDocuments;
             AllDocuments = allDocuments;
@@ -46,12 +46,12 @@ namespace CustomTranslator.Models
         /// Gets or sets the document response (includes pagination).
         /// </summary>
         [JsonProperty(PropertyName = "paginatedDocuments")]
-        public TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse PaginatedDocuments { get; set; }
+        public DocumentInfoResponse PaginatedDocuments { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "allDocuments")]
-        public TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse AllDocuments { get; set; }
+        public BaseDocumentResponse AllDocuments { get; set; }
 
         /// <summary>
         /// Validate the object.

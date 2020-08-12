@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// A class containing references to documents and corresponding processed
     /// documents.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorDocumentInstance
+    public partial class DocumentInstance
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorDocumentInstance class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorDocumentInstance()
+        public DocumentInstance()
         {
             CustomInit();
         }
@@ -31,7 +31,7 @@ namespace CustomTranslator.Models
         /// <param name="documentInfo">Gets or sets the document</param>
         /// <param name="processedDocumentInfo">Gets or sets the processed
         /// document</param>
-        public TextTranslatorModelsTextTranslatorDocumentInstance(TextTranslatorModelsTextTranslatorDocumentInfo documentInfo = default(TextTranslatorModelsTextTranslatorDocumentInfo), TextTranslatorModelsTextTranslatorProcessedDocumentInfo processedDocumentInfo = default(TextTranslatorModelsTextTranslatorProcessedDocumentInfo))
+        public DocumentInstance(DocumentInfo documentInfo = default(DocumentInfo), ProcessedDocumentInfo processedDocumentInfo = default(ProcessedDocumentInfo))
         {
             DocumentInfo = documentInfo;
             ProcessedDocumentInfo = processedDocumentInfo;
@@ -47,13 +47,13 @@ namespace CustomTranslator.Models
         /// Gets or sets the document
         /// </summary>
         [JsonProperty(PropertyName = "documentInfo")]
-        public TextTranslatorModelsTextTranslatorDocumentInfo DocumentInfo { get; set; }
+        public DocumentInfo DocumentInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the processed document
         /// </summary>
         [JsonProperty(PropertyName = "processedDocumentInfo")]
-        public TextTranslatorModelsTextTranslatorProcessedDocumentInfo ProcessedDocumentInfo { get; set; }
+        public ProcessedDocumentInfo ProcessedDocumentInfo { get; set; }
 
         /// <summary>
         /// Validate the object.

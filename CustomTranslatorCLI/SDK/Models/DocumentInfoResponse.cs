@@ -12,14 +12,14 @@ namespace CustomTranslator.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse
+    public partial class DocumentInfoResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse
         /// class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse()
+        public DocumentInfoResponse()
         {
             CustomInit();
         }
@@ -33,7 +33,7 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public TextTranslatorModelsResponseTextTranslatorDocumentInfoResponse(IList<TextTranslatorModelsTextTranslatorDocumentInfo> documents, int pageIndex, int totalPageCount)
+        public DocumentInfoResponse(IList<DocumentInfo> documents, int pageIndex, int totalPageCount)
         {
             Documents = documents;
             PageIndex = pageIndex;
@@ -50,7 +50,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the documents.
         /// </summary>
         [JsonProperty(PropertyName = "documents")]
-        public IList<TextTranslatorModelsTextTranslatorDocumentInfo> Documents { get; set; }
+        public IList<DocumentInfo> Documents { get; set; }
 
         /// <summary>
         /// Gets or sets the page index.

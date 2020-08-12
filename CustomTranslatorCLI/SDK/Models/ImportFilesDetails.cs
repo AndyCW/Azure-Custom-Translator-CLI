@@ -1,18 +1,21 @@
-﻿namespace CustomTranslator.Models
+﻿using System.Collections.Generic;
+
+namespace CustomTranslator.Models
 {
     public class Rootobject
     {
-        public ImportFilesDetails[] Content { get; set; }
+        public DocumentDetailsForImportRequest[] Content { get; set; }
     }
 
-    public class ImportFilesDetails
+    public class DocumentDetailsForImportRequest
     {
         public string DocumentName { get; set; }
         public string DocumentType { get; set; }
-        public FileDetail[] FileDetails { get; set; }
+        public List<FileForImportRequest> FileDetails { get; set; }
+        public bool IsParallel { get; set; }
     }
 
-    public class FileDetail
+    public class FileForImportRequest
     {
         public string Name { get; set; }
         public string LanguageCode { get; set; }
