@@ -8,9 +8,7 @@ using Microsoft.Rest.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace CustomTranslatorCLI.Commands
@@ -40,6 +38,7 @@ namespace CustomTranslatorCLI.Commands
             string Description { get; set; }
 
             [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx:yy. eg. en:fr).")]
+            [RegularExpression(@"^\w{2}:\w{2}$")]
             [Required]
             string LanguagePair { get; set; }
 
@@ -56,14 +55,6 @@ namespace CustomTranslatorCLI.Commands
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 LanguagePair = LanguagePair.ToLower();
-                // Validate language pair param
-                var regex = @"^\w{2}:\w{2}$";
-                var match = Regex.Match(LanguagePair, regex, RegexOptions.IgnoreCase);
-                if (!match.Success)
-                {
-                    console.WriteLine("Invalid LanguagePair, use format en:fr.");
-                    return -1;
-                }
 
                 // Get the supported language pairs
                 var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(atc.GetToken()));
@@ -71,8 +62,8 @@ namespace CustomTranslatorCLI.Commands
                     return -1;
 
                 var languagePairId = (from lp in languagePairs
-                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split(':')[0]
-                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split(':')[1])
+                    where lp.SourceLanguage.LanguageCode == LanguagePair.Split(":")[0]
+                        && (lp.TargetLanguage.LanguageCode == LanguagePair.Split(":")[1])
                     select lp.Id).FirstOrDefault();
 
                 if (languagePairId == null)

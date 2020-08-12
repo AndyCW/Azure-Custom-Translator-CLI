@@ -134,7 +134,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorDocumentsResponse>> ApiTexttranslatorV10DocumentsGetWithHttpMessagesAsync(string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<DocumentsResponse>> GetDocumentsWithHttpMessagesAsync(string authorization, int pageIndex, string workspaceId, bool? includeAllDocumentsFields = default(bool?), long? prioritizeModel = default(long?), string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the requested document
@@ -151,7 +151,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsTextTranslatorDocumentInfo>> ApiTexttranslatorV10DocumentsByIdGetWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<DocumentInfo>> ApiTexttranslatorV10DocumentsByIdGetWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Delete the document
@@ -254,7 +254,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorApiModelsResponseTestTranslatorImportFilesResponse>> ApiTexttranslatorV10DocumentsImportPostWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ImportFilesResponse>> ImportDocumentsWithHttpMessagesAsync(string authorization, string files, string documentDetails, string workspaceId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the status of the document import
@@ -301,7 +301,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse>> ApiTexttranslatorV10DocumentsImportJobsByJobIdGetWithHttpMessagesAsync(string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ImportJobStatusResponse>> GetImportJobsByJobIdWithHttpMessagesAsync(string authorization, System.Guid jobId, int pageIndex, int limit, string filter = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the status of all past document imports
@@ -447,7 +447,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsTextTranslatorModelInfo>> ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ModelInfo>> ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates the model.

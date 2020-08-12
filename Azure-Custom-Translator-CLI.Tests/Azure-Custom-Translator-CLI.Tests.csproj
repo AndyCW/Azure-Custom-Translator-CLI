@@ -8,6 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="abc.txt" />
+    <None Remove="xyz.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="abc.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xyz.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="WireMock.Net" Version="1.2.17" />

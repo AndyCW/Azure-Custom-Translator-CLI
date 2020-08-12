@@ -15,13 +15,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Class containing detailed information about document.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorDocumentInfo
+    public partial class DocumentInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorDocumentInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorDocumentInfo()
+        public DocumentInfo()
         {
             CustomInit();
         }
@@ -57,7 +57,7 @@ namespace CustomTranslator.Models
         /// 3. Has a language pair that is not supported</param>
         /// <param name="usedByPrioritizedModel">Gets or sets if this model is
         /// used by the specified prioritized model</param>
-        public TextTranslatorModelsTextTranslatorDocumentInfo(string name, bool isParallel, UserInfo createdBy, UserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TextTranslatorModelsTextTranslatorFileInfo> files = default(IList<TextTranslatorModelsTextTranslatorFileInfo>), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
+        public DocumentInfo(string name, bool isParallel, UserInfo createdBy, UserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TextTranslatorModelsTextTranslatorFileInfo> files = default(IList<TextTranslatorModelsTextTranslatorFileInfo>), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
         {
             Name = name;
             IsParallel = isParallel;

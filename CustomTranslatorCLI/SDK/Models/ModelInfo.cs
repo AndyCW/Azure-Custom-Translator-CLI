@@ -12,13 +12,13 @@ namespace CustomTranslator.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class TextTranslatorModelsTextTranslatorModelInfo
+    public partial class ModelInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorModelInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorModelInfo()
+        public ModelInfo()
         {
             CustomInit();
         }
@@ -96,7 +96,7 @@ namespace CustomTranslator.Models
         /// <param name="errorCode">Gets the ErrorCode for failed trainings.
         /// Possible values include: 'noError', 'unkown',
         /// 'selectTestSets'</param>
-        public TextTranslatorModelsTextTranslatorModelInfo(long id, string name, System.Guid projectId, System.DateTime modifiedDate, System.DateTime createdDate, UserInfo createdBy, UserInfo modifiedBy, string modelStatus, bool isTuningAuto, bool isTestingAuto, bool isAutoDeploy, double autoDeployThreshold, string modelIdentifier = default(string), IList<TextTranslatorModelsTextTranslatorDocumentInstance> documents = default(IList<TextTranslatorModelsTextTranslatorDocumentInstance>), IList<TextTranslatorModelsTextTranslatorModelRegionStatus> modelRegionStatuses = default(IList<TextTranslatorModelsTextTranslatorModelRegionStatus>), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), System.DateTime? startDate = default(System.DateTime?), System.DateTime? completionDate = default(System.DateTime?), int? trainingSentenceCount = default(int?), int? tuningSentenceCount = default(int?), int? testingSentenceCount = default(int?), int? phraseDictionarySentenceCount = default(int?), int? sentenceDictionarySentenceCount = default(int?), int? monolingualSentenceCount = default(int?), string statusInfo = default(string), double? hubBLEUScore = default(double?), string hubCategory = default(string), string errorCode = default(string))
+        public ModelInfo(long id, string name, System.Guid projectId, System.DateTime modifiedDate, System.DateTime createdDate, UserInfo createdBy, UserInfo modifiedBy, string modelStatus, bool isTuningAuto, bool isTestingAuto, bool isAutoDeploy, double autoDeployThreshold, string modelIdentifier = default(string), IList<DocumentInstance> documents = default(IList<DocumentInstance>), IList<TextTranslatorModelsTextTranslatorModelRegionStatus> modelRegionStatuses = default(IList<TextTranslatorModelsTextTranslatorModelRegionStatus>), double? baselineBleuScorePunctuated = default(double?), double? bleuScorePunctuated = default(double?), double? baselineBleuScoreUnpunctuated = default(double?), double? bleuScoreUnpunctuated = default(double?), double? baselineBleuScoreCIPunctuated = default(double?), double? bleuScoreCIPunctuated = default(double?), double? baselineBleuScoreCIUnpunctuated = default(double?), double? bleuScoreCIUnpunctuated = default(double?), System.DateTime? startDate = default(System.DateTime?), System.DateTime? completionDate = default(System.DateTime?), int? trainingSentenceCount = default(int?), int? tuningSentenceCount = default(int?), int? testingSentenceCount = default(int?), int? phraseDictionarySentenceCount = default(int?), int? sentenceDictionarySentenceCount = default(int?), int? monolingualSentenceCount = default(int?), string statusInfo = default(string), double? hubBLEUScore = default(double?), string hubCategory = default(string), string errorCode = default(string))
         {
             Id = id;
             Name = name;
@@ -172,7 +172,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the list of documents used for training this model
         /// </summary>
         [JsonProperty(PropertyName = "documents")]
-        public IList<TextTranslatorModelsTextTranslatorDocumentInstance> Documents { get; set; }
+        public IList<DocumentInstance> Documents { get; set; }
 
         /// <summary>
         /// Gets or sets the Regions this model is deployed in

@@ -15,14 +15,14 @@ namespace CustomTranslator.Models
     /// <summary>
     /// ImportJobStatus Response - POCO object
     /// </summary>
-    public partial class TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse
+    public partial class ImportJobStatusResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse
         /// class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse()
+        public ImportJobStatusResponse()
         {
             CustomInit();
         }
@@ -39,7 +39,7 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public TextTranslatorModelsResponseTextTranslatorImportJobStatusResponse(string jobName, IList<TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo> fileProcessingStatus, int pageIndex, int totalPageCount)
+        public ImportJobStatusResponse(string jobName, IList<TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo> fileProcessingStatus, int pageIndex, int totalPageCount)
         {
             JobName = jobName;
             FileProcessingStatus = fileProcessingStatus;

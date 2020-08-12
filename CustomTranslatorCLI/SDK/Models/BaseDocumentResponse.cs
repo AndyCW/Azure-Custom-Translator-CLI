@@ -11,14 +11,14 @@ namespace CustomTranslator.Models
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse
+    public partial class BaseDocumentResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse
         /// class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse()
+        public BaseDocumentResponse()
         {
             CustomInit();
         }
@@ -28,7 +28,7 @@ namespace CustomTranslator.Models
         /// TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse
         /// class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorBaseDocumentResponse(IList<TextTranslatorModelsTextTranslatorBaseDocumentInfo> documents = default(IList<TextTranslatorModelsTextTranslatorBaseDocumentInfo>))
+        public BaseDocumentResponse(IList<BaseDocumentInfo> documents = default(IList<BaseDocumentInfo>))
         {
             Documents = documents;
             CustomInit();
@@ -42,7 +42,7 @@ namespace CustomTranslator.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "documents")]
-        public IList<TextTranslatorModelsTextTranslatorBaseDocumentInfo> Documents { get; set; }
+        public IList<BaseDocumentInfo> Documents { get; set; }
 
     }
 }

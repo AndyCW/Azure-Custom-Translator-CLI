@@ -38,6 +38,39 @@
         "console": "internalConsole"
         },
         {
+        "name": ".NET Core Launch (console)-Upload doc",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["document","upload","-w","cffbe659-5fb5-4913-b7de-6274a1540345","-c", "C:/Users/anwigley/Downloads/enesdictionary1.xlsx","-dt","training", "-lp","en:es","-o"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-Upload doc status",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["document","status","-j","8e550c24-7ab6-40ad-90c0-f9dda4f6e70f"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-document list",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["document","list","-w","cffbe659-5fb5-4913-b7de-6274a1540345"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
             "name": ".NET Core Launch (console)-Set config",
             "type": "coreclr",
             "request": "launch",

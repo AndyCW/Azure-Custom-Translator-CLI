@@ -14,13 +14,13 @@ namespace CustomTranslator.Models
     /// Class containing base information about a document. Used for
     /// select all/none functionality on the front end.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorBaseDocumentInfo
+    public partial class BaseDocumentInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorBaseDocumentInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorBaseDocumentInfo()
+        public BaseDocumentInfo()
         {
             CustomInit();
         }
@@ -38,7 +38,7 @@ namespace CustomTranslator.Models
         /// <param name="characterCount">Gets or sets character count.</param>
         /// <param name="usedByPrioritizedModel">Gets or sets if this model is
         /// used by the specified prioritized model</param>
-        public TextTranslatorModelsTextTranslatorBaseDocumentInfo(long id, string documentType, long extractedSentenceCount, long characterCount, bool? usedByPrioritizedModel = default(bool?))
+        public BaseDocumentInfo(long id, string documentType, long extractedSentenceCount, long characterCount, bool? usedByPrioritizedModel = default(bool?))
         {
             Id = id;
             DocumentType = documentType;

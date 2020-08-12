@@ -7,6 +7,7 @@ namespace CustomTranslatorCLI
     [Subcommand(typeof(ConfigCommand))]
     [Subcommand(typeof(WorkspaceCommand))]
     [Subcommand(typeof(ProjectCommand))]
+    [Subcommand(typeof(DocumentCommand))]
     public class MainApp
     {
         int OnExecute(CommandLineApplication app, IConsole console)

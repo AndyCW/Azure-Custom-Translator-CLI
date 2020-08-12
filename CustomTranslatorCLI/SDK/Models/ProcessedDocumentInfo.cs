@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// A class containing information related to the document after it has
     /// been processed in a specific model training
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorProcessedDocumentInfo
+    public partial class ProcessedDocumentInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorProcessedDocumentInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorProcessedDocumentInfo()
+        public ProcessedDocumentInfo()
         {
             CustomInit();
         }
@@ -36,7 +36,7 @@ namespace CustomTranslator.Models
         /// sentence alignment is executed</param>
         /// <param name="usedSentenceCount">Sentences used after filtering and
         /// auto selection occur</param>
-        public TextTranslatorModelsTextTranslatorProcessedDocumentInfo(long id, long modelId, long documentId, long? alignedSentenceCount = default(long?), long? usedSentenceCount = default(long?))
+        public ProcessedDocumentInfo(long id, long modelId, long documentId, long? alignedSentenceCount = default(long?), long? usedSentenceCount = default(long?))
         {
             Id = id;
             ModelId = modelId;
