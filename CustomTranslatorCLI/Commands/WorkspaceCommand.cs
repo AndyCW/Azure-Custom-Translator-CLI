@@ -27,6 +27,7 @@ namespace CustomTranslatorCLI.Commands
         class Create : ParamActionCommandBase
         {
            [Option(Description = "(Required) workspace name.")]
+           [MaxLength(100)]
            [Required]
            string Name { get; set; }
 

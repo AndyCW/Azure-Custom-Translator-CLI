@@ -31,10 +31,12 @@ namespace CustomTranslatorCLI.Commands
             public string WorkspaceId { get; set; }
 
             [Option(CommandOptionType.SingleValue, Description = "(Required) Project name.")]
+            [MaxLength(256)]
             [Required]
             string Name { get; set; }
 
             [Option(CommandOptionType.SingleValue, Description = "Project description.")]
+            [MaxLength(500)]
             string Description { get; set; }
 
             [Option("-lp|--LanguagePair", CommandOptionType.SingleValue, Description = "Language pair (format xx:yy. eg. en:fr).")]
@@ -47,9 +49,11 @@ namespace CustomTranslatorCLI.Commands
             string Category { get; set; }
 
             [Option("-cd|--CategoryDescriptor", CommandOptionType.SingleValue, Description = "Category descriptor (max 75 chars).")]
+            [MaxLength(75)]
             string CategoryDescriptor { get; set; }
 
             [Option("-label|--Label", CommandOptionType.SingleValue, Description = "Label (max 30 chars).")]
+            [MaxLength(30)]
             string Label { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)

@@ -12,13 +12,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Information about a region a model is deployed or not deployed in
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorModelRegionStatus
+    public partial class ModelRegionStatus
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorModelRegionStatus class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorModelRegionStatus()
+        public ModelRegionStatus()
         {
             CustomInit();
         }
@@ -29,7 +29,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="region">Gets or sets the RegionId</param>
         /// <param name="isDeployed">Gets or sets the id for this role.</param>
-        public TextTranslatorModelsTextTranslatorModelRegionStatus(int region, bool isDeployed)
+        public ModelRegionStatus(int region, bool isDeployed)
         {
             Region = region;
             IsDeployed = isDeployed;

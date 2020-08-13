@@ -15,13 +15,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// The input class for model requests.
     /// </summary>
-    public partial class TextTranslatorModelsRequestTextTranslatorModelRequest
+    public partial class CreateModelRequest
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsRequestTextTranslatorModelRequest class.
         /// </summary>
-        public TextTranslatorModelsRequestTextTranslatorModelRequest()
+        public CreateModelRequest()
         {
             CustomInit();
         }
@@ -45,7 +45,7 @@ namespace CustomTranslator.Models
         /// bleu score diff threshold. Auto-deploy will occur when the
         /// bleu score threshold meets or exceeds the specified
         /// minimum.</param>
-        public TextTranslatorModelsRequestTextTranslatorModelRequest(string name, System.Guid projectId, IList<long?> documentIds = default(IList<long?>), bool? isTuningAuto = default(bool?), bool? isTestingAuto = default(bool?), bool? isAutoDeploy = default(bool?), bool? isAutoTrain = default(bool?), double? autoDeployThreshold = default(double?))
+        public CreateModelRequest(string name, System.Guid projectId, IList<long?> documentIds = default(IList<long?>), bool? isTuningAuto = default(bool?), bool? isTestingAuto = default(bool?), bool? isAutoDeploy = default(bool?), bool? isAutoTrain = default(bool?), double? autoDeployThreshold = default(double?))
         {
             Name = name;
             ProjectId = projectId;
