@@ -15,13 +15,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// A container for models results.
     /// </summary>
-    public partial class TextTranslatorModelsResponseTextTranslatorModelsResponse
+    public partial class ModelsResponse
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsResponseTextTranslatorModelsResponse class.
         /// </summary>
-        public TextTranslatorModelsResponseTextTranslatorModelsResponse()
+        public ModelsResponse()
         {
             CustomInit();
         }
@@ -34,9 +34,9 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public TextTranslatorModelsResponseTextTranslatorModelsResponse(IList<ModelInfo> modelsProperty, int pageIndex, int totalPageCount)
+        public ModelsResponse(IList<ModelInfo> modelsProperty, int pageIndex, int totalPageCount)
         {
-            ModelsProperty = modelsProperty;
+            Models = modelsProperty;
             PageIndex = pageIndex;
             TotalPageCount = totalPageCount;
             CustomInit();
@@ -51,7 +51,7 @@ namespace CustomTranslator.Models
         /// Gets or sets training models.
         /// </summary>
         [JsonProperty(PropertyName = "models")]
-        public IList<ModelInfo> ModelsProperty { get; set; }
+        public IList<ModelInfo> Models { get; set; }
 
         /// <summary>
         /// Gets or sets the page index.
@@ -73,13 +73,13 @@ namespace CustomTranslator.Models
         /// </exception>
         public virtual void Validate()
         {
-            if (ModelsProperty == null)
+            if (Models == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "ModelsProperty");
             }
-            if (ModelsProperty != null)
+            if (Models != null)
             {
-                foreach (var element in ModelsProperty)
+                foreach (var element in Models)
                 {
                     if (element != null)
                     {

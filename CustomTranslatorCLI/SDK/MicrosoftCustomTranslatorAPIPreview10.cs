@@ -2392,7 +2392,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ModelInfo>> ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ModelInfo>> GetModelWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -2711,7 +2711,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdDeleteWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> DeleteModelWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -2843,7 +2843,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10ModelsPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorModelRequest modelRequest, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> CreateModelWithHttpMessagesAsync(CreateModelRequest modelRequest, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (modelRequest == null)
             {
@@ -2982,7 +2982,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdTrainPostWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> TrainModelWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -3111,7 +3111,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdDeploymentPostWithHttpMessagesAsync(long id, string authorization, IList<TextTranslatorModelsTextTranslatorModelRegionStatus> requestedRegionalDeployments, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse> DeployModelWithHttpMessagesAsync(long id, string authorization, IList<ModelRegionStatus> requestedRegionalDeployments, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -4400,7 +4400,7 @@ namespace CustomTranslator
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorModelsResponse>> ApiTexttranslatorV10ProjectsByIdModelsGetWithHttpMessagesAsync(System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ModelsResponse>> GetProjectsByIdModelsWithHttpMessagesAsync(System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (authorization == null)
             {
@@ -4506,7 +4506,7 @@ namespace CustomTranslator
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorModelsResponse>();
+            var _result = new HttpOperationResponse<ModelsResponse>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -4515,7 +4515,7 @@ namespace CustomTranslator
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<TextTranslatorModelsResponseTextTranslatorModelsResponse>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<ModelsResponse>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

@@ -447,7 +447,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<ModelInfo>> ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ModelInfo>> GetModelWithHttpMessagesAsync(long id, string authorization, string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Updates the model.
@@ -488,7 +488,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdDeleteWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> DeleteModelWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Creates a new model.
@@ -511,7 +511,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ModelsPostWithHttpMessagesAsync(TextTranslatorModelsRequestTextTranslatorModelRequest modelRequest, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> CreateModelWithHttpMessagesAsync(CreateModelRequest modelRequest, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Train a model.
@@ -528,7 +528,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdTrainPostWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> TrainModelWithHttpMessagesAsync(long id, string authorization, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Deploy or undeploy a model.
@@ -548,7 +548,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse> ApiTexttranslatorV10ModelsByIdDeploymentPostWithHttpMessagesAsync(long id, string authorization, IList<TextTranslatorModelsTextTranslatorModelRegionStatus> requestedRegionalDeployments, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> DeployModelWithHttpMessagesAsync(long id, string authorization, IList<ModelRegionStatus> requestedRegionalDeployments, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the list of tests for the model.
@@ -788,7 +788,7 @@ namespace CustomTranslator
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<TextTranslatorModelsResponseTextTranslatorModelsResponse>> ApiTexttranslatorV10ProjectsByIdModelsGetWithHttpMessagesAsync(System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<ModelsResponse>> GetProjectsByIdModelsWithHttpMessagesAsync(System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the list of regions.

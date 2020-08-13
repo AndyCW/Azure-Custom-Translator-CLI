@@ -109,6 +109,7 @@ namespace CustomTranslatorCLI.Commands
             public string TargetFile { get; set; }
 
             [Option("-pn|--ParallelName", CommandOptionType.SingleValue, Description = "Document name of parallel file set.")]
+            [MaxLength(255)]
             public string ParallelName { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Override document if it exists.")]

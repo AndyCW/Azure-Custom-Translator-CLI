@@ -828,9 +828,9 @@ namespace CustomTranslator
             /// <param name='orderby'>
             /// The OData $orderby parameter.
             /// </param>
-            public static ModelInfo ApiTexttranslatorV10ModelsByIdGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string))
+            public static ModelInfo GetModel(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string))
             {
-                return operations.ApiTexttranslatorV10ModelsByIdGetAsync(id, authorization, orderby).GetAwaiter().GetResult();
+                return operations.GetModelAsync(id, authorization, orderby).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -877,9 +877,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ModelInfo> ApiTexttranslatorV10ModelsByIdGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ModelInfo> GetModelAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10ModelsByIdGetWithHttpMessagesAsync(id, authorization, orderby, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetModelWithHttpMessagesAsync(id, authorization, orderby, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -951,9 +951,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token.
             /// </param>
-            public static void ApiTexttranslatorV10ModelsByIdDelete(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
+            public static void DeleteModel(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
             {
-                operations.ApiTexttranslatorV10ModelsByIdDeleteAsync(id, authorization).GetAwaiter().GetResult();
+                operations.DeleteModelAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -971,9 +971,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ModelsByIdDeleteAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeleteModelAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ModelsByIdDeleteWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.DeleteModelWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -994,9 +994,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token.
             /// </param>
-            public static void ApiTexttranslatorV10ModelsPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorModelRequest modelRequest, string authorization)
+            public static void CreateModel(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateModelRequest modelRequest, string authorization)
             {
-                operations.ApiTexttranslatorV10ModelsPostAsync(modelRequest, authorization).GetAwaiter().GetResult();
+                operations.CreateModelAsync(modelRequest, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1020,9 +1020,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ModelsPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, TextTranslatorModelsRequestTextTranslatorModelRequest modelRequest, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task CreateModelAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, CreateModelRequest modelRequest, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ModelsPostWithHttpMessagesAsync(modelRequest, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.CreateModelWithHttpMessagesAsync(modelRequest, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1037,9 +1037,9 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// The authorization.
             /// </param>
-            public static void ApiTexttranslatorV10ModelsByIdTrainPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
+            public static void TrainModel(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
             {
-                operations.ApiTexttranslatorV10ModelsByIdTrainPostAsync(id, authorization).GetAwaiter().GetResult();
+                operations.TrainModelAsync(id, authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1057,9 +1057,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ModelsByIdTrainPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task TrainModelAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ModelsByIdTrainPostWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.TrainModelWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1077,9 +1077,9 @@ namespace CustomTranslator
             /// <param name='requestedRegionalDeployments'>
             /// An array of regions to be deployed/undeployed
             /// </param>
-            public static void ApiTexttranslatorV10ModelsByIdDeploymentPost(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, IList<TextTranslatorModelsTextTranslatorModelRegionStatus> requestedRegionalDeployments)
+            public static void DeployModel(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, IList<ModelRegionStatus> requestedRegionalDeployments)
             {
-                operations.ApiTexttranslatorV10ModelsByIdDeploymentPostAsync(id, authorization, requestedRegionalDeployments).GetAwaiter().GetResult();
+                operations.DeployModelAsync(id, authorization, requestedRegionalDeployments).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1100,9 +1100,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task ApiTexttranslatorV10ModelsByIdDeploymentPostAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, IList<TextTranslatorModelsTextTranslatorModelRegionStatus> requestedRegionalDeployments, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task DeployModelAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, IList<ModelRegionStatus> requestedRegionalDeployments, CancellationToken cancellationToken = default(CancellationToken))
             {
-                (await operations.ApiTexttranslatorV10ModelsByIdDeploymentPostWithHttpMessagesAsync(id, authorization, requestedRegionalDeployments, null, cancellationToken).ConfigureAwait(false)).Dispose();
+                (await operations.DeployModelWithHttpMessagesAsync(id, authorization, requestedRegionalDeployments, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1552,9 +1552,9 @@ namespace CustomTranslator
             /// <param name='orderby'>
             /// The OData $orderby parameter.
             /// </param>
-            public static TextTranslatorModelsResponseTextTranslatorModelsResponse ApiTexttranslatorV10ProjectsByIdModelsGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string))
+            public static ModelsResponse GetProjectsByIdModels(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string))
             {
-                return operations.ApiTexttranslatorV10ProjectsByIdModelsGetAsync(id, authorization, pageIndex, filter, orderby).GetAwaiter().GetResult();
+                return operations.GetProjectsByIdModelsAsync(id, authorization, pageIndex, filter, orderby).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1606,9 +1606,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<TextTranslatorModelsResponseTextTranslatorModelsResponse> ApiTexttranslatorV10ProjectsByIdModelsGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ModelsResponse> GetProjectsByIdModelsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, System.Guid id, string authorization, int pageIndex, string filter = default(string), string orderby = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10ProjectsByIdModelsGetWithHttpMessagesAsync(id, authorization, pageIndex, filter, orderby, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetProjectsByIdModelsWithHttpMessagesAsync(id, authorization, pageIndex, filter, orderby, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

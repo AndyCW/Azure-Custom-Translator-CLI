@@ -71,6 +71,72 @@
         "console": "internalConsole"
         },
         {
+        "name": ".NET Core Launch (console)-model list",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","list","-p","1a7a62fe-0877-4f99-8fa1-32fe3313fe3d"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-model create",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","create","-p","1a7a62fe-0877-4f99-8fa1-32fe3313fe3d", "-n","newModelTest","-d","799750"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-model delete",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","delete","-m","38926"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-model train",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","train","-m","38925"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-model show",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","show","-m","38925"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
+        "name": ".NET Core Launch (console)-model deploy",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/CustomTranslatorCLI.dll",
+        "args": ["model","deploy","-m","38925"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+        },
+        {
             "name": ".NET Core Launch (console)-Set config",
             "type": "coreclr",
             "request": "launch",
