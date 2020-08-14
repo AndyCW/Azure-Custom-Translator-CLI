@@ -268,5 +268,75 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             // ASSESS
             Assert.Equal(@$"--ComboFile and --TargetFile cannot be specified together.{ app.Out.NewLine}", ((MockTestWriter)app.Out).ReadAsString());
         }
+
+
+        [Fact]
+        public void Upload_Document()
+        {
+            // ARRANGE
+            var response = new List<LanguagePair>()
+            {
+                new LanguagePair()
+                {
+                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    {
+                        DisplayName = "Test",
+                        LanguageCode = "ab",
+                        Id = 255
+                    },
+                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    {
+                        DisplayName = "Test2",
+                        LanguageCode = "yz",
+                        Id = 254
+                    },
+                    Id = 1
+                }
+            };
+            var uploadDocumentResponse = new ImportFilesResponse()
+            {
+                JobId = Guid.Empty,
+                FilesAcceptedForProcessing = new List<string>()
+                {
+                    { "efg.xlsx" }
+                }
+            };
+
+            var mock = new Mock<IMicrosoftCustomTranslatorAPIPreview10>();
+            mock
+                .Setup(
+                    m => m.GetSupportedLanguagePairsWithHttpMessagesAsync(string.Empty, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<IList<LanguagePair>>() { Body = response }
+                );
+            mock
+                .Setup(
+                    m => m.ImportDocumentsWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportFilesResponse>() { Body = uploadDocumentResponse }
+                );
+
+            var app = InitApp(mock.Object);
+
+            // ACT
+            var file = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
+            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {file}");
+            app.Execute(args);
+
+            // ASSESS
+            string expectedResult = @"Uploading documents...
+{
+  ""jobId"": ""00000000-0000-0000-0000-000000000000"",
+  ""filesAcceptedForProcessing"": [
+    ""efg.xlsx""
+  ]
+}
+Done.
+";
+            Assert.Equal(expectedResult, ((MockTestWriter)app.Out).ReadAsString());
+        }
+
     }
 }
