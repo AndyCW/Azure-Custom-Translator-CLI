@@ -47,8 +47,11 @@ namespace CustomTranslatorCLI.Commands
             string DocumentIDs { get; set; }
 
             
-            [Option(CommandOptionType.NoValue, Description = "Override document if it exists.")]
+            [Option(CommandOptionType.NoValue, Description = "Initiate training.")]
             bool? Train { get; set; }
+
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
@@ -69,7 +72,11 @@ namespace CustomTranslatorCLI.Commands
                     ProjectId = new Guid(ProjectId)
                 };
 
-                console.WriteLine("Creating model...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Creating model...");
+                }
+
                 try
                 {
                     sdk.CreateModel(modelDefinition, atc.GetToken());
@@ -96,16 +103,30 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res1.Models.Count == 0)
                 {
-                    console.WriteLine("No models found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No models found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var model in res1.Models)
+                    if (!Json.HasValue)
                     {
-                        if (model.Name == Name)
+                        foreach (var model in res1.Models)
                         {
-                            console.WriteLine($"{model.Id, -10} {model.Name, -50} {model.ModelStatus}");
+                            if (model.Name == Name)
+                            {
+                                console.WriteLine($"{model.Id,-10} {model.Name,-50} {model.ModelStatus}");
+                            }
                         }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -127,11 +148,18 @@ namespace CustomTranslatorCLI.Commands
             public bool? Europe { get; set; }          
 
             [Option("-as|--AsiaPacific", CommandOptionType.SingleValue, Description = "North America region - set to 'true' to deploy (default), 'false' to undeploy.")]
-            public bool? Asia { get; set; }            
+            public bool? Asia { get; set; }
+
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Starting model deployment...");   
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Starting model deployment...");
+                }
+                   
                 var regions = new List<ModelRegionStatus>();
                 regions.Add(new ModelRegionStatus() 
                 {
@@ -166,8 +194,16 @@ namespace CustomTranslatorCLI.Commands
                         return -1;
                     }
                     throw;
-                }           
-                console.WriteLine("Deployment request submitted.");
+                }
+
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Deployment request submitted.");
+                }
+                else
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "submitted" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
  
                 return 0;
             }
@@ -181,9 +217,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ProjectId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting models...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting models...");
+                }
 
                 var res = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), 1));
                 if (res == null)
@@ -191,13 +233,27 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res.Models.Count == 0)
                 {
-                    console.WriteLine("No models found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No models found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var model in res.Models)
+                    if (!Json.HasValue)
                     {
-                        console.WriteLine($"{model.Id, -10} {model.Name, -25}");
+                        foreach (var model in res.Models)
+                        {
+                            console.WriteLine($"{model.Id,-10} {model.Name,-50} {model.ModelStatus}");
+                        }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -212,9 +268,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ModelId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting model...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting model...");
+                }
 
                 try
                 {
@@ -244,9 +306,16 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ModelId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Starting model training...");                
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Starting model training...");
+                }
+                                
                 try
                 {
                     sdk.TrainModel(Int64.Parse(ModelId), atc.GetToken());
@@ -260,8 +329,15 @@ namespace CustomTranslatorCLI.Commands
                     }
                     throw;
                 }           
-                console.WriteLine("Training submitted.");
- 
+
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Training submitted.");
+                }
+                else
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "submitted" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
                 return 0;
             }
         }
@@ -273,9 +349,16 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ModelId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Deleting model...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Deleting model...");
+                }
+
                 try
                 {
                     sdk.DeleteModel(Int64.Parse(ModelId), atc.GetToken());
@@ -289,7 +372,14 @@ namespace CustomTranslatorCLI.Commands
                     }
                     throw;
                 }
-                console.WriteLine("Done.");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Success.");
+                }
+                else
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
 
                 return 0;
             }

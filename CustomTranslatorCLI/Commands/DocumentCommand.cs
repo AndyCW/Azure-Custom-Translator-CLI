@@ -32,9 +32,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string WorkspaceId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting documents...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting documents...");
+                }
 
                 var res = CallApi<DocumentsResponse>(() => sdk.GetDocuments(atc.GetToken(), 1, WorkspaceId));
                 if (res == null)
@@ -42,13 +48,27 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res.PaginatedDocuments.Documents?.Count == 0)
                 {
-                    console.WriteLine("No documents found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No documents found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var document in res.PaginatedDocuments.Documents)
+                    if (!Json.HasValue)
                     {
-                        console.WriteLine($"{document.Id} {document.Languages[0].LanguageCode} {document.Name}");
+                        foreach (var document in res.PaginatedDocuments.Documents)
+                        {
+                            console.WriteLine($"{document.Id} {document.Languages[0].LanguageCode} {document.Name}");
+                        }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -115,6 +135,9 @@ namespace CustomTranslatorCLI.Commands
             [Option(CommandOptionType.NoValue, Description = "Override document if it exists.")]
             bool? Override { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
                 // Get the supported language pairs
@@ -161,7 +184,11 @@ namespace CustomTranslatorCLI.Commands
                 }
 
                 // Build request data
-                console.WriteLine("Uploading documents...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Uploading documents...");
+                }
+
                 var documentDetails = new DocumentDetailsForImportRequest()
                 {
                     DocumentName = ParallelName,
@@ -212,8 +239,6 @@ namespace CustomTranslatorCLI.Commands
                     return -1;
 
                 console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-
-                console.WriteLine("Done.");
 
                 return 0;
             }
