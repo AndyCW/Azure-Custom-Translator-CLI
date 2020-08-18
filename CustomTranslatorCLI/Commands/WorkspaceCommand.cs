@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -26,15 +27,18 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Creates new workspace.")]
         class Create : ParamActionCommandBase
         {
-           [Option(Description = "(Required) workspace name.")]
-           [MaxLength(100)]
-           [Required]
-           string Name { get; set; }
+            [Option(Description = "(Required) workspace name.")]
+            [MaxLength(100)]
+            [Required]
+            string Name { get; set; }
 
-           [Option(Description = "workspace description.")]
-           string Description { get; set; }
+            [Option(Description = "workspace description.")]
+            string Description { get; set; }
 
-           int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
+            int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
            {
                var workspaceDefinition = new CreateWorkspaceData()
                {
@@ -46,7 +50,10 @@ namespace CustomTranslatorCLI.Commands
                     }
                 };
 
-                console.WriteLine("Creating workspace...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Creating workspace...");
+                }
                 sdk.CreateWorkspace(workspaceDefinition, atc.GetToken());
 
                 var res1 = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(atc.GetToken()));
@@ -55,7 +62,14 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res1.Count == 0)
                 {
-                    console.WriteLine("No workspaces found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No workspaces found.");
+                    }
+                    else
+                    {
+                        Console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
@@ -63,7 +77,14 @@ namespace CustomTranslatorCLI.Commands
                     {
                         if (workspace.Name == Name)
                         {
-                            console.WriteLine($"{workspace.Id, 30} {workspace.Name, -25}");
+                            if (!Json.HasValue)
+                            {
+                                console.WriteLine($"{workspace.Id,30} {workspace.Name,-25}");
+                            }
+                            else
+                            {
+                                Console.WriteLine(SafeJsonConvert.SerializeObject(workspace, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                            }
                         }
                     }
                 }
@@ -75,9 +96,15 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Lists workspaces in your subscription.")]
         class List
         {
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting workspaces...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting workspaces...");
+                }
 
                 var res = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(atc.GetToken()));
                 if (res == null)
@@ -85,13 +112,27 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res.Count == 0)
                 {
-                    console.WriteLine("No workspaces found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No workspaces found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var workspace in res)
+                    if (!Json.HasValue)
                     {
-                        console.WriteLine($"{workspace.Id, 30} {workspace.Name, -25}");
+                        foreach (var workspace in res)
+                        {
+                            console.WriteLine($"{workspace.Id,30} {workspace.Name,-25}");
+                        }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -107,9 +148,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting workspace...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting workspace...");
+                }
 
                 var res = CallApi<WorkspaceInfo>(() => sdk.GetWorkspaceById(Id, atc.GetToken()));
                 if (res == null)
@@ -129,11 +176,24 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string Id { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Deleting workspace...");
-                CallApi<ErrorContent>(() => sdk.DeleteWorkspace(Id, atc.GetToken()));
-                console.WriteLine("Done.");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Deleting workspace...");
+                }
+                sdk.DeleteWorkspace(Id, atc.GetToken());
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Done.");
+                }
+                else
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
 
                 return 0;
             }

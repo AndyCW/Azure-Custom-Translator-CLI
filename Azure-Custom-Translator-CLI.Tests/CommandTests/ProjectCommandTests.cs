@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Azure_Custom_Translator_CLI.Tests.CommandTests
 {
-    public class WorkspaceCommandTests
+    public class ProjectCommandTests
     {
         public CommandLineApplication<MainApp> InitApp(IMicrosoftCustomTranslatorAPIPreview10 apiObject)
         {
@@ -40,68 +40,96 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
         }
 
         [Fact]
-        public void List_Success()
+        public void List_Json_Success()
         {
             // ARRANGE
-            var response = new List<WorkspaceInfo>()
+            var response = new ProjectsResponse()
             {
-                new WorkspaceInfo()
+                Projects = new List<ProjectInfo>()
                 {
-                    Id = Guid.Empty.ToString(),
-                    Name = "Moq"
+                    new ProjectInfo()
+                    {
+                        Id = Guid.Empty,
+                        Name = "Moq"
+                    }
                 }
             };
 
             var mock = new Mock<IMicrosoftCustomTranslatorAPIPreview10>();
             mock
                 .Setup(
-                    m => m.GetWorkspacesWithHttpMessagesAsync(string.Empty, null, CancellationToken.None)
+                    m => m.GetProjectsWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), null, null, null, CancellationToken.None)
                     )
                 .ReturnsAsync(
-                    new HttpOperationResponse<List<WorkspaceInfo>>() { Body = response }
+                    new HttpOperationResponse<ProjectsResponse>() { Body = response }
                 );
 
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("workspace list");
+            var args = CommandIntoArgs("project list -w 00000000-0000-0000-0000-000000000000 -j");
             app.Execute(args);
 
             // ASSESS
-            Assert.Equal($"Getting workspaces...{app.Out.NewLine}00000000-0000-0000-0000-000000000000 {"Moq",-25}{app.Out.NewLine}", ((MockTestWriter)app.Out).ReadAsString());
+            string expected = @"{
+  ""projects"": [
+    {
+      ""id"": ""00000000-0000-0000-0000-000000000000"",
+      ""name"": ""Moq"",
+      ""label"": null,
+      ""description"": null,
+      ""languagePair"": null,
+      ""category"": null,
+      ""categoryDescriptor"": null,
+      ""baselineBleuScorePunctuated"": null,
+      ""bleuScorePunctuated"": null,
+      ""baselineBleuScoreUnpunctuated"": null,
+      ""bleuScoreUnpunctuated"": null,
+      ""baselineBleuScoreCIPunctuated"": null,
+      ""bleuScoreCIPunctuated"": null,
+      ""baselineBleuScoreCIUnpunctuated"": null,
+      ""bleuScoreCIUnpunctuated"": null,
+      ""status"": null,
+      ""modifiedDate"": ""0001-01-01T00:00:00"",
+      ""createdDate"": ""0001-01-01T00:00:00"",
+      ""createdBy"": null,
+      ""modifiedBy"": null,
+      ""apiDomain"": null,
+      ""isAvailable"": false,
+      ""hubCategory"": null
+    }
+  ],
+  ""pageIndex"": 0,
+  ""totalPageCount"": 0
+}
+";
+            string actual = ((MockTestWriter)app.Out).ReadAsString();
+            Assert.Equal(expected, actual);
         }
 
 
         [Fact]
-        public void List_Json_Success()
+        public void Delete_Json()
         {
             // ARRANGE
-            var response = new List<WorkspaceInfo>()
-            {
-                new WorkspaceInfo()
-                {
-                    Id = Guid.Empty.ToString(),
-                    Name = "Moq"
-                }
-            };
-
+ 
             var mock = new Mock<IMicrosoftCustomTranslatorAPIPreview10>();
             mock
                 .Setup(
-                    m => m.GetWorkspacesWithHttpMessagesAsync(string.Empty, null, CancellationToken.None)
+                    m => m.DeleteProjectWithHttpMessagesAsync(It.IsAny<Guid>(), It.IsAny<string>(), null, CancellationToken.None)
                     )
                 .ReturnsAsync(
-                    new HttpOperationResponse<List<WorkspaceInfo>>() { Body = response }
+                    new HttpOperationResponse()
                 );
 
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("workspace list -j");
+            var args = CommandIntoArgs("project delete -p 00000000-0000-0000-0000-000000000000 -j");
             app.Execute(args);
 
             // ASSESS
-            string expected = $@"[{app.Out.NewLine}  {{{app.Out.NewLine}    ""id"": ""00000000-0000-0000-0000-000000000000"",{app.Out.NewLine}    ""role"": null,{app.Out.NewLine}    ""name"": ""Moq"",{app.Out.NewLine}    ""isCreator"": null,{app.Out.NewLine}    ""isDefaultWorkspace"": null,{app.Out.NewLine}    ""createdBy"": null,{app.Out.NewLine}    ""createdDate"": null,{app.Out.NewLine}    ""sharing"": null,{app.Out.NewLine}    ""hasMigrations"": null{app.Out.NewLine}  }}{app.Out.NewLine}]{app.Out.NewLine}";
+            string expected = $@"{{{app.Out.NewLine}  ""status"": ""success""{app.Out.NewLine}}}{app.Out.NewLine}";
             string actual = ((MockTestWriter)app.Out).ReadAsString();
             Assert.Equal(expected, actual);
         }

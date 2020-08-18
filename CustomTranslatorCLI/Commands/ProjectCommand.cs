@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Rest;
+using System.Net;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -55,6 +57,9 @@ namespace CustomTranslatorCLI.Commands
             [Option("-label|--Label", CommandOptionType.SingleValue, Description = "Label (max 30 chars).")]
             [MaxLength(30)]
             string Label { get; set; }
+
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
@@ -102,7 +107,10 @@ namespace CustomTranslatorCLI.Commands
                     Label = Label
                 };
 
-                console.WriteLine("Creating project...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Creating project...");
+                }
                 sdk.CreateProject(projectDefinition, atc.GetToken(), WorkspaceId);
 
                 var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
@@ -111,16 +119,30 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res1.Projects.Count == 0)
                 {
-                    console.WriteLine("No projects found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No projects found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var project in res1.Projects)
+                    if (!Json.HasValue)
                     {
-                        if (project.Name == Name)
+                        foreach (var project in res1.Projects)
                         {
-                            console.WriteLine($"{project.Id, 30} {project.Name, -25}");
+                            if (project.Name == Name)
+                            {
+                                console.WriteLine($"{project.Id,30} {project.Name,-25}");
+                            }
                         }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -136,9 +158,15 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string WorkspaceId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting projects...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting projects...");
+                }
 
                 var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
                 if (res == null)
@@ -146,13 +174,27 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res.Projects.Count == 0)
                 {
-                    console.WriteLine("No projects found.");
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine("No projects found.");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
                 }
                 else
                 {
-                    foreach (var project in res.Projects)
+                    if (!Json.HasValue)
                     {
-                        console.WriteLine($"{project.Id, 30} {project.Name, -25}");
+                        foreach (var project in res.Projects)
+                        {
+                            console.WriteLine($"{project.Id,30} {project.Name,-25}");
+                        }
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
@@ -168,13 +210,32 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ProjectId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Getting project...");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Getting project...");
+                }
 
-                var res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
-                if (res == null)
-                    return -1;
+                ProjectInfo res;
+                try
+                {
+                    res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
+                    if (res == null)
+                        return -1;
+                }
+                catch (HttpOperationException ex)
+                {
+                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        console.WriteLine("Invalid Project ID: project not found.");
+                        return -1;
+                    }
+                    throw;
+                }
 
                 console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
@@ -190,11 +251,37 @@ namespace CustomTranslatorCLI.Commands
             [Required]
             public string ProjectId { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
+            bool? Json { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                console.WriteLine("Deleting project...");
-                sdk.DeleteProject(new Guid(ProjectId), atc.GetToken());
-                console.WriteLine("Done.");
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Deleting project...");
+                }
+                
+                try
+                {
+                    sdk.DeleteProject(new Guid(ProjectId), atc.GetToken());
+                }
+                catch (HttpOperationException ex)
+                {
+                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        console.WriteLine("Invalid Project ID: project not found.");
+                        return -1;
+                    }
+                    throw;
+                }
+                if (!Json.HasValue)
+                {
+                    console.WriteLine("Done.");
+                }
+                else
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
 
                 return 0;
             }
