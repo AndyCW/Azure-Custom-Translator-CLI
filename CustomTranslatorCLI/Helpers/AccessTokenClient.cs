@@ -29,7 +29,6 @@
 
 using System;
 using System.Collections.Generic;
-using RestSharp;
 using Microsoft.Identity.Client;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
@@ -45,26 +44,16 @@ namespace CustomTranslatorCLI.Helpers
 
         private IPublicClientApplication app;
         private IConfiguration appConfiguration;
-        private string clientId;
-        private string workspaceId;
-        private string authorityUri;
-        private string apiEndpoint;
-        private List<string> scopes;
+        private ICachePersistence cachePersistence;
 
         /// <summary>
         /// Application(client) ID value - Create an app at the app registration portal
         /// https://ms.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
         /// </summary>
         public static string ClientId { get; set; }
-        public static string WorkspaceId { get; set; }
+        public static string ClientSecret { get; set; }
         public static string TenantId { get; set; }
         public static List<string> Scopes { get; set; } = new List<string>() { "email" };
-
-        /// <summary>
-        /// End point address for V1 of Swagger UI API and Oauth V2 endpoint
-        /// </summary>
-        public static string EndPointAddressV1Prod { get; set; } = "https://custom-api.cognitive.microsofttranslator.com";
-        public static string EndPointOauthV2 { get; set; }
 
         protected static string mBearerToken;
 
@@ -78,47 +67,36 @@ namespace CustomTranslatorCLI.Helpers
         /// </summary>
         private void LoadCredentials()
         {
-            ClientId = appConfiguration["clientId"];
-            TenantId = appConfiguration["tenantId"];
-
-            // Use environment variables if defined
-            var env_cId = (from var in appConfiguration.GetChildren()
-                           where var.Key == "Translator_ClientID"
-                           select var.Value).FirstOrDefault();
-            if (!string.IsNullOrEmpty(env_cId))
-            {
-                ClientId = env_cId;
-            }
-
-            var env_tId = (from var in appConfiguration.GetChildren()
-                           where var.Key == "Translator_TenantID"
-                           select var.Value).FirstOrDefault();
-            if (!string.IsNullOrEmpty(env_tId))
-            {
-                TenantId = env_tId;
-            }
+            ClientId = appConfiguration["AZURE_CLIENT_ID"];
+            ClientSecret = appConfiguration["AZURE_CLIENT_SECRET"];
+            TenantId = appConfiguration["AZURE_TENANT_ID"];
+            var keyVaultUrl = appConfiguration["TRANSLATOR_VAULT_URI"];
 
             if (string.IsNullOrWhiteSpace(ClientId))
             {
-                Console.WriteLine("Please supply a clientId. See Readme.txt.");
+                Console.WriteLine("Please supply a AZURE_CLIENT_ID. See Readme.txt.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(ClientSecret))
+            {
+                Console.WriteLine("Please supply a AZURE_CLIENT_SECRET. See Readme.txt.");
                 return;
             }
             if (string.IsNullOrWhiteSpace(TenantId))
             {
-                Console.WriteLine("Please supply a tenantId. See Readme.txt.");
+                Console.WriteLine("Please supply a AZURE_TENANT_ID. See Readme.txt.");
                 return;
             }
-
-            EndPointOauthV2 = $"https://login.microsoftonline.com/{TenantId}/oauth2/v2.0";
         }
 
         #endregion
 
         #region Constructor
 
-        public AccessTokenClient(IConfiguration configuration)
+        public AccessTokenClient(IConfiguration configuration, ICachePersistence cachepersistence)
         {
             appConfiguration = configuration;
+            cachePersistence = cachepersistence;
         }
 
         #endregion
@@ -135,18 +113,13 @@ namespace CustomTranslatorCLI.Helpers
             {
 
                 LoadCredentials();
-                clientId = AccessTokenClient.ClientId;
-                workspaceId = AccessTokenClient.WorkspaceId;
-                authorityUri = AccessTokenClient.EndPointOauthV2;
-                apiEndpoint = AccessTokenClient.EndPointAddressV1Prod;
-                scopes = AccessTokenClient.Scopes;
 
                 app = PublicClientApplicationBuilder.Create(ClientId)
                         .WithRedirectUri("http://localhost")
                         .Build();
-                CachePersistence.EnableSerialization(app.UserTokenCache);
+                cachePersistence.EnableSerialization(app.UserTokenCache);
 
-                string idToken = null;
+                string idToken;
                 try
                 {
                     idToken = AcquireTokenSilent();
@@ -169,7 +142,7 @@ namespace CustomTranslatorCLI.Helpers
         private string AcquireTokenSilent()
         {
             var accounts = app.GetAccountsAsync().Result;
-            var result = app.AcquireTokenSilent(scopes, accounts.FirstOrDefault()).ExecuteAsync().Result;
+            var result = app.AcquireTokenSilent(Scopes, accounts.FirstOrDefault()).ExecuteAsync().Result;
             return result.IdToken;
         }
 
@@ -179,7 +152,7 @@ namespace CustomTranslatorCLI.Helpers
         /// <returns></returns>        
         private string AcquireTokenWithSignIn()
         {
-            var result = app.AcquireTokenInteractive(scopes).ExecuteAsync().Result;
+            var result = app.AcquireTokenInteractive(Scopes).ExecuteAsync().Result;
 
             return result.IdToken;
         }

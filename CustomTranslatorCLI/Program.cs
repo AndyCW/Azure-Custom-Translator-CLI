@@ -31,7 +31,7 @@ namespace CustomTranslatorCLI
 
             IConfiguration appConfiguration = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-              .AddEnvironmentVariables("Translator_")
+              .AddEnvironmentVariables()
               .Build();
 
             CommandLineApplication<MainApp> app = new CommandLineApplication<MainApp>();
@@ -39,7 +39,7 @@ namespace CustomTranslatorCLI
             app.VersionOptionFromAssemblyAttributes(typeof(Program).Assembly);
             app.Conventions
                 .UseDefaultConventions()
-                .UseConstructorInjection(GetServices(config, appConfiguration, sdk, new AccessTokenClient(appConfiguration)));
+                .UseConstructorInjection(GetServices(config, appConfiguration, sdk));
 
             try
             {
@@ -68,13 +68,14 @@ namespace CustomTranslatorCLI
             return config;
         }
 
-        static ServiceProvider GetServices(IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
+        static ServiceProvider GetServices(IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk)
         {
             var services = new ServiceCollection()
                 .AddSingleton<IConfig>(config)
                 .AddSingleton<IConfiguration>(appConfiguration)
                 .AddSingleton<IMicrosoftCustomTranslatorAPIPreview10>(sdk)
-                .AddSingleton<IAccessTokenClient>(atc)
+                .AddSingleton<IAccessTokenClient, AccessTokenClient>()
+                .AddSingleton<ICachePersistence, AzureKeyVaultCachePersistence>()
                 .BuildServiceProvider();
 
             return services;

@@ -36,9 +36,9 @@ using Microsoft.Identity.Client;
 
 namespace CustomTranslatorCLI.Helpers
 {
-    static class CachePersistence
+    public class CachePersistence : ICachePersistence
     {
-        public static void EnableSerialization(ITokenCache tokenCache)
+        public void EnableSerialization(ITokenCache tokenCache)
         {
             tokenCache.SetBeforeAccess(BeforeAccessNotification);
             tokenCache.SetAfterAccess(AfterAccessNotification);
@@ -48,7 +48,7 @@ namespace CustomTranslatorCLI.Helpers
 
         private static readonly object FileLock = new object();
 
-        public static void BeforeAccessNotification(TokenCacheNotificationArgs args)
+        public void BeforeAccessNotification(TokenCacheNotificationArgs args)
         {
             var cacheFileDirectory = new FileInfo(CacheFilePath).Directory.FullName;
             if (!Directory.Exists(cacheFileDirectory))
@@ -63,7 +63,7 @@ namespace CustomTranslatorCLI.Helpers
             }
         }
 
-        public static void AfterAccessNotification(TokenCacheNotificationArgs args)
+        public void AfterAccessNotification(TokenCacheNotificationArgs args)
         {
             // if the access operation resulted in a cache update
             if (args.HasStateChanged)
