@@ -47,14 +47,21 @@ namespace CustomTranslatorCLI.Commands
             string DocumentIDs { get; set; }
 
             
-            [Option(CommandOptionType.NoValue, Description = "Initiate training.")]
+            [Option(CommandOptionType.NoValue, Description = "Initiate training [default is True].")]
             bool? Train { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
             bool? Json { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "If --train is true, will stop and wait for training completion.")]
+            bool Wait { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
+                _sdk = sdk;
+                _atc = atc;
+                _console = console;
+
                 // Populate the new model data
                 var docIDs = new List<long?>();
                 foreach(var docId in DocumentIDs.Split(','))
@@ -68,7 +75,7 @@ namespace CustomTranslatorCLI.Commands
                     IsTuningAuto = true,
                     IsTestingAuto = true,
                     IsAutoDeploy = true,
-                    IsAutoTrain = Train.HasValue ? true : false,
+                    IsAutoTrain = Train.HasValue ? Train.Value : true,
                     ProjectId = new Guid(ProjectId)
                 };
 
@@ -77,26 +84,9 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Creating model...");
                 }
 
-                try
-                {
-                    sdk.CreateModel(modelDefinition, atc.GetToken());
-                }
-                catch(HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Project ID: project not found.");
-                        return -1;
-                    }
-                    else if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
-                    {
-                        var errorDetails = JObject.Parse(ex.Response.Content);
-                        console.WriteLine("Error: " + (string)errorDetails["message"]);
-                        return -1;
-                    }
-                    throw;
-                }
+                CallApi(() => sdk.CreateModel(modelDefinition, atc.GetToken()));
 
+                // CreateModel does not return the new model Id so we must query for it
                 var res1 = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), 1));
                 if (res1 == null)
                     return -1;
@@ -105,33 +95,48 @@ namespace CustomTranslatorCLI.Commands
                 {
                     if (!Json.HasValue)
                     {
-                        console.WriteLine("No models found.");
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                        console.WriteLine("Error: Model not created.");
+                        return -1;
                     }
                 }
                 else
                 {
+                    ModelInfo createdModel = res1.Models.FirstOrDefault((s) => s.Name == Name);
+                    if (createdModel == null)
+                    {
+                        console.WriteLine("Error: Model not created.");
+                        return -1;
+                    }
+
+                    bool waitRequested = Wait && (modelDefinition.IsAutoTrain.HasValue && modelDefinition.IsAutoTrain.Value);
+                    if (waitRequested)
+                    {
+                        CreateAndWait(() => sdk.GetModel(createdModel.Id, atc.GetToken()), createdModel.Id, true, (modelId) => IsTrained(modelId));
+                        createdModel = CallApi<ModelInfo>(() => sdk.GetModel(createdModel.Id, atc.GetToken()));
+                    }
+
                     if (!Json.HasValue)
                     {
-                        foreach (var model in res1.Models)
-                        {
-                            if (model.Name == Name)
-                            {
-                                console.WriteLine($"{model.Id,-10} {model.Name,-50} {model.ModelStatus}");
-                            }
-                        }
+                        console.WriteLine($"{createdModel.Id,-10} {createdModel.Name,-50} {createdModel.ModelStatus}");
                     }
                     else
                     {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                        console.WriteLine(SafeJsonConvert.SerializeObject(createdModel, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 
                 return 0;
-           }
+            }
+
+            bool IsTrained(long id)
+            {
+                var statusValues = new List<string>()
+                {
+                    "trained"
+                };
+                var model = _sdk.GetModel(id, _atc.GetToken());
+                return (statusValues.Contains(model.ModelStatus));
+            }
         }
 
         [Command(Description = "Deploy or undeploy a model.")]
@@ -155,6 +160,10 @@ namespace CustomTranslatorCLI.Commands
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
+                _sdk = sdk;
+                _atc = atc;
+                _console = console;
+
                 if (!Json.HasValue)
                 {
                     console.WriteLine("Starting model deployment...");
@@ -175,26 +184,9 @@ namespace CustomTranslatorCLI.Commands
                 {
                     Region = 3,
                     IsDeployed = !Asia.HasValue ? true : Asia.Value
-                });        
-                try
-                {
-                    sdk.DeployModel(Int64.Parse(ModelId), atc.GetToken(), regions);
-                }
-                catch(HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Model ID: model not found.");
-                        return -1;
-                    }
-                    else if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
-                    {
-                        var errorDetails = JObject.Parse(ex.Response.Content);
-                        console.WriteLine("Error: " + (string)errorDetails["message"]);
-                        return -1;
-                    }
-                    throw;
-                }
+                });
+
+                CallApi(() => sdk.DeployModel(Int64.Parse(ModelId), atc.GetToken(), regions));
 
                 if (!Json.HasValue)
                 {
@@ -278,23 +270,12 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Getting model...");
                 }
 
-                try
-                {
-                    var res = CallApi<ModelInfo>(() => sdk.GetModel(Int64.Parse(ModelId), atc.GetToken()));
-                    if (res == null)
-                        return -1;
+                var res = CallApi<ModelInfo>(() => sdk.GetModel(Int64.Parse(ModelId), atc.GetToken()));
+                if (res == null)
+                    return -1;
 
-                    console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                }
-                catch(HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Model ID: model not found.");
-                        return -1;
-                    }
-                    throw;
-                }   
+                console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+
                 return 0;
             }
         }
@@ -309,36 +290,46 @@ namespace CustomTranslatorCLI.Commands
             [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
             bool? Json { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Will stop and wait for training completion.")]
+            bool Wait { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
-                if (!Json.HasValue)
-                {
-                    console.WriteLine("Starting model training...");
-                }
-                                
-                try
-                {
-                    sdk.TrainModel(Int64.Parse(ModelId), atc.GetToken());
-                }
-                catch(HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Model ID: model not found.");
-                        return -1;
-                    }
-                    throw;
-                }           
+                _sdk = sdk;
+                _atc = atc;
+                _console = console;
 
                 if (!Json.HasValue)
                 {
-                    console.WriteLine("Training submitted.");
+                    console.WriteLine("Starting model training...");
+                }               
+
+                var modelId = Int64.Parse(ModelId);
+                CreateAndWait(() => sdk.TrainModel(modelId, atc.GetToken()), modelId, Wait, (modelId) => IsTrained(modelId));        
+
+                if (!Json.HasValue)
+                {
+                    if (!Wait)
+                    {
+                        console.WriteLine("Training submitted.");
+                    }
                 }
                 else
                 {
-                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "submitted" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    string sts = Wait ? "success" : "submitted";
+                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = sts }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                 }
                 return 0;
+            }
+
+            bool IsTrained(long id)
+            {
+                var statusValues = new List<string>()
+                {
+                    "trained"
+                };
+                var model = _sdk.GetModel(id, _atc.GetToken());
+                return (statusValues.Contains(model.ModelStatus));
             }
         }
 
@@ -359,27 +350,9 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Deleting model...");
                 }
 
-                try
-                {
-                    sdk.DeleteModel(Int64.Parse(ModelId), atc.GetToken());
-                }
-                catch(HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Model ID: model not found.");
-                        return -1;
-                    }
-                    throw;
-                }
-                if (!Json.HasValue)
-                {
-                    console.WriteLine("Success.");
-                }
-                else
-                {
-                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                }
+                CallApi(() => sdk.DeleteModel(Int64.Parse(ModelId), atc.GetToken()));
+
+                console.WriteLine(!Json.HasValue ? "Success." : SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
                 return 0;
             }

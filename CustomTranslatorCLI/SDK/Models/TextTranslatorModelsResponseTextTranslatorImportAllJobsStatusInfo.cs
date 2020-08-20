@@ -59,7 +59,7 @@ namespace CustomTranslator.Models
         /// (id, display name).</param>
         /// <param name="languages">The file languages associated with this
         /// document.</param>
-        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), TextTranslatorModelsTextTranslatorImportJobStatus status = default(TextTranslatorModelsTextTranslatorImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), UserInfo createdBy = default(UserInfo), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>))
+        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), ImportJobStatus status = default(ImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), UserInfo createdBy = default(UserInfo), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>))
         {
             JobId = jobId;
             NumberFiles = numberFiles;
@@ -120,7 +120,7 @@ namespace CustomTranslator.Models
         /// the item with the lowest UploadStatus value.
         /// </summary>
         [JsonProperty(PropertyName = "status")]
-        public TextTranslatorModelsTextTranslatorImportJobStatus Status { get; set; }
+        public ImportJobStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the type of document uploaded by this job (ex:

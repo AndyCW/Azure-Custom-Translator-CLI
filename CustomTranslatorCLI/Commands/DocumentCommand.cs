@@ -27,7 +27,7 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Lists documents in your workspace.")]
         class List
         {
-            [Option(CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
+            [Option("-ws|--Workspace", CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
             [Guid]
             [Required]
             public string WorkspaceId { get; set; }
@@ -101,7 +101,7 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Uploads a combo document or a parallel document pair. Usage: translator document upload -w {workspaceId} -dt {documentType} -lp {languagePair} -c {comboFilePath} [-o] *OR* translator document upload -w {workspaceId} -dt {documentType} -lp {languagePair} -s {sourceFilePath} -t {targetFiePath} -pn {name} [-o]")]
         class Upload
         {
-            [Option(CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
+            [Option("-ws|--Workspace", CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
             [Guid]
             [Required]
             public string WorkspaceId { get; set; }
@@ -138,8 +138,15 @@ namespace CustomTranslatorCLI.Commands
             [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
             bool? Json { get; set; }
 
+            [Option(CommandOptionType.NoValue, Description = "Will stop and wait for upload completion.")]
+            bool Wait { get; set; }
+
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
             {
+                _sdk = sdk;
+                _atc = atc;
+                _console = console;
+
                 // Get the supported language pairs
                 var languagePairs = CallApi<IList<LanguagePair>>(() => sdk.GetSupportedLanguagePairs(atc.GetToken()));
                 if (languagePairs == null)
@@ -234,13 +241,43 @@ namespace CustomTranslatorCLI.Commands
                     files = SourceFile + "|" + TargetFile;
                 }
 
-                var res = CallApi<ImportFilesResponse>(() => sdk.ImportDocuments(atc.GetToken(), files , JsonConvert.SerializeObject(details, Formatting.Indented), WorkspaceId));
-                if (res == null)
+                var importFilesJobResponse = CallApi<ImportFilesResponse>(() => sdk.ImportDocuments(atc.GetToken(), files , JsonConvert.SerializeObject(details, Formatting.Indented), WorkspaceId));
+                if (importFilesJobResponse == null)
                     return -1;
 
-                console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                if (!Wait)
+                {
+                    console.WriteLine(SafeJsonConvert.SerializeObject(importFilesJobResponse, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
+                else
+                {
+                    Guid jobId = importFilesJobResponse.JobId.Value;
+                    CreateAndWait(() => sdk.GetImportJobsByJobId(atc.GetToken(), jobId, 1, 100), jobId, true, (jobId) => IsUploaded(jobId));
+
+                    var jobStatusResponse = CallApi<ImportJobStatusResponse>(() => sdk.GetImportJobsByJobId(atc.GetToken(), jobId, 1, 100));
+                    console.WriteLine(SafeJsonConvert.SerializeObject(jobStatusResponse, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                }
 
                 return 0;
+            }
+
+            bool IsUploaded(Guid jobId)
+            {
+                var statusValues = new List<string>()
+                {
+                    "Succeeded",
+                    "Failed"
+                };
+                var jobStatusResponse = _sdk.GetImportJobsByJobId(_atc.GetToken(), jobId, 1, 100);
+                int isCompleteCount = 0;
+                foreach (var fileStatus in jobStatusResponse.FileProcessingStatus)
+                {
+                    if (statusValues.Contains(fileStatus.Status.DisplayName))
+                    {
+                        isCompleteCount++;
+                    }
+                }
+                return isCompleteCount >= jobStatusResponse.FileProcessingStatus.Count;
             }
         }
     }

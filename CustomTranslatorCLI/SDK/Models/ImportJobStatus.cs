@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Defines the status of an import job.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorImportJobStatus
+    public partial class ImportJobStatus
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorImportJobStatus class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorImportJobStatus()
+        public ImportJobStatus()
         {
             CustomInit();
         }
@@ -30,7 +30,7 @@ namespace CustomTranslator.Models
         /// </summary>
         /// <param name="displayName">The display name of the status.</param>
         /// <param name="id">The id for the status.</param>
-        public TextTranslatorModelsTextTranslatorImportJobStatus(string displayName, int id)
+        public ImportJobStatus(string displayName, int id)
         {
             DisplayName = displayName;
             Id = id;

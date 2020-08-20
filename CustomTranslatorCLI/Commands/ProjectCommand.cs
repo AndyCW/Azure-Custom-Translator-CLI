@@ -27,7 +27,7 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Creates new project.")]
         class Create : ParamActionCommandBase
         {
-            [Option(CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
+            [Option("-ws|--Workspace", CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
             [Guid]
             [Required]
             public string WorkspaceId { get; set; }
@@ -153,7 +153,7 @@ namespace CustomTranslatorCLI.Commands
         [Command(Description = "Lists projects in your workspace.")]
         class List
         {
-            [Option(CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
+            [Option("-ws|--Workspace", CommandOptionType.SingleValue, Description = "(Required) Workspace ID.")]
             [Guid]
             [Required]
             public string WorkspaceId { get; set; }
@@ -220,22 +220,9 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Getting project...");
                 }
 
-                ProjectInfo res;
-                try
-                {
-                    res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
-                    if (res == null)
-                        return -1;
-                }
-                catch (HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Project ID: project not found.");
-                        return -1;
-                    }
-                    throw;
-                }
+                ProjectInfo res = CallApi<ProjectInfo>(() => sdk.GetProjectById(new Guid(ProjectId), atc.GetToken()));
+                if (res == null)
+                    return -1;
 
                 console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
@@ -260,28 +247,10 @@ namespace CustomTranslatorCLI.Commands
                 {
                     console.WriteLine("Deleting project...");
                 }
-                
-                try
-                {
-                    sdk.DeleteProject(new Guid(ProjectId), atc.GetToken());
-                }
-                catch (HttpOperationException ex)
-                {
-                    if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        console.WriteLine("Invalid Project ID: project not found.");
-                        return -1;
-                    }
-                    throw;
-                }
-                if (!Json.HasValue)
-                {
-                    console.WriteLine("Done.");
-                }
-                else
-                {
-                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                }
+
+                CallApi(() => sdk.DeleteProject(new Guid(ProjectId), atc.GetToken()));
+
+                console.WriteLine(!Json.HasValue ? "Success." : SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
                 return 0;
             }
