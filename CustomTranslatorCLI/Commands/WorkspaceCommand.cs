@@ -185,15 +185,9 @@ namespace CustomTranslatorCLI.Commands
                 {
                     console.WriteLine("Deleting workspace...");
                 }
-                sdk.DeleteWorkspace(Id, atc.GetToken());
-                if (!Json.HasValue)
-                {
-                    console.WriteLine("Done.");
-                }
-                else
-                {
-                    console.WriteLine(SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                }
+                CallApi(() => sdk.DeleteWorkspace(Id, atc.GetToken()));
+
+                console.WriteLine(!Json.HasValue ? "Success." : SafeJsonConvert.SerializeObject(new { status = "success" }, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
                 return 0;
             }

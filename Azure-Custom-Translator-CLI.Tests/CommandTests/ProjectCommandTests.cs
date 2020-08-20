@@ -67,7 +67,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("project list -w 00000000-0000-0000-0000-000000000000 -j");
+            var args = CommandIntoArgs("project list -ws 00000000-0000-0000-0000-000000000000 -j");
             app.Execute(args);
 
             // ASSESS

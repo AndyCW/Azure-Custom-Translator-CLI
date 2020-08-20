@@ -11,19 +11,24 @@ using CustomTranslatorCLI.SDK.Models;
 using System.Security.Authentication;
 using CustomTranslatorCLI.Helpers;
 using Microsoft.Extensions.Configuration;
+using System.Runtime.CompilerServices;
+using Microsoft.Rest;
+using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace CustomTranslatorCLI.Commands
 {
     [HelpOption("--help")]
     abstract class TranslatorCommandBase
     {
-        protected static IMicrosoftCustomTranslatorAPIPreview10 _customTranslatorAPI;
+        protected static IMicrosoftCustomTranslatorAPIPreview10 _sdk;
         protected static IConsole _console;
         protected static IConfig _config;
+        protected static IAccessTokenClient _atc;
 
         public TranslatorCommandBase(IMicrosoftCustomTranslatorAPIPreview10 customTranslatorAPI, IConsole console, IConfig config)
         {
-            _customTranslatorAPI = customTranslatorAPI;
+            _sdk = customTranslatorAPI;
             _console = console;
             _config = config;
         }
@@ -40,37 +45,72 @@ namespace CustomTranslatorCLI.Commands
         /// <exception cref="Exception">When the result of API call is ErrorContent.</exception>
         protected static T CallApi<T>(Func<object> method)
         {
-            var res = method.Invoke();
-            if (res != null && res is ErrorContent)
+            object res;
+            try
             {
-                if ((res as ErrorContent).Code == "Unauthorized")
+                res = method.Invoke();
+            }
+            catch (HttpOperationException ex)
+            {
+                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    _console.Error.WriteLine("Run 'config set' and add your Translator key or select proper configuration set by calling 'config select <name>'.");
+                    throw new Exception("Run 'config set' and add your Translator key or select proper configuration set by calling 'config select <name>'.");
                 }
-                throw new Exception($"API call ended with error: {(res as ErrorContent).Message}");
+                else if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var errorDetails = JObject.Parse(ex.Response.Content);
+                    throw new Exception("Error: " + (string)errorDetails["message"]);
+                }
+                else if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Invalid ID: target entity not found.");
+                }
+                throw;
             }
 
             return (T)res;
         }
 
-        protected static int CreateAndWait(Func<object> operation, bool wait, Func<Guid, object> probe)
+
+        /// <summary>
+        /// Call API with method.
+        /// </summary>
+        /// <exception cref="Exception">When the result of API call is ErrorContent.</exception>
+        protected static void CallApi(Action method)
         {
-            var res = CallApi<object>(operation);
-            if (res is Guid)
+            try
             {
-                if (wait)
-                    return WaitForProcessing((Guid)res, probe);
-                else
-                    _console.WriteLine("Created.");
-                return 0;
+                method.Invoke();
             }
-            else
+            catch (HttpOperationException ex)
             {
-                return -1;
+                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception("Run 'config set' and add your Translator key or select proper configuration set by calling 'config select <name>'.");
+                }
+                else if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var errorDetails = JObject.Parse(ex.Response.Content);
+                    throw new Exception("Error: " + (string)errorDetails["message"]);
+                }
+                else if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Invalid ID: target entity not found.");
+                }
+                throw;
             }
         }
 
-        protected static int WaitForProcessing(Guid id, Func<Guid, object> probe)
+        protected static int CreateAndWait<T>(Action operation, T id, bool wait, Func<T, bool> probe)
+        {
+            CallApi(operation);
+
+            if (wait)
+                return WaitForProcessing(id, probe);
+            return 0;
+         }
+
+        protected static int WaitForProcessing<T>(T id, Func<T, bool> probe)
         {
             _console.Write("Processing [.");
             var done = false;
@@ -78,28 +118,9 @@ namespace CustomTranslatorCLI.Commands
             {
                 _console.Write(".");
                 Thread.Sleep(1000);
-                var resource = probe.Invoke(id);
-                if (resource is Entity)
-                {
-                    if ((resource as Entity).Status == Constants.FAILED_STATUS)
-                    {
-                        _console.WriteLine(".]");
-                        _console.Error.WriteLine("Processing failed.");
-                        return -1;
-                    }
-
-                    done = (resource as Entity).Status == Constants.SUCCEEDED_STATUS;
-                }
-                else
-                {
-                    // přišel ErrorResult nebo něco jiného
-                    _console.Error.WriteLine("Unable to get status. " + (resource as ErrorContent).Message);
-                    return -1;
-                }
-
+                done = probe.Invoke(id);
             }
             _console.WriteLine(".] Done");
-            _console.WriteLine(id.ToString());
             return 0;
         }
     }

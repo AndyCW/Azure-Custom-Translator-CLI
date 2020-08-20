@@ -12,14 +12,14 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Text Translator Import Job File Status
     /// </summary>
-    public partial class TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo
+    public partial class ImportJobFileStatusInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo
         /// class.
         /// </summary>
-        public TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo()
+        public ImportJobFileStatusInfo()
         {
             CustomInit();
         }
@@ -40,7 +40,7 @@ namespace CustomTranslator.Models
         /// <param name="parentId">Gets or sets the parent identifier.</param>
         /// <param name="language">Gets or sets the file language associated
         /// with the document.</param>
-        public TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo(TextTranslatorModelsTextTranslatorImportJobStatus status = default(TextTranslatorModelsTextTranslatorImportJobStatus), System.DateTime? modifiedDate = default(System.DateTime?), string fileName = default(string), string documentName = default(string), string summary = default(string), int? id = default(int?), int? parentId = default(int?), TextTranslatorModelsTextTranslatorLanguage language = default(TextTranslatorModelsTextTranslatorLanguage))
+        public ImportJobFileStatusInfo(ImportJobStatus status = default(ImportJobStatus), System.DateTime? modifiedDate = default(System.DateTime?), string fileName = default(string), string documentName = default(string), string summary = default(string), int? id = default(int?), int? parentId = default(int?), TextTranslatorModelsTextTranslatorLanguage language = default(TextTranslatorModelsTextTranslatorLanguage))
         {
             Status = status;
             ModifiedDate = modifiedDate;
@@ -62,7 +62,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the status.
         /// </summary>
         [JsonProperty(PropertyName = "status")]
-        public TextTranslatorModelsTextTranslatorImportJobStatus Status { get; set; }
+        public ImportJobStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the date the upload status was last modified

@@ -50,7 +50,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("document upload -w 00000000-0000-0000-0000-000000000000 -lp abc:xyz -dt training");
+            var args = CommandIntoArgs("document upload -ws 00000000-0000-0000-0000-000000000000 -lp abc:xyz -dt training");
             app.Execute(args);
 
             // ASSESS
@@ -67,7 +67,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt test");
+            var args = CommandIntoArgs("document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt test");
             app.Execute(args);
 
             // ASSESS
@@ -83,7 +83,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -s abc10.txt");
+            var args = CommandIntoArgs("document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -s abc10.txt");
             app.Execute(args);
 
             // ASSESS
@@ -127,7 +127,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
 
             // ACT
             var file = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
-            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -s {file}");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -s {file}");
             app.Execute(args);
 
             // ASSESS
@@ -171,7 +171,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
 
             // ACT
             var file = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
-            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -t {file}");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -t {file}");
             app.Execute(args);
 
             // ASSESS
@@ -216,7 +216,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             // ACT
             var cfile = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
             var sfile = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "xyz.txt");
-            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {cfile} -s {sfile}");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {cfile} -s {sfile}");
             app.Execute(args);
 
             // ASSESS
@@ -262,7 +262,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             // ACT
             var cfile = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
             var sfile = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "xyz.txt");
-            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {cfile} -t {sfile}");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {cfile} -t {sfile}");
             app.Execute(args);
 
             // ASSESS
@@ -322,7 +322,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
 
             // ACT
             var file = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
-            var args = CommandIntoArgs($"document upload -w 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {file}");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {file}");
             app.Execute(args);
 
             // ASSESS
@@ -333,7 +333,143 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
     ""efg.xlsx""
   ]
 }
-Done.
+";
+            Assert.Equal(expectedResult, ((MockTestWriter)app.Out).ReadAsString());
+        }
+
+        [Fact]
+        public void Upload_Document_Wait()
+        {
+            // ARRANGE
+            var response = new List<LanguagePair>()
+            {
+                new LanguagePair()
+                {
+                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    {
+                        DisplayName = "Test",
+                        LanguageCode = "ab",
+                        Id = 255
+                    },
+                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    {
+                        DisplayName = "Test2",
+                        LanguageCode = "yz",
+                        Id = 254
+                    },
+                    Id = 1
+                }
+            };
+            var uploadDocumentResponse = new ImportFilesResponse()
+            {
+                JobId = Guid.Empty,
+                FilesAcceptedForProcessing = new List<string>()
+                {
+                    { "efg.xlsx" }
+                }
+            };
+            var jobStatusResponse1 = new ImportJobStatusResponse()
+            {
+                FileProcessingStatus = new List<ImportJobFileStatusInfo>()
+                {
+                    new ImportJobFileStatusInfo()
+                    {
+                        DocumentName = "efg.xlsx",
+                        Status = new ImportJobStatus()
+                        {
+                            DisplayName = "processing"
+                        }
+                    }
+                }
+            };
+            var jobStatusResponse2 = new ImportJobStatusResponse()
+            {
+                FileProcessingStatus = new List<ImportJobFileStatusInfo>()
+                {
+                    new ImportJobFileStatusInfo()
+                    {
+                        DocumentName = "efg.xlsx",
+                        Status = new ImportJobStatus()
+                        {
+                            DisplayName = "Failed"
+                        }
+                    }
+                }
+            };
+
+            var mock = new Mock<IMicrosoftCustomTranslatorAPIPreview10>();
+            mock
+                .Setup(
+                    m => m.GetSupportedLanguagePairsWithHttpMessagesAsync(string.Empty, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<IList<LanguagePair>>() { Body = response }
+                );
+            mock
+                .Setup(
+                    m => m.ImportDocumentsWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportFilesResponse>() { Body = uploadDocumentResponse }
+                );
+            mock
+                .Setup(
+                    m => m.GetImportJobsByJobIdWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportJobStatusResponse>() { Body = jobStatusResponse1 }
+                );
+            mock
+                .Setup(
+                    m => m.GetImportJobsByJobIdWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportJobStatusResponse>() { Body = jobStatusResponse1 }
+                );
+            mock
+                .Setup(
+                    m => m.GetImportJobsByJobIdWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportJobStatusResponse>() { Body = jobStatusResponse1 }
+                );
+            mock
+                .Setup(
+                    m => m.GetImportJobsByJobIdWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ImportJobStatusResponse>() { Body = jobStatusResponse2 }
+                );
+
+            var app = InitApp(mock.Object);
+
+            // ACT
+            var file = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, "abc.txt");
+            var args = CommandIntoArgs($"document upload -ws 00000000-0000-0000-0000-000000000000 -lp ab:yz -dt training -c {file} -w -j");
+            app.Execute(args);
+
+            // ASSESS
+            string expectedResult = @"Processing [...] Done
+{
+  ""jobName"": null,
+  ""fileProcessingStatus"": [
+    {
+      ""status"": {
+        ""displayName"": ""Failed"",
+        ""id"": 0
+      },
+      ""modifiedDate"": null,
+      ""fileName"": null,
+      ""documentName"": ""efg.xlsx"",
+      ""summary"": null,
+      ""id"": null,
+      ""parentId"": null,
+      ""language"": null
+    }
+  ],
+  ""pageIndex"": 0,
+  ""totalPageCount"": 0
+}
 ";
             Assert.Equal(expectedResult, ((MockTestWriter)app.Out).ReadAsString());
         }

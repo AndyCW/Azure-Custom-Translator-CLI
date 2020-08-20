@@ -39,7 +39,7 @@ namespace CustomTranslator.Models
         /// <param name="pageIndex">Gets or sets the page index.</param>
         /// <param name="totalPageCount">Gets or sets the total number of
         /// pages.</param>
-        public ImportJobStatusResponse(string jobName, IList<TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo> fileProcessingStatus, int pageIndex, int totalPageCount)
+        public ImportJobStatusResponse(string jobName, IList<ImportJobFileStatusInfo> fileProcessingStatus, int pageIndex, int totalPageCount)
         {
             JobName = jobName;
             FileProcessingStatus = fileProcessingStatus;
@@ -63,7 +63,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the file processing status.
         /// </summary>
         [JsonProperty(PropertyName = "fileProcessingStatus")]
-        public IList<TextTranslatorApiModelsResponseTextTranslatorImportJobFileStatusInfo> FileProcessingStatus { get; set; }
+        public IList<ImportJobFileStatusInfo> FileProcessingStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the page index.
