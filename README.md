@@ -61,17 +61,18 @@ The CLI tool must authenticate against your organisations Azure Active Directory
 
 1. Go to [https://ms.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade](https://ms.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade).
 1. Click **+ New Registration**.
-1. Enter the name of your application (e.g. **MyTranslatorCLI**) and select account type. Use **Accounts in this organizational directory only**.
-1. In the **Redirect URI**, select **Public client/native (mobile & desktop)*-in the dropdown and enter **<http://localhost>*-as the URI.
-1. Click **Register**.
+   - Enter the name of your application (e.g. **MyTranslatorCLI**).
+   - Select account type. Use **Accounts in any organizational directory (Any Azure AD directory - Multitenant)**.
+   - In the **Redirect URI**, select **Public client/native (mobile & desktop)** and enter **<http://localhost>** as the URI.
+   - Click **Register**.
 1. Note the following values displayed on the Overview tab which you will need to configure your CLI tool installation:
    - **Application (client) ID**
    - **Directory (tenant) ID**
-1. Now click on **Certificates & secrets*-under Manage in the left menu options.
+1. Now click on **Certificates & secrets** under Manage in the left menu options.
    1. Under *Client Secrets*, click **+ New client secret**.
-   1. Enter a description and select your required expiry period (Use *Never-if unsure).
+   1. Enter a description and select your required expiry period (Use *Never* if unsure).
    1. Click **Add**.
-   1. Note down the CLI secret. You will not be able to see the secret value once you leave this blade, although you can generate a new value.
+   1. Note down the CLI secret, which you will need later on. You will not be able to see the secret value once you leave this blade, although you can generate a new value.
 
 #### Creating the Azure Key Vault
 
@@ -79,19 +80,19 @@ The CLI tool uses an Azure Key Vault instance to store the client access token a
 
 1. In the Azure Portal home page, click **+ Create a resource**.
 1. Search for **Key Vault**. On the *Key Vault-resource page, click **Create**.
-   - Select your subscription and enter the **Resource group*-you want the Key Vault to be created in.
-   - Enter the **Name*-and select the **Region**, and the **Standard*-pricing tier.
-   - Click **Review + create*-and then click **Create**.
-1. When the Key Vault is created, go to the new Key Vault resource, and click on **Access policies*-under *Settings-in the menu.
+   - Select your subscription and enter the **Resource group** you want the Key Vault to be created in.
+   - Enter the **Name** and select the **Region**, and the **Standard** pricing tier.
+   - Click **Review + create** and then click **Create**.
+1. When the Key Vault is created, go to the new Key Vault resource, and click on **Access policies** under *Settings-in the menu.
    - Click **+ Add Access Policy**.
-   - Click on the **Secret permissions*-dropdown and select:
-      -**Get**
-      -**List**
-      -**Set**
+   - Click on the **Secret permissions** dropdown and select:
+      - **Get**
+      - **List**
+      - **Set**
    - Click the *None selected-link next to **Select principal**.
-   - In the search box on the **Principal*-selection pane, enter the *Application (client) ID-for the new Application you created in the previous step. Select the application when it shows up.
+   - In the search box on the **Principal** selection pane, enter the *Application (client) ID-for the new Application you created in the previous step. Select the application when it shows up.
    - Click **Add**.
-1. From the *Overview-tab, note the **DNS Name*-of your Key Vault (e.g. *<https://mytranslatorkv.vault.azure.net/>*) which you will need to configure your Custom Translator CLI tool.
+1. From the *Overview* tab, note the **DNS Name** of your Key Vault (e.g. *<https://mytranslatorkv.vault.azure.net/>*) which you will need to configure your Custom Translator CLI tool.
 
 ### Setting CLI tool configuration
 
@@ -110,7 +111,7 @@ Go to the folder where .NET Core global tools are installed. Global tools are in
 | Windows | `%USERPROFILE%\.dotnet\tools` |
 
 - Beneath that folder, navigate to the *\.store\custom-translator-cli\<version>\custom-translator-cli\<version>\tools\netcoreapp3.1\any-folder.
-- Rename the **appSettings.sample.config*-file to **appSettings.config**, and enter the values you collected above:
+- Rename the **appSettings.sample.config** file to **appSettings.config**, and enter the values you collected above:
 
 ```xml
 {
@@ -160,7 +161,7 @@ This can be useful when you work with multiple subscriptions.
 
 ### First time authentication
 
-The first time you use any **translator*-command *other than-**config**, for example, *translator workspace list*, the tool will launch a browser window and you must sign into Azure using the subscription you used to configure the Azure resources for the tool.
+The first time you use any **translator** command *other than- **config**, for example, *translator workspace list*, the tool will launch a browser window and you must sign into Azure using the subscription you used to configure the Azure resources for the tool.
 
 This is a one-time requirement and is required to get the authentication token and refresh token that the tool uses when it authenticates against your Azure Active Directory everytime you use the tool thereafter. The tool stores the authentication token and refresh token in the Azure Key Vault that you configured earlier. If you manually delete the entry in your Azure Key Vault, the next time you use the translator CLI tool, you will be required to sign in again.
 
@@ -306,16 +307,16 @@ translator model deploy -m <Id>
 
 When using the CLI in a devops pipeline, there are a few things to remember:
 
-- The one-time authentication in a browser described above in [First Time Authentication](#first-time-authentication) will not work when the tool is used in a pipeline. To get around this it is essential that you **run the CLI once interactively*-on any machine, using a command such as *translator workspace list*.  
+- The one-time authentication in a browser described above in [First Time Authentication](#first-time-authentication) will not work when the tool is used in a pipeline. To get around this it is essential that you **run the CLI once interactively** on any machine, using a command such as *translator workspace list*.  
 This causes the authentication tokens to be cached in Azure Key Vault where the instance of the tool running in a pipeline will be able to find them, so it won't try to put up a browser window.
 
 - Set environment variables or secret variables in your pipeline for the app configuration values. It is recommended that you set them as secrets so that they are not visible in pipeline build logs:
-  -**TRANSLATOR_VAULT_URI**: *your-keyvault-DNS-hostname*
-  -**AZURE_CLIENT_ID**: *Application (client) ID*
-  -**AZURE_TENANT_ID**: *Directory (tenant) ID*
-  -**AZURE_CLIENT_SECRET**: *Application client secret*
+  - **TRANSLATOR_VAULT_URI**: *your-keyvault-DNS-hostname*
+  - **AZURE_CLIENT_ID**: *Application (client) ID*
+  - **AZURE_TENANT_ID**: *Directory (tenant) ID*
+  - **AZURE_CLIENT_SECRET**: *Application client secret*
 
-- Example pipeline step if you are using *GitHub Actions*, where the configuration values above have been defined as **GitHub Secrets*-in your repo:
+- Example pipeline step if you are using *GitHub Actions*, where the configuration values above have been defined as **GitHub Secrets** in your repo:
   
    ```bash
     - name: set config
