@@ -159,7 +159,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             var app = InitApp(mock.Object);
 
             // ACT
-            var args = CommandIntoArgs("model create -p 00000000-0000-0000-0000-000000000000 -n testmodel -d 1,2 -w -j");
+            var args = CommandIntoArgs("model create -p 00000000-0000-0000-0000-000000000000 -n testmodel -d 1,2 -t -w -j");
             app.Execute(args);
 
             // ASSESS
@@ -343,6 +343,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
                     )
                 .ReturnsAsync(
                     new HttpOperationResponse()
+                );
+            mock
+                .Setup(
+                    m => m.GetModelWithHttpMessagesAsync(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<string>(), null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<ModelInfo>() { Body = response1 }
                 );
             mock
                 .Setup(

@@ -1,49 +1,168 @@
 # Azure Custom Translator Manager CLI
 
-Azure Custom Translator Manager CLI is an unofficial command-line tool for [Microsoft Azure Cognitive Services Custom Translator](https://docs.microsoft.com/azure/cognitive-services/translator/custom-translator/overview) management - workspaces, projects, models, tests, endpoints etc. Useful especially for automation and CI/CD.
+- [Azure Custom Translator Manager CLI](#azure-custom-translator-manager-cli)
+  - [Installation](#installation)
+    - [Installing the tool](#installing-the-tool)
+    - [Configuring required resources in Azure](#configuring-required-resources-in-azure)
+      - [Creating the App registration](#creating-the-app-registration)
+      - [Creating the Azure Key Vault](#creating-the-azure-key-vault)
+    - [Setting CLI tool configuration](#setting-cli-tool-configuration)
+      - [Using an appSettings.config configuration file](#using-an-appsettingsconfig-configuration-file)
+      - [Setting environment variables](#setting-environment-variables)
+  - [Usage](#usage)
+    - [Using `translator config` to set your Azure Translator resource key](#using-translator-config-to-set-your-azure-translator-resource-key)
+    - [First time authentication](#first-time-authentication)
+    - [Help](#help)
+    - [Entity operations](#entity-operations)
+    - [Wait](#wait)
+    - [JSON](#json)
+  - [Example workflow](#example-workflow)
+  - [Using the CLI tool in a DevOps workflow](#using-the-cli-tool-in-a-devops-workflow)
 
-![Build status](https://dev.azure.com/msimecek/AzureSpeechCLI/_apis/build/status/AzureSpeechCLI-GitHub)
+Azure Custom Translator Manager CLI is an unofficial command-line tool for [Microsoft Azure Cognitive Services Custom Translator](https://docs.microsoft.com/azure/cognitive-services/translator/custom-translator/overview) management -workspaces, projects, models, tests, endpoints etc. Useful especially for automation and CI/CD.
 
-## Custom Translator API
+![Build status](https://dev.azure.com/andycw/Azure-Custom-Translator-CLI/_apis/build/status/Azure-Custom-Translator-CLI-GitHub)
 
-This tool is using [Custom Translator API Preview v1.0](https://custom-api.cognitive.microsofttranslator.com/swagger/). SDK was generated automatically from the Swagger definition using [AutoRest](https://github.com/Azure/AutoRest), but a few adjustments had to be made to the generated code.
+This tool is using [Custom Translator API Preview v1.0](https://custom-api.cognitive.microsofttranslator.com/swagger/). SDK was generated automatically from the Swagger definition using [AutoRest](https://github.com/Azure/AutoRest), but many adjustments had to be made to the generated code. If you want to change the source and build your own version of the tool and you regenerate the SDK with AutoRest, significant rework will be required to make the solution build.
 
-**Until this is refactored, it's not safe to regenerate the SDK with AutoRest.**
+## Installation
 
-## Usage
+To use the tool, you must:
+
+- Install the tool on your system
+- Configure Azure services required by the tool
+- Set configuration parameters for the tool.
+
+### Installing the tool
 
 With .NET Core installed just run:
 
 ```bash
-dotnet tool install -g azuretranslatorcli
+dotnet tool install -g azure-translator-cli
 ```
 
-Alternatively, you can go to [Releases](https://github.com/msimecek/Azure-Speech-CLI/releases) and download a compiled version for your operating system, or build directly from sources.
+Alternatively, you can go to [Releases](https://github.com/andycw/Azure-Custom-Translator-CLI/releases) and download a compiled version for your operating system, or build directly from sources.
 
 > CLI is created with .NET Core and builds are currently running for Windows, MacOS and Linux.
 >
 
-### Configuration
+### Configuring required resources in Azure
 
-Before using the tool, you need to set your Custom Translator service credentials.
+The Custom Translator CLI requires that you setup the following in Azure:
 
+-Register an application at the Microsoft App Registration portal
+-Create an Azure Key Vault for the CLI tool to use to store authentication tokens
+
+You will then update the CLI configuration so that it can use these resources.
+
+#### Creating the App registration
+
+The CLI tool must authenticate against your organisations Azure Active Directory each time you use it to get an access token that is validated by the Azure Custom Translation service. You must register an application at the Microsoft App Registration portal to enable this:
+
+1. Go to [https://ms.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade](https://ms.portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade).
+1. Click **+ New Registration**.
+1. Enter the name of your application (e.g. **MyTranslatorCLI**) and select account type. Use **Accounts in this organizational directory only**.
+1. In the **Redirect URI**, select **Public client/native (mobile & desktop)*-in the dropdown and enter **<http://localhost>*-as the URI.
+1. Click **Register**.
+1. Note the following values displayed on the Overview tab which you will need to configure your CLI tool installation:
+   - **Application (client) ID**
+   - **Directory (tenant) ID**
+1. Now click on **Certificates & secrets*-under Manage in the left menu options.
+   1. Under *Client Secrets*, click **+ New client secret**.
+   1. Enter a description and select your required expiry period (Use *Never-if unsure).
+   1. Click **Add**.
+   1. Note down the CLI secret. You will not be able to see the secret value once you leave this blade, although you can generate a new value.
+
+#### Creating the Azure Key Vault
+
+The CLI tool uses an Azure Key Vault instance to store the client access token and refresh token. You must configure the Key Vault now:
+
+1. In the Azure Portal home page, click **+ Create a resource**.
+1. Search for **Key Vault**. On the *Key Vault-resource page, click **Create**.
+   - Select your subscription and enter the **Resource group*-you want the Key Vault to be created in.
+   - Enter the **Name*-and select the **Region**, and the **Standard*-pricing tier.
+   - Click **Review + create*-and then click **Create**.
+1. When the Key Vault is created, go to the new Key Vault resource, and click on **Access policies*-under *Settings-in the menu.
+   - Click **+ Add Access Policy**.
+   - Click on the **Secret permissions*-dropdown and select:
+      -**Get**
+      -**List**
+      -**Set**
+   - Click the *None selected-link next to **Select principal**.
+   - In the search box on the **Principal*-selection pane, enter the *Application (client) ID-for the new Application you created in the previous step. Select the application when it shows up.
+   - Click **Add**.
+1. From the *Overview-tab, note the **DNS Name*-of your Key Vault (e.g. *<https://mytranslatorkv.vault.azure.net/>*) which you will need to configure your Custom Translator CLI tool.
+
+### Setting CLI tool configuration
+
+Now you have all the values needed, you need to configure the tool so that it can use them. There are two ways you can do this:
+
+-Entering the values in an app.config configuration file
+-Saving the values as environment variables
+
+#### Using an appSettings.config configuration file
+
+Go to the folder where .NET Core global tools are installed. Global tools are installed in the following directories by default when you install using the `-g` or `--global` option:
+
+| OS | Path |
+|---|-----|
+| Linux/macOS | `$HOME/.dotnet/tools` |
+| Windows | `%USERPROFILE%\.dotnet\tools` |
+
+- Beneath that folder, navigate to the *\.store\custom-translator-cli\<version>\custom-translator-cli\<version>\tools\netcoreapp3.1\any-folder.
+- Rename the **appSettings.sample.config*-file to **appSettings.config**, and enter the values you collected above:
+
+```xml
+{
+  "TRANSLATOR_VAULT_URI": "your-keyvault-DNS-hostname",
+  "AZURE_CLIENT_ID": "Application (client) ID",
+  "AZURE_TENANT_ID": "Directory (tenant) ID",
+  "AZURE_CLIENT_SECRET": "Application client secret"
+}
 ```
-translator config set --name Project1 --key ABCD12345 --select
+
+- Save your changes.
+
+#### Setting environment variables
+
+The CLI tool can get the configuration values it needs from environment variables instead of from an appSettings.config file. Set the following environment variables:
+
+- **TRANSLATOR_VAULT_URI**: *your-keyvault-DNS-hostname*
+- **AZURE_CLIENT_ID**: *Application (client) ID*
+- **AZURE_TENANT_ID**: *Directory (tenant) ID*
+- **AZURE_CLIENT_SECRET**: *Application client secret*
+
+## Usage
+
+Before using the tool to manage workspaces, projects, documents and models, you need to set your Custom Translator service credentials.
+
+### Using `translator config` to set your Azure Translator resource key
+
+Set your Custom Translator service credentials as follows
+
+```bash
+translator config set --name Project1 --key ABCD12345 --region global --select
 ```
 
 Or shorter version:
 
-```
+```bash
 translator config set -n Project2 -k ABCD54321 -s
 ```
 
-Both commands store your credentials as configuration set and automatically make these credentials selected (by using the `--select` parameter). You can have multiple sets and switch between them:
+Both commands store your credentials as a configuration set and automatically make these credentials selected (by using the `--select` parameter). You can have multiple sets and switch between them:
 
-```
+```bash
 translator config select Project1
 ```
 
 This can be useful when you work with multiple subscriptions.
+
+### First time authentication
+
+The first time you use any **translator*-command *other than-**config**, for example, *translator workspace list*, the tool will launch a browser window and you must sign into Azure using the subscription you used to configure the Azure resources for the tool.
+
+This is a one-time requirement and is required to get the authentication token and refresh token that the tool uses when it authenticates against your Azure Active Directory everytime you use the tool thereafter. The tool stores the authentication token and refresh token in the Azure Key Vault that you configured earlier. If you manually delete the entry in your Azure Key Vault, the next time you use the translator CLI tool, you will be required to sign in again.
 
 ### Help
 
@@ -51,280 +170,167 @@ If you're not sure what commands and parameters are available, try adding `--hel
 
 For example:
 
-```
+```bash
 translator --help
-translator dataset --help
-translator dataset create --help
+translator model --help
+translator document upload --help
 ```
 
 ### Entity operations
 
-Every entity supports basic set of operations:
+Every entity (workspace|project|document|model) supports basic set of operations:
 
-* `create`
-* `list`
-* `show`
-* `delete`
+- `create`
+- `list`
+- `show`
+- `delete`
 
 When working with a specific entity, ID is usually required:
 
-```
-speech dataset show <GUID>
-speech model delete <GUID>
+```bash
+translator project list -ws <GUID>
+translator model delete --modelid <Int64>
 ```
 
 ### Wait
 
-Every *create* command offers optional `--wait` (`-w`) flag which makes the CLI block and wait for the create operation to complete (dataset processed, model trained, endpoint provisioned etc.). When new entity is created, it writes corresponding ID to console.
+Every *create-command offers optional `--wait` (`-w`) flag which makes the CLI block and wait for the create operation to complete (dataset processed, model trained, endpoint provisioned etc.). When new entity is created, it writes corresponding ID to console.
 
 This is useful in automation pipelines when commands are run as individual steps in a complex process.
 
-```
-translator dataset create --name CLI --audio "C:\Test.zip" --transcript "C:\test.txt" --wait
-Uploading acoustic dataset...
+```bash
+translator model create -p 00000000-0000-0000-0000-000000000000 -n testmodel -d 1,2 --train --wait
+
+Creating model...
 Processing [..............]
-c34d53e4-oooo-48d5-b18f-7492332f287c
+1234       testmodel                                          trained
 ```
 
-## Commands
+### JSON
 
-### Compile
+Every command offers optional `--json` (`-j`) flag which forces the output from the CLI to be formatted as JSON.
 
-After setting your subscription key and endpoint you usually start by preparing data. CLI can help by providing the `compile` command.
+This is useful in automation pipelines when the output from commands need to be parsed to determine status.
 
-```
-speech compile --audio <source folder> --transcript <txt file> --output <target folder> --test-percentage 10
-```
+```bash
+translator model create -p 00000000-0000-0000-0000-000000000000 -n testmodel -d 1,2 --train --wait --json
 
-This command expects a folder with all audio samples as WAV files and TXT file with corresponding transcripts.
-
-It creates the output folder, divides data in two sets ("train" and "test") a compresses them into ZIP files. At the end you will get:
-
-* Train.zip
-* train.txt
-* Test.zip
-* test.txt
-
-### Datasets
-
-There are three types of datasets in the Speech Service: **acoustic**, **language** and **pronunciation**.
-
-To create acoustic dataset, you need to provide a ZIP file with all audio samples and TXT file with corresponding transcriptions.
-
-To create language and pronunciation datasets, you need to provide TXT file with language data.
-
-To **create an acoustic dataset** use:
-
-```
-dataset create --name CLI --audio "C:\Train.zip" --transcript "C:\train.txt" --wait
-```
-
-To **create a language dataset** use:
-
-```
-dataset create --name CLI-Lang --language "C:\language.txt" --wait
-```
-
-To create a **pronunciation dataset** use:
-
-```
-dataset create --name CLI-Pro --pronunciation "C:\pronunciation.txt" --wait
-```
-
-To **list available datasets**:
-
-```
-dataset list
-```
-
-To **show details of dataset**:
-
-```
-dataset show 63f20d88-f531-4af0-bc85-58e0e9dAAACCDD
+Creating model...
+Processing [.........] Done
+{
+  "id": 1234,
+  "name": "testmodel",
+  "modelIdentifier": null,
+  "projectId": "00000000-0000-0000-0000-000000000000",
+  "documents": null,
+  "modelRegionStatuses": null,
+  "baselineBleuScorePunctuated": null,
+  "bleuScorePunctuated": null,
+  "baselineBleuScoreUnpunctuated": null,
+  "bleuScoreUnpunctuated": null,
+  "baselineBleuScoreCIPunctuated": null,
+  "bleuScoreCIPunctuated": null,
+  "baselineBleuScoreCIUnpunctuated": null,
+  "bleuScoreCIUnpunctuated": null,
+  "startDate": null,
+  "completionDate": null,
+  "modifiedDate": "0001-01-01T00:00:00",
+  "createdDate": "0001-01-01T00:00:00",
+  "createdBy": null,
+  "modifiedBy": null,
+  "trainingSentenceCount": null,
+  "tuningSentenceCount": null,
+  "testingSentenceCount": null,
+  "phraseDictionarySentenceCount": null,
+  "sentenceDictionarySentenceCount": null,
+  "monolingualSentenceCount": null,
+  "modelStatus": "trained",
+  "statusInfo": null,
+  "isTuningAuto": false,
+  "isTestingAuto": false,
+  "isAutoDeploy": false,
+  "autoDeployThreshold": 0.0,
+  "hubBLEUScore": null,
+  "hubCategory": null,
+  "errorCode": null
+}
 ```
 
-To **show available locales**:
+## Example workflow
 
-```
-dataset locales acoustic
-dataset locales language
-dataset locales pronunciation
-```
+The following is an example of a typical workflow using the CLI. Note that output from the commands is not shown.
 
-### Base models
+Start by setting your configuration for your translator subscription key:
 
-Similarly to datasets there are two types of models in the Speech Service: acoustic and language. Both are created from previously uploaded datasets.
-
-To **create an acoustic model** you first need to get GUID of base model (referred to as *scenario*):
-
-```
-model list-scenarios --locale en-us
+```bash
+translator config set --name Project1 --key ABCD12345 --select
 ```
 
-*`en-us` is the default locale, but you can choose a different one.*
+Then you may wish to see the existing workspaces:
 
-The list will be order by model date - it's recommended to use the newest. Beware that GUIDs can vary between datacenters!
-
-Scenarios can be filtered by **purpose**. Possible values are:
-
-* `OnlineTranscription`
-* `BatchTranscription`
-* `LanguageAdaptation`
-* `AcousticAdaptation`
-* `LanguageOnlineInterpolation`
-
-Default is `AcousticAdaptation`, because that's the type you will use when creating custom speech models.
-
-```
-model list-scenarios --purpose AcousticAdaptation
+```bash
+translator workspace list
 ```
 
-To disable filtering by purpose, use `--purpose all`.
+You can use the CLI to create a new workspace, or work within an existing one. Specify the ID of the workspace when creating a new project:
 
-Output:
-
-```
-Getting scenarios...
-042de52f-d7b7-489d-921c-1b0a59d89dd1     v4.5 Unified 11. 1. 2019 13:38:33
-7a1d51ce-a26d-4ee3-aee8-0fa020a65086     v3.3 Unified 26. 11. 2018 19:59:20
-5d3b7fb0-f493-4e97-9616-e20130327304     v3.2 Unified 26. 11. 2018 18:59:20
-d36f6c4b-8f75-41d1-b126-c38e46a059af     Unified V3 EMBR - ULM 2. 8. 2018 15:12:17
-c7a69da3-27de-4a4b-ab75-b6716f6321e5 V2.5 Conversational (AM/LM adapt) 16. 4. 2018 11:55:00
-a1f8db59-40ff-4f0e-b011-37629c3a1a53 V2.0 Conversational (AM/LM adapt) - Deprecated 17. 8. 2017 12:00:00
-cc7826ac-5355-471d-9bc6-a54673d06e45 V1.0 Conversational (AM/LM adapt) - Deprecated 4. 11. 2016 12:01:02
-a3d8aab9-6f36-44cd-9904-b37389ce2bfa V1.0 Interactive (AM/LM adapt) - Deprecated 4. 11. 2016 8:23:42
+```bash
+translator project create -ws <GUID>
 ```
 
-To use in scripts, you may want to get just a list of IDs:
+Next upload documents to the workspace:
 
-```
-model list-scenarios --simple
-```
-
-Output:
-
-```
-042de52f-d7b7-489d-921c-1b0a59d89dd1
-7a1d51ce-a26d-4ee3-aee8-0fa020a65086
-5d3b7fb0-f493-4e97-9616-e20130327304
-d36f6c4b-8f75-41d1-b126-c38e46a059af
-c7a69da3-27de-4a4b-ab75-b6716f6321e5
-a1f8db59-40ff-4f0e-b011-37629c3a1a53
-cc7826ac-5355-471d-9bc6-a54673d06e45
-a3d8aab9-6f36-44cd-9904-b37389ce2bfa
+```bash
+translator document upload -ws <GUID> -lp en:es -dt training -c abc.xlsx
 ```
 
-### Models
+List documents to get their IDs:
 
-Then you can use GUID of selected **scenario** (see [Base models](#base-models)) in the `create` command:
-
-```
-model create --name CLI --locale en-us --audio-dataset <GUID> --scenario c7a69da3-27de-4a4b-ab75-b6716f6321e5 --wait
+```bash
+translator document list -ws <GUID>
 ```
 
-To **create a language model** you need the same scenario GUID and then call:
+Create a model in your project, specifying the document ID(s) and weather you want to train it immediately:
 
-```
-model create --name CLI-Lang --locale en-us --language-dataset <GUID> --scenario c7a69da3-27de-4a4b-ab75-b6716f6321e5 --wait
-```
-
-**Pronunciation models** work the same, just provide ID of the pronunciation dataset:
-
-```
-model create --name CLI-Pro --locale en-us --pronunciation-dataset <GUID> --scenario c7a69da3-27de-4a4b-ab75-b6716f6321e5 --wait
+```bash
+translator model create -p <GUID> -n myNewModel -d 12 -w -t
 ```
 
-To **show available locales**:
+Deploy the model:
 
-```
-model locales acoustic
-model locales language
-```
-
-### Tests
-
-To **create an accuracy test** you need three GUIDs: testing audio dataset ID, ID of the acoustic model you are testing and ID of a language model:
-
-```
-speech test create --name CLI --audio-dataset <GUID> --model <GUID> --language-model <GUID> --wait
+```bash
+translator model deploy -m <Id>
 ```
 
-To see the **detail of particular test**, call:
+## Using the CLI tool in a DevOps workflow
 
-```
-speech test list
-...
-speech test show <GUID>
-```
+When using the CLI in a devops pipeline, there are a few things to remember:
 
-### Endpoints
+- The one-time authentication in a browser described above in [First Time Authentication](#first-time-authentication) will not work when the tool is used in a pipeline. To get around this it is essential that you **run the CLI once interactively*-on any machine, using a command such as *translator workspace list*.  
+This causes the authentication tokens to be cached in Azure Key Vault where the instance of the tool running in a pipeline will be able to find them, so it won't try to put up a browser window.
 
-And finally, to be able to use the model, you need to create an endpoint.
+- Set environment variables or secret variables in your pipeline for the app configuration values. It is recommended that you set them as secrets so that they are not visible in pipeline build logs:
+  -**TRANSLATOR_VAULT_URI**: *your-keyvault-DNS-hostname*
+  -**AZURE_CLIENT_ID**: *Application (client) ID*
+  -**AZURE_TENANT_ID**: *Directory (tenant) ID*
+  -**AZURE_CLIENT_SECRET**: *Application client secret*
 
-To **create an endpoint** use:
+- Example pipeline step if you are using *GitHub Actions*, where the configuration values above have been defined as **GitHub Secrets*-in your repo:
+  
+   ```bash
+    - name: set config
+      run: translator config set -n default -k b12d1367695f403a9abcdefghijk -r global -s
 
-```
-speech endpoint create --name CLI --locale en-us --model <GUID> --language-model <GUID> --concurrent-recognitions 1 --wait
-```
-
-### Batch transcriptions
-
-A bonus command, which doesn't revolve around entities. Batch transcription generates a transcript of long audio file with timestamps, using your custom model.
-
-```
-speech transcript create --name CLI --locale en-us --recording <URL> --model <GUID> --language <GUID> --wait
-```
-
-To include **word-level timestamps**, use the `--word-level-timestamps` (`-wt`) parameter.
-
-To activate **diariazation** (speaker separation), use the `--diarization` (`-di`) parameter. This will also force word-level timestamps.
-
-To include **sentiment** score, use the `--sentiment` (`-s`) parameter.
-
-Once the batch is done, you can call:
-
-```
-speech transcript show <GUID>
-```
-
-And get result URLs from response JSON.
-
-Or you can call **download** to get it as file:
-
-```
-speech transcript download <GUID> --out-dir <PATH> --format <format> --file-name <filename>
-```
-
-Supported output formats:
-
-* JSON (default)
-* VTT
-* TXT
-
-If you specify `--file-name` this value will be used for the output file (with extension given by format).
-
-If you don't specify `--out-dir` current working directory will be used.
-
-To update name or description of batch transcription, use the **update** command:
-
-```
-speech transcript update <GUID> --name <name> --description <description>
-```
-
-### Single transcription
-
-If you want to perform transcript of a single, short WAV file, you can use single transcription command like this:
-
-```
-speech transcript single --input "C:\test.wav" --endpoint <GUID> --output-format detailed
-```
-
-## TODO
-
-- [ ] Work with names too, not just GUIDs
-- [ ] Check if uploaded files are in the correct format (UTF-8 BOM text files)
+    - name: Get workspaces
+      run: translator workspace list
+      env:
+        AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        TRANSLATOR_VAULT_URI: ${{ secrets.TRANSLATOR_VAULT_URI }}
+   ```
 
 -----
 
-By participating in this project, you
+Contributions to this project are welcome. By participating in this project, you
 agree to abide by the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).

@@ -47,7 +47,7 @@ namespace CustomTranslatorCLI.Commands
             string DocumentIDs { get; set; }
 
             
-            [Option(CommandOptionType.NoValue, Description = "Initiate training [default is True].")]
+            [Option(CommandOptionType.NoValue, Description = "Initiate training [default is False].")]
             bool? Train { get; set; }
 
             [Option(CommandOptionType.NoValue, Description = "Return output as JSON.")]
@@ -75,7 +75,7 @@ namespace CustomTranslatorCLI.Commands
                     IsTuningAuto = true,
                     IsTestingAuto = true,
                     IsAutoDeploy = true,
-                    IsAutoTrain = Train.HasValue ? Train.Value : true,
+                    IsAutoTrain = Train.HasValue ? true : false,
                     ProjectId = new Guid(ProjectId)
                 };
 
