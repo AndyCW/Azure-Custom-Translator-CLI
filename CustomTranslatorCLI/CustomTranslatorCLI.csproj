@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>translator</ToolCommandName>
     <PackageId>custom-translator-cli</PackageId>
-    <PackageVersion>1.0.0-alpha.12</PackageVersion>
+    <PackageVersion>1.0.0</PackageVersion>
     <Description>A CLI to manage models for the Azure Custom Translator service</Description>
     <Authors>Andy Wigley</Authors>
     <PackageTags>translator custom-translator</PackageTags>
@@ -17,16 +17,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appSettings.json" />
     <None Remove="appSettings.sample.json" />
     <None Include="logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appSettings.json">
+    <Content Include="appSettings.sample.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="appSettings.sample.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +39,12 @@
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
     <PackageReference Include="RestSharp" Version="106.11.4" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
