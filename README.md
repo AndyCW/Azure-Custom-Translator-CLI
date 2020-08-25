@@ -6,6 +6,7 @@
     - [Configuring required resources in Azure](#configuring-required-resources-in-azure)
       - [Creating the App registration](#creating-the-app-registration)
       - [Creating the Azure Key Vault](#creating-the-azure-key-vault)
+      - [Grant your application access to the Key Vault](#grant-your-application-access-to-the-key-vault)
     - [Setting CLI tool configuration](#setting-cli-tool-configuration)
       - [Using an appSettings.config configuration file](#using-an-appsettingsconfig-configuration-file)
       - [Setting environment variables](#setting-environment-variables)
@@ -50,8 +51,8 @@ Alternatively, you can go to [Releases](https://github.com/andycw/Azure-Custom-T
 
 The Custom Translator CLI requires that you setup the following in Azure:
 
--Register an application at the Microsoft App Registration portal
--Create an Azure Key Vault for the CLI tool to use to store authentication tokens
+- Register an application at the Microsoft App Registration portal
+- Create an Azure Key Vault for the CLI tool to use to store authentication tokens
 
 You will then update the CLI configuration so that it can use these resources.
 
@@ -83,14 +84,17 @@ The CLI tool uses an Azure Key Vault instance to store the client access token a
    - Select your subscription and enter the **Resource group** you want the Key Vault to be created in.
    - Enter the **Name** and select the **Region**, and the **Standard** pricing tier.
    - Click **Review + create** and then click **Create**.
-1. When the Key Vault is created, go to the new Key Vault resource, and click on **Access policies** under *Settings-in the menu.
+
+#### Grant your application access to the Key Vault
+
+1. When the Key Vault is created, go to the new Key Vault resource, and click on **Access policies** under *Settings* in the menu.
    - Click **+ Add Access Policy**.
    - Click on the **Secret permissions** dropdown and select:
       - **Get**
       - **List**
       - **Set**
-   - Click the *None selected-link next to **Select principal**.
-   - In the search box on the **Principal** selection pane, enter the *Application (client) ID-for the new Application you created in the previous step. Select the application when it shows up.
+   - Click the *None selected* link next to **Select principal**.
+   - In the search box on the **Principal** selection pane, enter the *Application (client) ID* or the application name (e.g. *MyTranslatorCLI*) for the new Application you created in the previous step. Select the application when it shows up.
    - Click **Add**.
 1. From the *Overview* tab, note the **DNS Name** of your Key Vault (e.g. *<https://mytranslatorkv.vault.azure.net/>*) which you will need to configure your Custom Translator CLI tool.
 
@@ -98,8 +102,8 @@ The CLI tool uses an Azure Key Vault instance to store the client access token a
 
 Now you have all the values needed, you need to configure the tool so that it can use them. There are two ways you can do this:
 
--Entering the values in an app.config configuration file
--Saving the values as environment variables
+- Entering the values in an app.config configuration file
+- Saving the values as environment variables
 
 #### Using an appSettings.config configuration file
 
@@ -161,9 +165,9 @@ This can be useful when you work with multiple subscriptions.
 
 ### First time authentication
 
-The first time you use any **translator** command *other than- **config**, for example, *translator workspace list*, the tool will launch a browser window and you must sign into Azure using the subscription you used to configure the Azure resources for the tool.
+The first time you use any **translator** command (apart from *config*), for example, *translator workspace list*, the tool will launch a browser window and you must sign into Azure using the subscription you used to configure the Azure resources for the tool.
 
-This is a one-time requirement and is required to get the authentication token and refresh token that the tool uses when it authenticates against your Azure Active Directory everytime you use the tool thereafter. The tool stores the authentication token and refresh token in the Azure Key Vault that you configured earlier. If you manually delete the entry in your Azure Key Vault, the next time you use the translator CLI tool, you will be required to sign in again.
+This is a one-time requirement and is required to get the authentication token and refresh token that the tool uses when it authenticates against your Azure Active Directory everytime you use the tool thereafter. The tool stores the authentication token and refresh token in the Azure Key Vault that you configured earlier. If you manually purge (not soft delete) the entry in your Azure Key Vault, the next time you use the translator CLI tool, you will be required to sign in again.
 
 ### Help
 
