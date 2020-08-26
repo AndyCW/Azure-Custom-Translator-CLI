@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Defines the a billing region
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorBillingRegions
+    public partial class BillingRegions
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorBillingRegions class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorBillingRegions()
+        public BillingRegions()
         {
             CustomInit();
         }
@@ -32,7 +32,7 @@ namespace CustomTranslator.Models
         /// (GBL, USW2, etc)</param>
         /// <param name="billingRegionName">Gets or sets the billing region
         /// name (Global, US West 2, etc)</param>
-        public TextTranslatorModelsTextTranslatorBillingRegions(string billingRegionCode, string billingRegionName)
+        public BillingRegions(string billingRegionCode, string billingRegionName)
         {
             BillingRegionCode = billingRegionCode;
             BillingRegionName = billingRegionName;

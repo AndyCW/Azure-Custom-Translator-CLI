@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Microsoft.Rest;
 
 namespace CustomTranslatorCLI.Commands
 {
@@ -39,14 +40,46 @@ namespace CustomTranslatorCLI.Commands
             bool? Json { get; set; }
 
             int OnExecute(IConsole console, IConfig config, IConfiguration appConfiguration, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
-           {
-               var workspaceDefinition = new CreateWorkspaceData()
-               {
+            {
+                _sdk = sdk;
+                _console = console;
+                _config = config;
+                _atc = atc;
+
+                // See if it already exists
+                var ws = FindWorkspace(Name, sdk, atc);
+                if (ws != null)
+                {
+                    if (!Json.HasValue)
+                    {
+                        console.WriteLine($"Workspace '{Name}' already exists");
+                        console.WriteLine($"{ws.Id,30} {ws.Name,-25}");
+                    }
+                    else
+                    {
+                        console.WriteLine(SafeJsonConvert.SerializeObject(ws, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                    }
+
+                    return 0;
+                }
+
+                var billingRegions = CallApi<List<BillingRegions>>(() => sdk.GetBillingregions(atc.GetToken()));
+                var billingRegion = (from br in billingRegions
+                                         where br.BillingRegionName.ToLower() == config.TranslatorRegion.ToLower()
+                                         select br).FirstOrDefault();
+
+                if (billingRegion == null)
+                {
+                    throw new Exception($"Unknown billing region '{config.TranslatorRegion}'. Run 'config set' and add your Translator key and region or select proper configuration set by calling 'config select <name>'.");
+                }
+
+                var workspaceDefinition = new CreateWorkspaceData()
+                {
                     Name = Name,
                     Subscription = new Subscription()
                     {
                         SubscriptionKey = config.TranslatorKey,
-                        BillingRegionCode = config.TranslatorRegion
+                        BillingRegionCode = billingRegion.BillingRegionCode
                     }
                 };
 
@@ -54,43 +87,49 @@ namespace CustomTranslatorCLI.Commands
                 {
                     console.WriteLine("Creating workspace...");
                 }
-                sdk.CreateWorkspace(workspaceDefinition, atc.GetToken());
 
-                var res1 = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(atc.GetToken()));
-                if (res1 == null)
-                    return -1;
+                CallApi<HttpOperationResponse>(() => sdk.CreateWorkspace(workspaceDefinition, atc.GetToken()));
 
-                if (res1.Count == 0)
+                var workspace = FindWorkspace(Name, sdk, atc);
+                if (workspace == null)
                 {
-                    if (!Json.HasValue)
-                    {
-                        console.WriteLine("No workspaces found.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                    }
+                    throw new Exception("FAILED: Workspace not created.");
+                }
+
+                if (!Json.HasValue)
+                {
+                    console.WriteLine($"{workspace.Id,30} {workspace.Name,-25}");
                 }
                 else
                 {
-                    foreach (var workspace in res1)
-                    {
-                        if (workspace.Name == Name)
-                        {
-                            if (!Json.HasValue)
-                            {
-                                console.WriteLine($"{workspace.Id,30} {workspace.Name,-25}");
-                            }
-                            else
-                            {
-                                Console.WriteLine(SafeJsonConvert.SerializeObject(workspace, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                            }
-                        }
-                    }
+                    console.WriteLine(SafeJsonConvert.SerializeObject(workspace, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                 }
 
                 return 0;
            }
+
+            private WorkspaceInfo FindWorkspace(string name, IMicrosoftCustomTranslatorAPIPreview10 sdk, IAccessTokenClient atc)
+            {
+                var wsList = CallApi<List<WorkspaceInfo>>(() => sdk.GetWorkspaces(atc.GetToken()));
+                if (wsList == null)
+                    return null;
+
+                WorkspaceInfo ws = null;
+                if (wsList.Count > 0)
+                {
+
+                    foreach (var workspace in wsList)
+                    {
+                        if (workspace.Name == name)
+                        {
+                            ws = workspace;
+                            break;
+                        }
+                    }
+                }
+
+                return ws;
+            }
         }
 
         [Command(Description = "Lists workspaces in your subscription.")]

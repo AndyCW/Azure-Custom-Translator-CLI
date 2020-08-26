@@ -111,7 +111,8 @@ namespace CustomTranslatorCLI.Commands
                 {
                     console.WriteLine("Creating project...");
                 }
-                sdk.CreateProject(projectDefinition, atc.GetToken(), WorkspaceId);
+
+                CallApi(() => sdk.CreateProject(projectDefinition, atc.GetToken(), WorkspaceId));
 
                 var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
                 if (res1 == null)
@@ -119,30 +120,24 @@ namespace CustomTranslatorCLI.Commands
 
                 if (res1.Projects.Count == 0)
                 {
-                    if (!Json.HasValue)
-                    {
-                        console.WriteLine("No projects found.");
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                    }
+                    throw new Exception("Error: project creation failed.");
                 }
                 else
                 {
-                    if (!Json.HasValue)
+                    foreach (var project in res1.Projects)
                     {
-                        foreach (var project in res1.Projects)
+                        if (project.Name == Name && (project.Label == Label))
                         {
-                            if (project.Name == Name)
+                            if (!Json.HasValue)
                             {
                                 console.WriteLine($"{project.Id,30} {project.Name,-25}");
                             }
+                            else
+                            {
+                                console.WriteLine(SafeJsonConvert.SerializeObject(project, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                            }
+                            break;
                         }
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res1, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                     }
                 }
 

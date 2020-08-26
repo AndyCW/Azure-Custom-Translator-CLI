@@ -41,7 +41,7 @@ namespace CustomTranslator.Models
         /// <param name="billing">Includes price per million characters, if
         /// subscription
         /// is paid or free</param>
-        public TextTranslatorModelsTextTranslatorSubscriptionResponse(string id = default(string), string name = default(string), string kind = default(string), string sku = default(string), bool? isCMKEnabled = default(bool?), TextTranslatorModelsTextTranslatorBillingRegions region = default(TextTranslatorModelsTextTranslatorBillingRegions), TextTranslatorUtilitiesTrainingPriceInformation billing = default(TextTranslatorUtilitiesTrainingPriceInformation))
+        public TextTranslatorModelsTextTranslatorSubscriptionResponse(string id = default(string), string name = default(string), string kind = default(string), string sku = default(string), bool? isCMKEnabled = default(bool?), BillingRegions region = default(BillingRegions), TextTranslatorUtilitiesTrainingPriceInformation billing = default(TextTranslatorUtilitiesTrainingPriceInformation))
         {
             Id = id;
             Name = name;
@@ -95,7 +95,7 @@ namespace CustomTranslator.Models
         /// resides in
         /// </summary>
         [JsonProperty(PropertyName = "region")]
-        public TextTranslatorModelsTextTranslatorBillingRegions Region { get; set; }
+        public BillingRegions Region { get; set; }
 
         /// <summary>
         /// Gets or sets includes price per million characters, if subscription

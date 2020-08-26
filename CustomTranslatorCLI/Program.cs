@@ -15,7 +15,7 @@ namespace CustomTranslatorCLI
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var config = GetConfig();
 
@@ -44,10 +44,12 @@ namespace CustomTranslatorCLI
             try
             {
                 app.Execute(args);
+                return 0;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.InnerException?.Message);
+                Console.Error.WriteLine(ex.Message);
+                return -1;
             }
         }
 
