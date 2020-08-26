@@ -40,7 +40,7 @@ namespace CustomTranslatorCLI.Commands
 
 
         /// <summary>
-        /// Call API with method returning meaningful object for success and ErrorContent for failure.
+        /// Call API with method returning meaningful object for success.
         /// </summary>
         /// <exception cref="Exception">When the result of API call is ErrorContent.</exception>
         protected static T CallApi<T>(Func<object> method)

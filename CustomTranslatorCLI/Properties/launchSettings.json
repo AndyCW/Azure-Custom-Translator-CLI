@@ -3,7 +3,7 @@
     "CustomTranslatorCLI": {
       "commandName": "Executable",
       "executablePath": "C:\\GitHub\\andycw\\Azure-Custom-Translator-CLI\\CustomTranslatorCLI\\bin\\Debug\\netcoreapp3.1\\CustomTranslatorCLI.exe",
-      "commandLineArgs": "project list -j -ws cffbe659-5fb5-4913-b7de-6274a1540345"
+      "commandLineArgs": "workspace create -n AutomationTestWS"
     }
   }
 }

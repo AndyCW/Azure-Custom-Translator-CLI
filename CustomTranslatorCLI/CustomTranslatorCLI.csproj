@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>translator</ToolCommandName>
     <PackageId>custom-translator-cli</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.5</PackageVersion>
     <Description>A CLI to manage models for the Azure Custom Translator service</Description>
     <Authors>Andy Wigley</Authors>
     <PackageTags>translator custom-translator</PackageTags>
@@ -14,17 +14,15 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <Version>1.0.2</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/AndyCW/Azure-Custom-Translator-CLI</RepositoryUrl>
+    <PackageReleaseNotes>See Azure Custom Translator CLI README for important setup information, and for documentation on usage. Source repo is at https://github.com/AndyCW/Azure-Custom-Translator-CLI</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appSettings.sample.json" />
     <None Include="logo.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appSettings.sample.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +43,13 @@
     <None Update="appSettings.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    <None Update="appSettings.sample.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(ProjectDir)\appSettings.json&quot; &quot;$(TargetDir)\appSettings.json&quot;" />
+  </Target>
 
 </Project>

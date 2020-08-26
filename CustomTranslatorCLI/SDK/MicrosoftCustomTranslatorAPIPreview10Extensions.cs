@@ -1819,9 +1819,9 @@ namespace CustomTranslator
             /// </param>
             /// <param name='authorization'>
             /// </param>
-            public static IList<TextTranslatorModelsTextTranslatorBillingRegions> ApiTexttranslatorV10SubscriptionsBillingregionsGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static IList<BillingRegions> GetBillingregions(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
-                return operations.ApiTexttranslatorV10SubscriptionsBillingregionsGetAsync(authorization).GetAwaiter().GetResult();
+                return operations.GetBillingregionsAsync(authorization).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1835,9 +1835,9 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TextTranslatorModelsTextTranslatorBillingRegions>> ApiTexttranslatorV10SubscriptionsBillingregionsGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<BillingRegions>> GetBillingregionsAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.ApiTexttranslatorV10SubscriptionsBillingregionsGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetBillingRegionsWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
