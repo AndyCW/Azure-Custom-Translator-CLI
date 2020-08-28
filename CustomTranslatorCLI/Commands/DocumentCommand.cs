@@ -42,34 +42,35 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Getting documents...");
                 }
 
-                var res = CallApi<DocumentsResponse>(() => sdk.GetDocuments(atc.GetToken(), 1, WorkspaceId));
-                if (res == null)
-                    return -1;
+                int pageIndex = 1;
+                List<DocumentInfo> documents = new List<DocumentInfo>();
 
-                if (res.PaginatedDocuments.Documents?.Count == 0)
+                while (true)
                 {
-                    if (!Json.HasValue)
+                    var res = CallApi<DocumentsResponse>(() => sdk.GetDocuments(atc.GetToken(), pageIndex, WorkspaceId));
+                    if (res == null)
+                        throw new Exception("GetDocuments returned null response");
+
+                    documents.AddRange(res.PaginatedDocuments.Documents);
+
+                    pageIndex++;
+                    if (pageIndex > res.PaginatedDocuments.TotalPageCount)
                     {
-                        console.WriteLine("No documents found.");
+                        break;
                     }
-                    else
+                }
+
+                //Report results
+                if (!Json.HasValue)
+                {
+                    foreach (var document in documents)
                     {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                        console.WriteLine($"{document.Id} {document.Languages[0].LanguageCode} {document.Name}");
                     }
                 }
                 else
                 {
-                    if (!Json.HasValue)
-                    {
-                        foreach (var document in res.PaginatedDocuments.Documents)
-                        {
-                            console.WriteLine($"{document.Id} {document.Languages[0].LanguageCode} {document.Name}");
-                        }
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                    }
+                    console.WriteLine(SafeJsonConvert.SerializeObject(documents, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                 }
 
                 return 0;
@@ -88,11 +89,25 @@ namespace CustomTranslatorCLI.Commands
             {
                 console.WriteLine("Getting Import Status...");
 
-                var res = CallApi<ImportJobStatusResponse>(() => sdk.GetImportJobsByJobId(atc.GetToken(), new Guid(JobId), 1, 100));
-                if (res == null)
-                    return -1;
+                int pageIndex = 1;
+                List<ImportJobFileStatusInfo> jobStatus = new List<ImportJobFileStatusInfo>();
 
-                console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                while (true)
+                {
+                    var res = CallApi<ImportJobStatusResponse>(() => sdk.GetImportJobsByJobId(atc.GetToken(), new Guid(JobId), pageIndex, 100));
+                    if (res == null)
+                        throw new Exception("GetImportJobsByJobId returned null response");
+
+                    jobStatus.AddRange(res.FileProcessingStatus);
+
+                    pageIndex++;
+                    if (pageIndex > res.TotalPageCount)
+                    {
+                        break;
+                    }
+                }
+
+                console.WriteLine(SafeJsonConvert.SerializeObject(jobStatus, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
 
                 return 0;
             }
@@ -252,7 +267,7 @@ namespace CustomTranslatorCLI.Commands
                 else
                 {
                     Guid jobId = importFilesJobResponse.JobId.Value;
-                    CreateAndWait(() => sdk.GetImportJobsByJobId(atc.GetToken(), jobId, 1, 100), jobId, true, (jobId) => IsUploaded(jobId));
+                    CreateAndWait(() => sdk.GetImportJobsByJobId(atc.GetToken(), jobId, 1, 100), jobId, true, (jobId) => IsUploaded(jobId), Json.HasValue ? false : true);
 
                     var jobStatusResponse = CallApi<ImportJobStatusResponse>(() => sdk.GetImportJobsByJobId(atc.GetToken(), jobId, 1, 100));
                     console.WriteLine(SafeJsonConvert.SerializeObject(jobStatusResponse, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));

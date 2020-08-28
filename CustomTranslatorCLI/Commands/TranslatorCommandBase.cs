@@ -101,26 +101,26 @@ namespace CustomTranslatorCLI.Commands
             }
         }
 
-        protected static int CreateAndWait<T>(Action operation, T id, bool wait, Func<T, bool> probe)
+        protected static int CreateAndWait<T>(Action operation, T id, bool wait, Func<T, bool> probe, bool showProgress)
         {
             CallApi(operation);
 
             if (wait)
-                return WaitForProcessing(id, probe);
+                return WaitForProcessing(id, probe, showProgress);
             return 0;
          }
 
-        protected static int WaitForProcessing<T>(T id, Func<T, bool> probe)
+        protected static int WaitForProcessing<T>(T id, Func<T, bool> probe, bool showProgress)
         {
-            _console.Write("Processing [.");
+            _console.Write(showProgress ? "Processing [." : "");
             var done = false;
             while (!done)
             {
-                _console.Write(".");
+                _console.Write(showProgress ? "." : "");
                 Thread.Sleep(1000);
                 done = probe.Invoke(id);
             }
-            _console.WriteLine(".] Done");
+            _console.WriteLine(showProgress ? ".] Done" : "");
             return 0;
         }
     }

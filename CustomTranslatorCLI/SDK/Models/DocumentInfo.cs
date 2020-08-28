@@ -57,7 +57,7 @@ namespace CustomTranslator.Models
         /// 3. Has a language pair that is not supported</param>
         /// <param name="usedByPrioritizedModel">Gets or sets if this model is
         /// used by the specified prioritized model</param>
-        public DocumentInfo(string name, bool isParallel, UserInfo createdBy, UserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TextTranslatorModelsTextTranslatorFileInfo> files = default(IList<TextTranslatorModelsTextTranslatorFileInfo>), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
+        public DocumentInfo(string name, bool isParallel, UserInfo createdBy, UserInfo modifiedBy, long id, string documentType, long extractedSentenceCount, long characterCount, IList<TranslatorFileInfo> files = default(IList<TranslatorFileInfo>), IList<TranslatorLanguage> languages = default(IList<TranslatorLanguage>), System.DateTime? createdDate = default(System.DateTime?), bool? isAvailable = default(bool?), bool? usedByPrioritizedModel = default(bool?))
         {
             Name = name;
             IsParallel = isParallel;
@@ -111,13 +111,13 @@ namespace CustomTranslator.Models
         /// was uploaded for it, and others still need to be provided.
         /// </summary>
         [JsonProperty(PropertyName = "files")]
-        public IList<TextTranslatorModelsTextTranslatorFileInfo> Files { get; set; }
+        public IList<TranslatorFileInfo> Files { get; set; }
 
         /// <summary>
         /// Gets or sets the file languages associated with the document.
         /// </summary>
         [JsonProperty(PropertyName = "languages")]
-        public IList<TextTranslatorModelsTextTranslatorLanguage> Languages { get; set; }
+        public IList<TranslatorLanguage> Languages { get; set; }
 
         /// <summary>
         /// Gets or sets CreatedDate

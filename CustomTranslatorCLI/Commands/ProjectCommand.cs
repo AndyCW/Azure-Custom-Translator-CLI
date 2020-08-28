@@ -114,7 +114,11 @@ namespace CustomTranslatorCLI.Commands
 
                 CallApi(() => sdk.CreateProject(projectDefinition, atc.GetToken(), WorkspaceId));
 
-                var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
+                if (Label == null)
+                {
+                    Label = string.Empty;
+                }                
+                var res1 = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1, $"name eq {Name}", "createdDate desc"));
                 if (res1 == null)
                     return -1;
 
@@ -124,10 +128,14 @@ namespace CustomTranslatorCLI.Commands
                 }
                 else
                 {
+
+                    bool foundIt = false;
+
                     foreach (var project in res1.Projects)
                     {
                         if (project.Name == Name && (project.Label == Label))
                         {
+                            foundIt = true;
                             if (!Json.HasValue)
                             {
                                 console.WriteLine($"{project.Id,30} {project.Name,-25}");
@@ -138,6 +146,10 @@ namespace CustomTranslatorCLI.Commands
                             }
                             break;
                         }
+                    }
+                    if (!foundIt)
+                    {
+                        throw new Exception("Error: project creation failed.");
                     }
                 }
 
@@ -163,34 +175,34 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Getting projects...");
                 }
 
-                var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, 1));
-                if (res == null)
-                    return -1;
+                int pageIndex = 1;
+                List<ProjectInfo> projects = new List<ProjectInfo>();
 
-                if (res.Projects.Count == 0)
+                while (true)
                 {
-                    if (!Json.HasValue)
+                    var res = CallApi<ProjectsResponse>(() => sdk.GetProjects(atc.GetToken(), WorkspaceId, pageIndex));
+                    if (res == null)
+                        throw new Exception("GetProjects returned null response");
+
+                    projects.AddRange(res.Projects);
+
+                    pageIndex++;
+                    if (pageIndex > res.TotalPageCount)
                     {
-                        console.WriteLine("No projects found.");
+                        break;
                     }
-                    else
+                }
+
+                if (!Json.HasValue)
+                {
+                    foreach (var project in projects)
                     {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                        console.WriteLine($"{project.Id,30} {project.Name,-25}");
                     }
                 }
                 else
                 {
-                    if (!Json.HasValue)
-                    {
-                        foreach (var project in res.Projects)
-                        {
-                            console.WriteLine($"{project.Id,30} {project.Name,-25}");
-                        }
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                    }
+                    console.WriteLine(SafeJsonConvert.SerializeObject(projects, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                 }
 
                 return 0;

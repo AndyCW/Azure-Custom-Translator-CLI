@@ -34,7 +34,7 @@ namespace CustomTranslator.Models
         /// <param name="targetLanguage">The Second Language, could be a source
         /// or target</param>
         /// <param name="id">The Id for the language pair.</param>
-        public LanguagePair(TextTranslatorModelsTextTranslatorLanguage sourceLanguage, TextTranslatorModelsTextTranslatorLanguage targetLanguage, long? id = default(long?))
+        public LanguagePair(TranslatorLanguage sourceLanguage, TranslatorLanguage targetLanguage, long? id = default(long?))
         {
             Id = id;
             SourceLanguage = sourceLanguage;
@@ -57,13 +57,13 @@ namespace CustomTranslator.Models
         /// Gets or sets the First Language, could be a source or target
         /// </summary>
         [JsonProperty(PropertyName = "sourceLanguage")]
-        public TextTranslatorModelsTextTranslatorLanguage SourceLanguage { get; set; }
+        public TranslatorLanguage SourceLanguage { get; set; }
 
         /// <summary>
         /// Gets or sets the Second Language, could be a source or target
         /// </summary>
         [JsonProperty(PropertyName = "targetLanguage")]
-        public TextTranslatorModelsTextTranslatorLanguage TargetLanguage { get; set; }
+        public TranslatorLanguage TargetLanguage { get; set; }
 
         /// <summary>
         /// Validate the object.
