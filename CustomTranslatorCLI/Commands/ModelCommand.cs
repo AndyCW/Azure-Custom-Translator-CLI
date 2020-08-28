@@ -87,7 +87,7 @@ namespace CustomTranslatorCLI.Commands
                 CallApi(() => sdk.CreateModel(modelDefinition, atc.GetToken()));
 
                 // CreateModel does not return the new model Id so we must query for it
-                var res1 = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), 1));
+                var res1 = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), 1, $"modelName eq {Name}"));
                 if (res1 == null)
                     return -1;
 
@@ -111,7 +111,7 @@ namespace CustomTranslatorCLI.Commands
                     bool waitRequested = Wait && (modelDefinition.IsAutoTrain.HasValue && modelDefinition.IsAutoTrain.Value);
                     if (waitRequested)
                     {
-                        CreateAndWait(() => sdk.GetModel(createdModel.Id, atc.GetToken()), createdModel.Id, true, (modelId) => IsTrained(modelId));
+                        CreateAndWait(() => sdk.GetModel(createdModel.Id, atc.GetToken()), createdModel.Id, true, (modelId) => IsTrained(modelId), Json.HasValue ? false : true);
                         createdModel = CallApi<ModelInfo>(() => sdk.GetModel(createdModel.Id, atc.GetToken()));
                     }
 
@@ -219,34 +219,34 @@ namespace CustomTranslatorCLI.Commands
                     console.WriteLine("Getting models...");
                 }
 
-                var res = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), 1));
-                if (res == null)
-                    return -1;
+                int pageIndex = 1;
+                List<ModelInfo> models = new List<ModelInfo>();
 
-                if (res.Models.Count == 0)
+                while (true)
                 {
-                    if (!Json.HasValue)
+                    var res = CallApi<ModelsResponse>(() => sdk.GetProjectsByIdModels(new Guid(ProjectId), atc.GetToken(), pageIndex));
+                    if (res == null)
+                        throw new Exception("GetProjectsByIdModels returned null response");
+
+                    models.AddRange(res.Models);
+
+                    pageIndex++;
+                    if (pageIndex > res.TotalPageCount)
                     {
-                        console.WriteLine("No models found.");
+                        break;
                     }
-                    else
+                }
+
+                if (!Json.HasValue)
+                {
+                    foreach (var model in models)
                     {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
+                        console.WriteLine($"{model.Id,-10} {model.Name,-50} {model.ModelStatus}");
                     }
                 }
                 else
                 {
-                    if (!Json.HasValue)
-                    {
-                        foreach (var model in res.Models)
-                        {
-                            console.WriteLine($"{model.Id,-10} {model.Name,-50} {model.ModelStatus}");
-                        }
-                    }
-                    else
-                    {
-                        console.WriteLine(SafeJsonConvert.SerializeObject(res, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
-                    }
+                    console.WriteLine(SafeJsonConvert.SerializeObject(models, new Newtonsoft.Json.JsonSerializerSettings() { Formatting = Newtonsoft.Json.Formatting.Indented }));
                 }
 
                 return 0;
@@ -305,7 +305,7 @@ namespace CustomTranslatorCLI.Commands
                 }               
 
                 var modelId = Int64.Parse(ModelId);
-                CreateAndWait(() => sdk.TrainModel(modelId, atc.GetToken()), modelId, Wait, (modelId) => IsTrained(modelId));        
+                CreateAndWait(() => sdk.TrainModel(modelId, atc.GetToken()), modelId, Wait, (modelId) => IsTrained(modelId), Json.HasValue ? false : true);        
 
                 if (!Json.HasValue)
                 {

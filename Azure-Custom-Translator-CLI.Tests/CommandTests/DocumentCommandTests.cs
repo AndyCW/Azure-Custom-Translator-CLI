@@ -41,6 +41,123 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             return command.Split(' ');
         }
 
+
+        [Fact]
+        public void List_Documents()
+        {
+            // ARRANGE
+            var response1 = new DocumentsResponse()
+            {
+                PaginatedDocuments = new DocumentInfoResponse()
+                {
+                    PageIndex = 1,
+                    TotalPageCount = 2,
+                    Documents = new List<DocumentInfo>()
+                    {
+                        new DocumentInfo()
+                        {
+                            Name = "firstdoc",
+                            Id = 1,
+                            Languages = new List<TranslatorLanguage>()
+                            {
+                                new TranslatorLanguage()
+                                {
+                                    DisplayName = "Test",
+                                    LanguageCode = "ab",
+                                    Id = 255
+                                }
+                            }
+                        },
+                        new DocumentInfo()
+                        {
+                            Name = "seconddoc",
+                            Id = 2,
+                            Languages = new List<TranslatorLanguage>()
+                            {
+                                new TranslatorLanguage()
+                                {
+                                    DisplayName = "Test",
+                                    LanguageCode = "cd",
+                                    Id = 255
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            };
+            var response2 = new DocumentsResponse()
+            {
+                PaginatedDocuments = new DocumentInfoResponse()
+                {
+                    PageIndex = 2,
+                    TotalPageCount = 2,
+                    Documents = new List<DocumentInfo>()
+                    {
+                        new DocumentInfo()
+                        {
+                            Name = "thirddoc",
+                            Id = 3,
+                            Languages = new List<TranslatorLanguage>()
+                            {
+                                new TranslatorLanguage()
+                                {
+                                    DisplayName = "Test",
+                                    LanguageCode = "ef",
+                                    Id = 255
+                                }
+                            }
+                        },
+                        new DocumentInfo()
+                        {
+                            Name = "fourthdoc",
+                            Id = 4,
+                            Languages = new List<TranslatorLanguage>()
+                            {
+                                new TranslatorLanguage()
+                                {
+                                    DisplayName = "Test",
+                                    LanguageCode = "gh",
+                                    Id = 255
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var mock = new Mock<IMicrosoftCustomTranslatorAPIPreview10>();
+            mock
+                .Setup(
+                    m => m.GetDocumentsWithHttpMessagesAsync(string.Empty, 1, It.IsAny<string>(), null, null, null, null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<DocumentsResponse>() { Body = response1 }
+                );
+            mock
+                .Setup(
+                    m => m.GetDocumentsWithHttpMessagesAsync(string.Empty, 2, It.IsAny<string>(), null, null, null, null, null, CancellationToken.None)
+                    )
+                .ReturnsAsync(
+                    new HttpOperationResponse<DocumentsResponse>() { Body = response2 }
+                );
+
+            var app = InitApp(mock.Object);
+
+            // ACT
+            var args = CommandIntoArgs($"document list -ws 00000000-0000-0000-0000-000000000000");
+            app.Execute(args);
+
+            // ASSESS
+            string expectedResult = @"Getting documents...
+1 ab firstdoc
+2 cd seconddoc
+3 ef thirddoc
+4 gh fourthdoc
+";
+
+            Assert.Equal(expectedResult, ((MockTestWriter)app.Out).ReadAsString());
+        }
         [Fact]
         public void Upload_LanguagePair_Invalid()
         {
@@ -98,13 +215,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -142,13 +259,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -186,13 +303,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -232,13 +349,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -278,13 +395,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -345,13 +462,13 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             {
                 new LanguagePair()
                 {
-                    SourceLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    SourceLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test",
                         LanguageCode = "ab",
                         Id = 255
                     },
-                    TargetLanguage = new TextTranslatorModelsTextTranslatorLanguage()
+                    TargetLanguage = new TranslatorLanguage()
                     {
                         DisplayName = "Test2",
                         LanguageCode = "yz",
@@ -449,7 +566,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             app.Execute(args);
 
             // ASSESS
-            string expectedResult = @"Processing [...] Done
+            string expectedResult = @"
 {
   ""jobName"": null,
   ""fileProcessingStatus"": [

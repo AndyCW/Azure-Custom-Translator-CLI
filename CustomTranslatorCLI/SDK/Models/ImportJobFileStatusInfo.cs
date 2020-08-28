@@ -40,7 +40,7 @@ namespace CustomTranslator.Models
         /// <param name="parentId">Gets or sets the parent identifier.</param>
         /// <param name="language">Gets or sets the file language associated
         /// with the document.</param>
-        public ImportJobFileStatusInfo(ImportJobStatus status = default(ImportJobStatus), System.DateTime? modifiedDate = default(System.DateTime?), string fileName = default(string), string documentName = default(string), string summary = default(string), int? id = default(int?), int? parentId = default(int?), TextTranslatorModelsTextTranslatorLanguage language = default(TextTranslatorModelsTextTranslatorLanguage))
+        public ImportJobFileStatusInfo(ImportJobStatus status = default(ImportJobStatus), System.DateTime? modifiedDate = default(System.DateTime?), string fileName = default(string), string documentName = default(string), string summary = default(string), int? id = default(int?), int? parentId = default(int?), TranslatorLanguage language = default(TranslatorLanguage))
         {
             Status = status;
             ModifiedDate = modifiedDate;
@@ -104,7 +104,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the file language associated with the document.
         /// </summary>
         [JsonProperty(PropertyName = "language")]
-        public TextTranslatorModelsTextTranslatorLanguage Language { get; private set; }
+        public TranslatorLanguage Language { get; private set; }
 
         /// <summary>
         /// Validate the object.

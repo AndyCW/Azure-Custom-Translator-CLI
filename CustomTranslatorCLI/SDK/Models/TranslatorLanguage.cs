@@ -13,13 +13,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// Defines a language that can be used in the text translator.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorLanguage
+    public partial class TranslatorLanguage
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorLanguage class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorLanguage()
+        public TranslatorLanguage()
         {
             CustomInit();
         }
@@ -31,7 +31,7 @@ namespace CustomTranslator.Models
         /// <param name="id">The Id of the language</param>
         /// <param name="displayName">The Display Name of the language</param>
         /// <param name="languageCode">The ISO code of the language</param>
-        public TextTranslatorModelsTextTranslatorLanguage(long id, string displayName, string languageCode)
+        public TranslatorLanguage(long id, string displayName, string languageCode)
         {
             Id = id;
             DisplayName = displayName;

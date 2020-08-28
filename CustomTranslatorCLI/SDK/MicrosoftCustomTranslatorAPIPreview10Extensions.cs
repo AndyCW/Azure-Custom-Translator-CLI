@@ -301,7 +301,7 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// Access token
             /// </param>
-            public static IList<TextTranslatorModelsTextTranslatorFileInfo> ApiTexttranslatorV10DocumentsByIdFilesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
+            public static IList<TranslatorFileInfo> ApiTexttranslatorV10DocumentsByIdFilesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization)
             {
                 return operations.ApiTexttranslatorV10DocumentsByIdFilesGetAsync(id, authorization).GetAwaiter().GetResult();
             }
@@ -321,7 +321,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TextTranslatorModelsTextTranslatorFileInfo>> ApiTexttranslatorV10DocumentsByIdFilesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<TranslatorFileInfo>> ApiTexttranslatorV10DocumentsByIdFilesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, long id, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiTexttranslatorV10DocumentsByIdFilesGetWithHttpMessagesAsync(id, authorization, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -726,7 +726,7 @@ namespace CustomTranslator
             /// <param name='authorization'>
             /// The auth token for the system
             /// </param>
-            public static IList<TextTranslatorModelsTextTranslatorLanguage> ApiTexttranslatorV10LanguagesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
+            public static IList<TranslatorLanguage> ApiTexttranslatorV10LanguagesGet(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization)
             {
                 return operations.ApiTexttranslatorV10LanguagesGetAsync(authorization).GetAwaiter().GetResult();
             }
@@ -743,7 +743,7 @@ namespace CustomTranslator
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<TextTranslatorModelsTextTranslatorLanguage>> ApiTexttranslatorV10LanguagesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<TranslatorLanguage>> ApiTexttranslatorV10LanguagesGetAsync(this IMicrosoftCustomTranslatorAPIPreview10 operations, string authorization, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ApiTexttranslatorV10LanguagesGetWithHttpMessagesAsync(authorization, null, cancellationToken).ConfigureAwait(false))
                 {

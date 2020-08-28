@@ -70,7 +70,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
 
             mock
                 .Setup(
-                    m => m.GetProjectsByIdModelsWithHttpMessagesAsync(new Guid("00000000-0000-0000-0000-000000000000"), It.IsAny<string>(), 1, null, null, null, CancellationToken.None)
+                    m => m.GetProjectsByIdModelsWithHttpMessagesAsync(new Guid("00000000-0000-0000-0000-000000000000"), It.IsAny<string>(), 1, It.IsAny<string>(), It.IsAny<string>(), null, CancellationToken.None)
                     )
                 .ReturnsAsync(new HttpOperationResponse<ModelsResponse>() { Body = response }
                 );
@@ -130,7 +130,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
                 );
             mock
                 .Setup(
-                    m => m.GetProjectsByIdModelsWithHttpMessagesAsync(new Guid("00000000-0000-0000-0000-000000000000"), It.IsAny<string>(), 1, null, null, null, CancellationToken.None)
+                    m => m.GetProjectsByIdModelsWithHttpMessagesAsync(new Guid("00000000-0000-0000-0000-000000000000"), It.IsAny<string>(), 1, It.IsAny<string>(), It.IsAny<string>(), null, CancellationToken.None)
                     )
                 .ReturnsAsync(new HttpOperationResponse<ModelsResponse>() { Body = response1 }
                 );
@@ -163,7 +163,7 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             app.Execute(args);
 
             // ASSESS
-            string expected = @"Processing [...] Done
+            string expected = @"
 {
   ""id"": 1234,
   ""name"": ""testmodel"",

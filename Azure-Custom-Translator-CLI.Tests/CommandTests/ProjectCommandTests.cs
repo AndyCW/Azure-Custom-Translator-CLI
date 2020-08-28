@@ -71,37 +71,33 @@ namespace Azure_Custom_Translator_CLI.Tests.CommandTests
             app.Execute(args);
 
             // ASSESS
-            string expected = @"{
-  ""projects"": [
-    {
-      ""id"": ""00000000-0000-0000-0000-000000000000"",
-      ""name"": ""Moq"",
-      ""label"": null,
-      ""description"": null,
-      ""languagePair"": null,
-      ""category"": null,
-      ""categoryDescriptor"": null,
-      ""baselineBleuScorePunctuated"": null,
-      ""bleuScorePunctuated"": null,
-      ""baselineBleuScoreUnpunctuated"": null,
-      ""bleuScoreUnpunctuated"": null,
-      ""baselineBleuScoreCIPunctuated"": null,
-      ""bleuScoreCIPunctuated"": null,
-      ""baselineBleuScoreCIUnpunctuated"": null,
-      ""bleuScoreCIUnpunctuated"": null,
-      ""status"": null,
-      ""modifiedDate"": ""0001-01-01T00:00:00"",
-      ""createdDate"": ""0001-01-01T00:00:00"",
-      ""createdBy"": null,
-      ""modifiedBy"": null,
-      ""apiDomain"": null,
-      ""isAvailable"": false,
-      ""hubCategory"": null
-    }
-  ],
-  ""pageIndex"": 0,
-  ""totalPageCount"": 0
-}
+            string expected = @"[
+  {
+    ""id"": ""00000000-0000-0000-0000-000000000000"",
+    ""name"": ""Moq"",
+    ""label"": null,
+    ""description"": null,
+    ""languagePair"": null,
+    ""category"": null,
+    ""categoryDescriptor"": null,
+    ""baselineBleuScorePunctuated"": null,
+    ""bleuScorePunctuated"": null,
+    ""baselineBleuScoreUnpunctuated"": null,
+    ""bleuScoreUnpunctuated"": null,
+    ""baselineBleuScoreCIPunctuated"": null,
+    ""bleuScoreCIPunctuated"": null,
+    ""baselineBleuScoreCIUnpunctuated"": null,
+    ""bleuScoreCIUnpunctuated"": null,
+    ""status"": null,
+    ""modifiedDate"": ""0001-01-01T00:00:00"",
+    ""createdDate"": ""0001-01-01T00:00:00"",
+    ""createdBy"": null,
+    ""modifiedBy"": null,
+    ""apiDomain"": null,
+    ""isAvailable"": false,
+    ""hubCategory"": null
+  }
+]
 ";
             string actual = ((MockTestWriter)app.Out).ReadAsString();
             Assert.Equal(expected, actual);

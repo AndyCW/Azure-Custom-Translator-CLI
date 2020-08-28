@@ -59,7 +59,7 @@ namespace CustomTranslator.Models
         /// (id, display name).</param>
         /// <param name="languages">The file languages associated with this
         /// document.</param>
-        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), ImportJobStatus status = default(ImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), UserInfo createdBy = default(UserInfo), IList<TextTranslatorModelsTextTranslatorLanguage> languages = default(IList<TextTranslatorModelsTextTranslatorLanguage>))
+        public TextTranslatorModelsResponseTextTranslatorImportAllJobsStatusInfo(System.Guid? jobId = default(System.Guid?), int? numberFiles = default(int?), int? numberFilesWithErrors = default(int?), string name = default(string), ImportJobStatus status = default(ImportJobStatus), string documentType = default(string), System.DateTime? createdDate = default(System.DateTime?), UserInfo createdBy = default(UserInfo), IList<TranslatorLanguage> languages = default(IList<TranslatorLanguage>))
         {
             JobId = jobId;
             NumberFiles = numberFiles;
@@ -148,7 +148,7 @@ namespace CustomTranslator.Models
         /// Gets the file languages associated with this document.
         /// </summary>
         [JsonProperty(PropertyName = "languages")]
-        public IList<TextTranslatorModelsTextTranslatorLanguage> Languages { get; private set; }
+        public IList<TranslatorLanguage> Languages { get; private set; }
 
         /// <summary>
         /// Validate the object.

@@ -12,13 +12,13 @@ namespace CustomTranslator.Models
     /// <summary>
     /// A class for the file information.
     /// </summary>
-    public partial class TextTranslatorModelsTextTranslatorFileInfo
+    public partial class TranslatorFileInfo
     {
         /// <summary>
         /// Initializes a new instance of the
         /// TextTranslatorModelsTextTranslatorFileInfo class.
         /// </summary>
-        public TextTranslatorModelsTextTranslatorFileInfo()
+        public TranslatorFileInfo()
         {
             CustomInit();
         }
@@ -33,7 +33,7 @@ namespace CustomTranslator.Models
         /// <param name="uploadDate">Gets or sets UploadDate</param>
         /// <param name="extractedSentenceCount">Gets or sets
         /// ExtractedSentenceCount</param>
-        public TextTranslatorModelsTextTranslatorFileInfo(long? id = default(long?), string fileName = default(string), TextTranslatorModelsTextTranslatorLanguage language = default(TextTranslatorModelsTextTranslatorLanguage), System.DateTime? uploadDate = default(System.DateTime?), int? extractedSentenceCount = default(int?))
+        public TranslatorFileInfo(long? id = default(long?), string fileName = default(string), TranslatorLanguage language = default(TranslatorLanguage), System.DateTime? uploadDate = default(System.DateTime?), int? extractedSentenceCount = default(int?))
         {
             Id = id;
             FileName = fileName;
@@ -64,7 +64,7 @@ namespace CustomTranslator.Models
         /// Gets or sets the language.
         /// </summary>
         [JsonProperty(PropertyName = "language")]
-        public TextTranslatorModelsTextTranslatorLanguage Language { get; set; }
+        public TranslatorLanguage Language { get; set; }
 
         /// <summary>
         /// Gets or sets UploadDate
